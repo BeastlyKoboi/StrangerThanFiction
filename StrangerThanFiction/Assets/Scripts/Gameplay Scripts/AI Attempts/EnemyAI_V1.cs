@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
+/// <summary>
+/// The first placeholder attempt at an enemy AI.
+/// </summary>
 public class EnemyAI_V1 : MonoBehaviour
 {
     public Player myPlayer;
@@ -15,20 +18,11 @@ public class EnemyAI_V1 : MonoBehaviour
     {
         myPlayer = GetComponent<Player>();
         myPlayer.OnMyTurnStart += PlayTurn;
-
     }
 
-    private void OnEnable()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    /// <summary>
+    /// The enemy AI will play the first card in its hand that is playable.
+    /// </summary>
     public void PlayTurn()
     {
         Debug.Log("Enemy Turn PlayTurn is called.");

@@ -22,26 +22,17 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler,
     // Update is called once per frame
     void Update()
     {
+        if (draggable.isSelected) return;
+
         if (isHovered)
         {
-            if (draggable.isSelected) return;
-
             rectTransform.anchoredPosition = Vector2.MoveTowards(rectTransform.anchoredPosition, endPos, moveSpeed * Time.deltaTime);
             rectTransform.localRotation = Quaternion.RotateTowards(rectTransform.localRotation, endRotation, rotSpeed * Time.deltaTime);
         }
         else
         {
-
-            if (rectTransform.anchoredPosition != startPos)
-            {
-                rectTransform.anchoredPosition = Vector2.MoveTowards(rectTransform.anchoredPosition, startPos, moveSpeed * Time.deltaTime);
-
-            }
-            if (rectTransform.localRotation != startRotation)
-            {
-                rectTransform.localRotation = Quaternion.RotateTowards(rectTransform.localRotation, startRotation, rotSpeed * Time.deltaTime);
-
-            }
+            rectTransform.anchoredPosition = Vector2.MoveTowards(rectTransform.anchoredPosition, startPos, moveSpeed * Time.deltaTime);
+            rectTransform.localRotation = Quaternion.RotateTowards(rectTransform.localRotation, startRotation, rotSpeed * Time.deltaTime);
         }
     }
     private void OnEnable()
@@ -49,7 +40,7 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler,
         rectTransform = GetComponent<RectTransform>();
         draggable = GetComponent<Draggable>();
         startPos = rectTransform.anchoredPosition;
-        endPos = new Vector2(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y + 150);
+        endPos = new Vector2(startPos.x, startPos.y + 150);
         startRotation = rectTransform.localRotation;
         endRotation = Quaternion.Euler(0, 0, 0);
     }
@@ -57,7 +48,6 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler,
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
         isHovered = true;
-        rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y, 5);
         orderIndex = transform.GetSiblingIndex();
         transform.SetAsLastSibling();
     }
@@ -72,7 +62,6 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler,
     public void OnPointerExit(PointerEventData pointerEventData)
     {
         isHovered = false;
-        rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y, 0);
         transform.SetSiblingIndex(orderIndex);
     }
 }

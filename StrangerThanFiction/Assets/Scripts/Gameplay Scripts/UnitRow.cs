@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -20,25 +21,31 @@ public class UnitRow : MonoBehaviour
         UpdateUnitPositions();
     }
 
-    public void RemoveUnit(CardModel newUnit)
+    public void RemoveUnit(CardModel unitToRemove)
     {
-
+        // test
+        //int index = units.IndexOf(unitToRemove);
+        //if (index != -1)
+        //{
+        //    units.RemoveAt(index);
+        //    unitRects.RemoveAt(index);
+        //    UpdateUnitPositions();
+        //}
     }
 
     public void UpdateUnitPositions()
     {
+        if (units.Count == 0) return;
         float unitWidth = units[0].unitView.transform.localScale.x * units[0].unitView.GetComponent<RectTransform>().rect.width;
-        float unitCount = units.Count;
-
-        float filledRowWidth = unitCount * unitWidth;
-
+        // Find out why next line does not work
+        //float unitWidth = units[0].unitView.transform.localScale.x * unitRects[0].rect.width;
+        float filledRowWidth = units.Count * unitWidth;
         float startingXPos = -filledRowWidth / 2 + unitWidth / 2;
 
-        for (int index = 0; index < unitCount; index++)
+        for (int i = 0; i < units.Count; i++)
         {
-            unitRects[index].anchoredPosition = new Vector2(startingXPos, 0);
-            unitRects[index].rotation = Quaternion.identity;
-            startingXPos += unitWidth;
+            unitRects[i].anchoredPosition = new Vector2(startingXPos + i * unitWidth, 0);
+            unitRects[i].rotation = Quaternion.identity;
         }
 
     }
@@ -93,6 +100,12 @@ public class UnitRow : MonoBehaviour
                 weakest.CurrentPlotArmor > unitsArr[i].CurrentPlotArmor)
                 weakest = unitsArr[i];
         }
+
+        //return units
+        //    .OrderBy(u => u.CurrentPower)
+        //    .ThenBy(u => u.CurrentPlotArmor)
+        //    .FirstOrDefault();
+
         return weakest;
     }
 
@@ -106,9 +119,16 @@ public class UnitRow : MonoBehaviour
 
         units.ForEach(unit => { total += unit.CurrentPower; });
 
+        // Other option
+        return units.Sum(unit => unit.CurrentPower);
+
         return total;
     }
 
+    /// <summary>
+    /// Returns an array of the units in this row.
+    /// </summary>
+    /// <returns></returns>
     public CardModel[] GetUnits()
     {
         return units.ToArray();

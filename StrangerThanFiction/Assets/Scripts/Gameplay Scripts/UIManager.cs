@@ -5,6 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages the UI of the gameplay
+/// </summary>
 public class UIManager : MonoBehaviour
 {
     [HeaderAttribute("Game State")]
@@ -40,7 +43,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI overkillText;
     [SerializeField] private TextMeshProUGUI resultText;
 
-
+    /// Used to test game over screen
+    [ContextMenu("Trigger Game Over")]
+    void TriggerGameOver()
+    {
+        GameOver();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +56,10 @@ public class UIManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Activates the Round Start Popup
+    /// </summary>
+    /// <param name="roundNum"></param>
     public void RoundStart(int roundNum)
     {
         RoundPopup.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"Round {roundNum}";
@@ -59,6 +71,9 @@ public class UIManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Activates the Game over Popup and show the results.
+    /// </summary>
     public async void GameOver()
     {
         int playerTotalPower = board.GetTotalPower(gameManager.player1);
@@ -78,9 +93,14 @@ public class UIManager : MonoBehaviour
             overkillText.text = $"Overkill: {(enemyTotalPower - playerTotalPower).ToString()}";
         }
 
+        GameOverPopup.gameObject.SetActive(true);
         GameOverPopup.SetTrigger("GameOver");
     }
 
+    /// <summary>
+    /// Updates the deck count of the player
+    /// </summary>
+    /// <param name="player"></param>
     public void UpdateDeck(Player player)
     {
         if (player == player1)
@@ -88,6 +108,11 @@ public class UIManager : MonoBehaviour
         else if (player == player2)
             deckLabelPlayer2.text = $"Deck {player2.Deck.Count}";
     }
+
+    /// <summary>
+    /// Updates the discard count of the player
+    /// </summary>
+    /// <param name="player"></param>
     public void UpdateDiscard(Player player)
     {
         if (player == player1)
@@ -96,6 +121,9 @@ public class UIManager : MonoBehaviour
             discardLabelPlayer2.text = $"Disc {player2.Discard.Count}";
     }
 
+    /// <summary>
+    /// Updates the mana of the player
+    /// </summary>
     public void UpdateMana(Player player)
     {
         if (player == player1)
@@ -105,6 +133,9 @@ public class UIManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Updates the total power of the players
+    /// </summary>
     public void UpdateTotalPower()
     {
         int frontPower = board.GetTotalFrontPower(gameManager.player1);

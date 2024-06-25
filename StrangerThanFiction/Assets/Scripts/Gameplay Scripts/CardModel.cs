@@ -211,6 +211,10 @@ public abstract class CardModel : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Method to summon this card as a unit.
+    /// </summary>
+    /// <returns></returns>
     public virtual async Task Summon()
     {
         cardView.gameObject.SetActive(false);
@@ -232,7 +236,6 @@ public abstract class CardModel : MonoBehaviour
     /// <summary>
     /// Method to destroy this card. 
     /// </summary>
-    /// <param name="player"></param>
     /// <returns></returns>
     public virtual async Task Destroy()
     {
@@ -240,6 +243,9 @@ public abstract class CardModel : MonoBehaviour
         Destroy(cardView.gameObject);
     }
 
+    /// <summary>
+    /// Method to trigger OnRoundStart event.
+    /// </summary>
     public void RoundStart()
     {
         OnRoundStart?.Invoke();
@@ -280,10 +286,7 @@ public abstract class CardModel : MonoBehaviour
 
         // Damage does its worst, the OnTakeDamage event triggers,
         // and the amount is finally returned
-        if (CurrentPower > damage)
-            CurrentPower -= damage;
-        else
-            CurrentPower = 0;
+        CurrentPower = Math.Max(CurrentPower - damage, 0);
 
         OnTakeDamage?.Invoke();
 
@@ -416,9 +419,9 @@ public abstract class CardModel : MonoBehaviour
 
         string path = Path.Combine(Application.streamingAssetsPath, filename);
 
-        if (System.IO.File.Exists(path))
+        if (File.Exists(path))
         {
-            byte[] bytes = System.IO.File.ReadAllBytes(path);
+            byte[] bytes = File.ReadAllBytes(path);
             Texture2D texture = new Texture2D(100, 100, TextureFormat.RGB24, false);
             texture.LoadImage(bytes);
             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
@@ -499,12 +502,14 @@ public abstract class CardModel : MonoBehaviour
         unitTextPlotArmor = unitView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
         unitTextPlotArmor.text = CurrentPlotArmor.ToString();
 
-
         unitView.Find("Name").GetComponent<TextMeshProUGUI>().text = Title;
 
         unitView.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Updates the card stat text on the card view.
+    /// </summary>
     private void UpdateCardStatText()
     {
         if (!cardView) return;
@@ -517,6 +522,9 @@ public abstract class CardModel : MonoBehaviour
             cardTextPlotArmor.text = CurrentPlotArmor.ToString();
     }
 
+    /// <summary>
+    /// Updates the unit stat text on the unit view.
+    /// </summary>
     private void UpdateUnitStatText()
     {
         if (!unitView) return;

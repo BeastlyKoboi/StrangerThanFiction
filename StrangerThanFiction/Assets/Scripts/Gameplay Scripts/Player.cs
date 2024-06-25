@@ -58,23 +58,30 @@ public class Player : MonoBehaviour
 
     [HeaderAttribute("The Cards")]
     public HandManager handManager;
-    public CardPile Deck { get; set; }
+    public CardPile Deck { get; private set; }
     public GameObject deckGameObject;
 
-    public CardPile Discard { get; set; }
+    public CardPile Discard { get; private set; }
     public GameObject discardGameObject;
 
     [HeaderAttribute("Card Prefabs")]
     public GameObject cardPrefab;
     public GameObject unitPrefab;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Method to initialize the player
+    /// </summary>
     void Start()
     {
         OnRoundStart += handManager.RoundStart;
 
     }
 
+    /// <summary>
+    /// Method to initialize the player's deck.
+    /// </summary>
+    /// <param name="cards"></param>
+    /// <param name="isHidden"></param>
     public void PopulateDeck(string[] cards, bool isHidden)
     {
         Deck = new CardPile();
@@ -98,6 +105,10 @@ public class Player : MonoBehaviour
         };
     }
 
+    /// <summary>
+    /// Method to handle the player's turn. 
+    /// </summary>
+    /// <returns></returns>
     public async Task PlayerTurn()
     {
         hasEndedTurn = false;
@@ -124,59 +135,70 @@ public class Player : MonoBehaviour
         handManager.LockCards();
     }
 
+    /// <summary>
+    /// Method to draw a card from the player's deck.
+    /// </summary>
     public void DrawCard()
     {
-        if (Deck.Count == 0)
-            ShuffleDiscardIntoDeck();
+        if (Deck.Count == 0) ShuffleDiscardIntoDeck();
+        if (Deck.Count == 0) return;
 
-        if (Deck.Count == 0)
-            return;
-
-        CardModel drawnCard;
-        drawnCard = Deck[Deck.Count - 1];
+        CardModel drawnCard = Deck[Deck.Count - 1];
         Deck.RemoveAt(Deck.Count - 1);
         handManager.AddCardToHandFromDeck(drawnCard);
     }
 
+    /// <summary>
+    /// Method to discard a card from the player's hand.
+    /// </summary>
+    /// <param name="card"></param>
     public void DiscardCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
         Discard.Add(card);
         card.gameObject.transform.SetParent(discardGameObject.transform, true);
         RectTransform cardRect = card.gameObject.GetComponent<RectTransform>();
-        cardRect.anchoredPosition = new Vector2(0, 0);
+        cardRect.anchoredPosition = Vector2.zero;
         cardRect.rotation = Quaternion.identity;
     }
 
+    /// <summary>
+    /// Method to destroy a card.
+    /// </summary>
+    /// <param name="card"></param>
     public async void DestroyCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
         await card.Destroy();
     }
 
-    public void PassTurn()
-    {
-        hasEndedTurn = true;
-    }
+    /// <summary>
+    /// Method to pass the player's turn.
+    /// </summary>
+    public void PassTurn() => hasEndedTurn = true;
 
+    /// <summary>
+    /// Method to check if the player can play any cards.
+    /// </summary>
     public bool CanDoSomething()
     {
-        bool actionsLeft = true;
-
         handManager.RefreshPlayableCards();
-
-        if (handManager.NumPlayableCards == 0)
-        {
-            actionsLeft = false;
-        }
-
-        return actionsLeft;
+        return handManager.NumPlayableCards > 0;
     }
 
+    /// <summary>
+    /// Method to reset the player's mana.
+    /// </summary>
+    public void ResetMana() => CurrentMana = MaxMana;
+
+    /// <summary>
+    /// Method to play a card.
+    /// </summary>
+    /// <param name="card"></param>
+    /// <returns></returns>
     private async Task PlayCard(CardModel card)
     {
         OnCardPlayed?.Invoke(card);
-
         await card.Play(this);
 
         if (card.Type == CardType.Unit)
@@ -192,42 +214,58 @@ public class Player : MonoBehaviour
         handManager.playedCard = null;
     }
 
+    /// <summary>
+    /// Method to shuffle the discard pile into the deck.
+    /// </summary>
     private void ShuffleDiscardIntoDeck()
     {
         for (int i = 0; i < Discard.Count; i++)
         {
             Deck.Add(Discard[i]);
             Discard[i].gameObject.transform.SetParent(deckGameObject.transform, true);
-            Discard[i].GetComponent<RectTransform>().anchoredPosition = new Vector2();
+            Discard[i].GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         }
 
         Discard.Clear();
         Deck.Shuffle();
     }
 
-    public void AddCardToDeck()
-    {
-
-    }
-
+    /// <summary>
+    /// Method to invoke OnRoundStart event attached to player.
+    /// </summary>
     public void RoundStart()
     {
         OnRoundStart?.Invoke();
     }
 
+    /// <summary>
+    /// Method to invoke OnUnitSummoned event attached to player.
+    /// </summary>
+    /// <param name="unit"></param>
     public void UnitSummoned(CardModel unit)
     {
         OnUnitSummoned?.Invoke(unit);
     }
 
+    /// <summary>
+    /// Method to create a card.
+    /// Probably should be moved to a factory class.
+    /// </summary>
+    /// <param name="cardName"></param>
+    /// <param name="isHidden"></param>
+    /// <param name="parent"></param>
+    /// <param name="creator"></param>
+    /// <returns></returns>
     public CardModel CreateCard(string cardName, bool isHidden, GameObject parent, string creator = "")
     {
-        Type MyScriptType = System.Type.GetType(cardName);
-
         GameObject cardObj = new GameObject(cardName, typeof(RectTransform));
         cardObj.transform.SetParent(parent.transform, false);
 
-        cardObj.AddComponent(MyScriptType);
+        Type cardScriptType = Type.GetType(cardName);
+        if (cardScriptType != null)
+        {
+            cardObj.AddComponent(cardScriptType);
+        }
 
         Instantiate(cardPrefab, new Vector3(0, 0, 0), Quaternion.identity).transform.SetParent(cardObj.transform, false);
 

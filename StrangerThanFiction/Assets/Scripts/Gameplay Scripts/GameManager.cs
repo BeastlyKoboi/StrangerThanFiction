@@ -8,6 +8,10 @@ using UnityEngine.UIElements;
 
 /// <summary>
 /// Manages the flow of game in a single match. 
+/// TODO: Add more events for more specific actions.
+/// TODO: Add more functionality for battlefield conditions.
+/// TODO: Rework save data 
+/// TODO:
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -27,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     [HeaderAttribute("Game State Information")]
     public int roundNumber = 0;
-    private int totalRounds = 6;
+    public const int totalRounds = 6;
 
     [HeaderAttribute("Text Assets")]
     [SerializeField] private TextAsset StarterDecksJSON;
@@ -58,12 +62,14 @@ public class GameManager : MonoBehaviour
     //  - 
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Method to initialize the game.
+    /// </summary>
     void Start()
     {
         // initialize all needed stuff for beginning of game 
 
-        //JsonUtility.FromJsonOverwrite(StarterDecksJSON.text, this);
+        JsonUtility.FromJsonOverwrite(StarterDecksJSON.text, this);
 
         //gameObject.AddComponent<LocalStorageManager>();
         //LocalStorageManager storage = gameObject.GetComponent<LocalStorageManager>();
@@ -105,7 +111,7 @@ public class GameManager : MonoBehaviour
             roundNumber++;
             await RoundActivity();
 
-        } while (roundNumber != totalRounds);
+        } while (roundNumber < totalRounds);
 
         // Decide who has most power then grant win to player
 
@@ -122,11 +128,9 @@ public class GameManager : MonoBehaviour
 
         OnRoundStart?.Invoke();
 
-        player1.CurrentMana = 0;
-        player1.CurrentMana += player1.MaxMana;
-        player2.CurrentMana = 0;
-        player2.CurrentMana += player2.MaxMana;
-
+        // Consider reseting mana before round start. 
+        player1.ResetMana();
+        player2.ResetMana();
 
         await DrawHands(); // ITF maybe put this in event with numCards to draw as a variable
 
@@ -154,44 +158,56 @@ public class GameManager : MonoBehaviour
         OnRoundEnd?.Invoke();
     }
 
+    /// <summary>
+    /// Method to draw hands for both players. Used at round start
+    /// </summary>
+    /// <param name="numCards"></param>
+    /// <returns></returns>
     private async Task DrawHands(int numCards = 5)
     {
         for (int i = 0; i < numCards; i++)
         {
             player1.DrawCard();
-
             player2.DrawCard();
-
             await Task.Delay(500);
         }
-
-        // Draw additional cards here
     }
 
+    /// <summary>
+    /// Method to discard the hands of both players. Used at round end.
+    /// </summary>
+    /// <returns></returns>
     private async Task DiscardHands()
     {
-        int cardCount = player1.handManager.Hand.Count;
-        CardModel[] cards = player1.handManager.Hand.ToArray();
-
-        for (int i = 0; i < cards.Length; i++)
-        {
-            player1.DiscardCard(cards[i]);
-        }
-
-        cards = player2.handManager.Hand.ToArray();
-        for (int i = 0; i < cards.Length; i++)
-        {
-            player2.DiscardCard(cards[i]);
-        }
-
+        DiscardPlayerHand(player1);
+        DiscardPlayerHand(player2);
         await Task.Delay(2000);
     }
 
-    private void EndGame()
+    /// <summary>
+    /// Method to discard a player's hand.
+    /// </summary>
+    /// <param name="player"></param>
+    private void DiscardPlayerHand(Player player)
     {
-        uiManager.GameOver();
+        foreach (CardModel card in player.handManager.Hand.ToArray())
+        {
+            player.DiscardCard(card);
+        }
     }
 
+    /// <summary>
+    /// Method to end the game.
+    /// </summary>
+    private void EndGame()
+    {
+        uiManager.GameOver(); // Maybe add this to event
+        OnGameOver?.Invoke();
+    }
+
+    /// <summary>
+    /// Method to quit the game.
+    /// </summary>
     public void QuitGame()
     {
         Application.Quit();

@@ -36,8 +36,7 @@ public class Appear : MonoBehaviour
             isMoving = false;
             if (!gameObject.GetComponent<CardModel>().IsHidden)
             {
-                GetComponent<Hoverable>().enabled = true;
-                GetComponent<Draggable>().enabled = true;
+                EnableInteractionComponents(true);
             }
         }
     }
@@ -48,8 +47,13 @@ public class Appear : MonoBehaviour
         endRotation = Quaternion.Euler(0, 0, zRotation);
         isMoving = true;
 
-        GetComponent<Hoverable>().enabled = false;
-        GetComponent<Draggable>().enabled = false;
+        EnableInteractionComponents(false);
+    }
+
+    private void EnableInteractionComponents(bool enable)
+    {
+        if (GetComponent<Hoverable>()) GetComponent<Hoverable>().enabled = enable;
+        if (GetComponent<Hoverable>()) GetComponent<Hoverable>().enabled = enable;
     }
 
 }

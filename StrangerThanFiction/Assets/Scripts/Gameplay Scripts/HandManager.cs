@@ -11,10 +11,11 @@ public class HandManager : MonoBehaviour
 
     public int NumPlayableCards = 0;
 
-    public Vector2 handBounds;
-    public int rotationBounds;
-    public int cardGap;
-    public Vector2 handCenter;
+    public Vector2 handBounds = new Vector2(500, 20);
+    public int rotationBounds = 20;
+    public int cardGap = 150;
+    public int cardDeviation = 60;
+    public Vector2 handCenter = new Vector2(0, -500);
 
     public CardModel hoveredCard; 
     public CardModel selectedCard;
@@ -25,27 +26,18 @@ public class HandManager : MonoBehaviour
     {
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         Hand = new CardPile();
-
-        handBounds.x = 500;
-        handBounds.y = 20;
-        rotationBounds = 20;
-        cardGap = 150;
-        handCenter.x = 0;
-        handCenter.y = -500;
     }
-
 
     public void AddCardToHandFromDeck(CardModel card)
     {
-        card.AddComponent<Appear>();
-        card.AddComponent<Hoverable>();
-        card.AddComponent<Draggable>();
-        
+        if (!card.GetComponent<Appear>()) card.gameObject.AddComponent<Appear>();
+        if (!card.GetComponent<Hoverable>()) card.gameObject.AddComponent<Hoverable>();
+        if (!card.GetComponent<Draggable>()) card.gameObject.AddComponent<Draggable>();
+
         card.transform.SetParent(transform);
         Hand.Insert(0, card);
         UpdateTargetTransforms();
         RefreshPlayableCards();
-        // Add hover and drag scripts 
     }
 
     public void RemoveCardFromHand(CardModel card)
@@ -56,40 +48,37 @@ public class HandManager : MonoBehaviour
         Hand.Remove(card);
         UpdateTargetTransforms();
         RefreshPlayableCards();
-        // remove hover and drag scripts
     }
 
     private void UpdateTargetTransforms()
     {
-        float startingXPos = -(Hand.Count + 1) * cardGap / 2;
-        Vector2 cardPos = new Vector2(startingXPos, handCenter.y - handBounds.y);
-        float startingRot = rotationBounds;
-        int middleCardIndex = (int)Math.Ceiling(Hand.Count / 2.0f);
-        float yPosIncrement = (2 * handBounds.y) / middleCardIndex;
+        float startingXPos = -(Hand.Count - 1) * cardGap / 2f;
 
         for (int cardIndex = 0; cardIndex < Hand.Count; cardIndex++)
         {
-            if (cardIndex < middleCardIndex)
-            {
-                cardPos += new Vector2(cardGap, yPosIncrement);
-            }
-            else
-            {
-                cardPos += new Vector2(cardGap, -yPosIncrement);
-            }
+            Vector2 cardPos = new Vector2(startingXPos + cardIndex * cardGap, 
+                handCenter.y + CalculateCardYPos(cardIndex, Hand.Count, cardDeviation));
+            float zRotation = CalculateCardRotation(cardIndex, Hand.Count, rotationBounds);
 
-            //startingRot -= 2 * rotationBounds / Hand.Count;
-
-            Hand[cardIndex].GetComponent<Appear>().RefreshTarget(cardPos, startingRot);
-
-            if (Hand.Count > 1)
-                startingRot -= 2 * rotationBounds / (Hand.Count - 1);
-            else
-                startingRot = 0;
-
+            Hand[cardIndex].GetComponent<Appear>().RefreshTarget(cardPos, zRotation);
             Hand[cardIndex].GetComponent<Hoverable>().rectTransform.SetAsLastSibling();
         }
 
+    }
+
+    private float CalculateCardRotation(int cardIndex, int totalCount, int maxRotation)
+    {
+        if (totalCount <= 1) return 0;
+        float middleIndex = (totalCount - 1) / 2f;
+        return -(cardIndex - middleIndex) * (2 * maxRotation) / (totalCount - 1);
+    }
+
+    private float CalculateCardYPos(int cardIndex, int totalCount, int maxDeviation)
+    {
+        if (totalCount <= 1) return 0;
+        float middleIndex = (totalCount - 1) / 2f;
+        return (cardIndex - middleIndex) * (2 * maxDeviation) / (totalCount - 1) * 
+            (cardIndex < middleIndex? 1: -1); // flip the sign for the second half
     }
 
     public void LockCards()
@@ -118,18 +107,12 @@ public class HandManager : MonoBehaviour
     {
         NumPlayableCards = 0;
 
-        for (int i = 0; i < Hand.Count; i++)
+        Hand.ForEach((card) =>
         {
-            CardModel card = Hand[i];
-            bool isPlayable = true;
-
-            if (card.CurrentCost > card.Owner.CurrentMana)
-                isPlayable = false;
-
-            if (isPlayable) NumPlayableCards++;
-
+            bool isPlayable = card.CurrentCost <= card.Owner.CurrentMana;
             card.Playable = isPlayable;
-        }
+            if (isPlayable) NumPlayableCards++;
+        });
     }
 
 }
