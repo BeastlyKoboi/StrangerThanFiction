@@ -34,6 +34,7 @@ public class Appear : MonoBehaviour
         if (rectTransform.localRotation == endRotation && rectTransform.anchoredPosition == endPos)
         {
             isMoving = false;
+            transform.SetAsFirstSibling();
             if (!gameObject.GetComponent<CardModel>().IsHidden)
             {
                 EnableInteractionComponents(true);

@@ -23,28 +23,21 @@ public sealed class Pinocchio : CardModel
     public override void Start()
     {
         base.Start();
-
-        OnPlay += () =>
-        {
-            CardModel strongestUnit = Board.GetStrongestUnit(Owner);
-
-            if (strongestUnit)
-            {
-                strongestUnit.GrantPower(3);
-            }
-
-        };
-
-        OnSummon += () =>
-        {
-            
-            OnRoundStart += () =>
-            {
-                Debug.Log("In pinoc on round start");
-                CardModel card = Owner.CreateCard("TallTale", IsHidden, gameObject, "Pinocchio");
-                Owner.handManager.AddCardToHandFromDeck(card);
-            };
-        };
     }
 
+    protected override void SummonEffect()
+    {
+        OnRoundStart += CreateTallTaleInHand;
+    }
+
+    protected override void DestroyEffect()
+    {
+        OnRoundStart -= CreateTallTaleInHand;
+    }
+
+    private void CreateTallTaleInHand()
+    {
+        CardModel card = CardFactory.Instance.CreateCard("TallTale", IsHidden, gameObject.transform, Owner, Board);
+        Owner.handManager.AddCardToHandFromDeck(card);
+    }
 }

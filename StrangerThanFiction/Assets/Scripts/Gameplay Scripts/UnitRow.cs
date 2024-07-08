@@ -120,7 +120,7 @@ public class UnitRow : MonoBehaviour
         units.ForEach(unit => { total += unit.CurrentPower; });
 
         // Other option
-        return units.Sum(unit => unit.CurrentPower);
+        // return units.Sum(unit => unit.CurrentPower);
 
         return total;
     }

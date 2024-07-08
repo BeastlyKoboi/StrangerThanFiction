@@ -33,6 +33,11 @@ public class GameManager : MonoBehaviour
     public int roundNumber = 0;
     public const int totalRounds = 6;
 
+    [HeaderAttribute("Card Prefabs")]
+    public GameObject cardPrefab;
+    public GameObject unitPrefab;
+    public GameObject discardPrefab;
+
     [HeaderAttribute("Text Assets")]
     [SerializeField] private TextAsset StarterDecksJSON;
     private string[] Pinocchio = new string[]
@@ -75,13 +80,18 @@ public class GameManager : MonoBehaviour
         //LocalStorageManager storage = gameObject.GetComponent<LocalStorageManager>();
         //storage.SaveData("Starter Deck", StarterDecksJSON.text);
 
+        CardFactory.Instance.Initialize(cardPrefab, unitPrefab.gameObject, discardPrefab);
+
         player1.PopulateDeck(Pinocchio, false);
         player2.PopulateDeck(Pinocchio, true);
 
         OnRoundStart += player1.RoundStart;
         OnRoundStart += player2.RoundStart;
-
         OnRoundStart += boardManager.RoundStart;
+
+        OnRoundEnd += player1.RoundEnd;
+        OnRoundEnd += player2.RoundEnd;
+        OnRoundEnd += boardManager.RoundEnd;
 
         // Call on game start 
         StartGame();

@@ -19,17 +19,15 @@ public sealed class TallTale : CardModel
         base.Start();
 
         ApplyCondition(Combust.GetName(), new Combust(this, 0));
-
-        OnPlay += () =>
-        {
-            if (Owner.Deck.Count > 0)
-            {
-                CardModel topUnit = Owner.Deck[^1];
-
-                topUnit.CurrentCost -= 1;
-            }
-
-        };
     }
 
+    protected override void PlayEffect()
+    {
+        if (Owner.Deck.Count > 0)
+        {
+            CardModel topUnit = Owner.Deck[^1];
+
+            topUnit.CurrentCost -= 1;
+        }
+    }
 }

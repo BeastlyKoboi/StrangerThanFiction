@@ -22,15 +22,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // offset = rectTransform.anchoredPosition - eventData.position;
         offset = this.transform.position - new Vector3(eventData.position.x, eventData.position.y, 0);
         isSelected = true;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Offset is finally!!! working right
-        // rectTransform.anchoredPosition = eventData.position + offset;
         this.transform.position = eventData.position + offset;
     }
 

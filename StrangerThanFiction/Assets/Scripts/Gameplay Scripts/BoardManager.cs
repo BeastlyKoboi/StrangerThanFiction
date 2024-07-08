@@ -76,7 +76,10 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public void RoundEnd()
     {
-
+        player1FrontRow.ForEach(unit => unit.RoundEnd());
+        player1BackRow.ForEach(unit => unit.RoundEnd());
+        player2FrontRow.ForEach(unit => unit.RoundEnd());
+        player2BackRow.ForEach(unit => unit.RoundEnd());
     }
 
     /// <summary>

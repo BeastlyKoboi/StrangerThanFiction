@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,17 +20,23 @@ public sealed class Donkey : CardModel
     public override void Start()
     {
         base.Start();
-
-        OnPlay += () =>
-        {
-            Owner.OnUnitSummoned += (unit) =>
-            {
-                if (unit.Title == Title && unit != this)
-                {
-                    GrantPower(1);
-                }
-            };
-        };
     }
 
+    protected override void SummonEffect()
+    {
+        Owner.OnUnitSummoned += OnCopySummonGrantMePower;
+    }
+
+    protected override void DestroyEffect()
+    {
+        Owner.OnUnitSummoned -= OnCopySummonGrantMePower;
+    }
+
+    private void OnCopySummonGrantMePower(CardModel unit)
+    {
+        if (unit.Title == Title && unit != this)
+        {
+            GrantPower(1);
+        }
+    }
 }

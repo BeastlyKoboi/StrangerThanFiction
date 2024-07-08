@@ -13,7 +13,7 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler,
     public Quaternion startRotation;
     public Quaternion endRotation;
     public float moveSpeed = 1000;
-    public float rotSpeed = 50;
+    public float rotSpeed = 100;
 
     public bool isHovered;
 
@@ -40,7 +40,8 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler,
         rectTransform = GetComponent<RectTransform>();
         draggable = GetComponent<Draggable>();
         startPos = rectTransform.anchoredPosition;
-        endPos = new Vector2(startPos.x, startPos.y + 150);
+        // replace 375 with card height
+        endPos = new Vector2(startPos.x, -Camera.main.pixelHeight / 2 + 375 / 2); 
         startRotation = rectTransform.localRotation;
         endRotation = Quaternion.Euler(0, 0, 0);
     }

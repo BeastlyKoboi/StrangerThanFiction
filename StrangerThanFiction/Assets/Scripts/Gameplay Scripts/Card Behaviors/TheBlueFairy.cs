@@ -19,13 +19,23 @@ public class TheBlueFairy : CardModel
     public override void Start()
     {
         base.Start();
+    }
 
-        Owner.OnCardPlayed += (card) =>
+    protected override void SummonEffect()
+    {
+        Owner.OnCardPlayed += IfCardPlayedIsCostReducedDrawCard;
+    }
+
+    protected override void DestroyEffect()
+    {
+        Owner.OnCardPlayed -= IfCardPlayedIsCostReducedDrawCard;
+    }
+
+    private void IfCardPlayedIsCostReducedDrawCard(CardModel card)
+    {
+        if (card.BaseCost > card.CurrentCost)
         {
-            if (card.BaseCost > card.CurrentCost)
-            {
-                card.Owner.DrawCard();
-            }
-        };
+            Owner.DrawCard();
+        }
     }
 }

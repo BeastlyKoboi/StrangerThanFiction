@@ -187,21 +187,32 @@ public abstract class CardModel : MonoBehaviour
         //{
         //    OverwriteUnitPrefab();
         //}
+        OnPlay += PlayEffect;
+        OnSummon += SummonEffect;
+        OnDiscard += DiscardEffect;
+        OnDestroy += DestroyEffect;
     }
 
     // ----------------------------------------------------------------------------
     // Card Behaviors
     // ----------------------------------------------------------------------------
 
+    // Should be overridden by cards if they have any effects.
+    protected virtual void PlayEffect() { }
+    protected virtual void SummonEffect() { }
+    protected virtual void DiscardEffect() { }
+    protected virtual void DestroyEffect() { }
+
+
     /// <summary>
-    /// Method to play this card.
+    /// Method to play this card. Needs to add Play Requirements functionality
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
     public virtual async Task Play(Player player)
     {
         Owner.CurrentMana -= CurrentCost;
-
+        
         OnPlay?.Invoke();
 
         if (Type == CardType.Unit)
@@ -249,6 +260,11 @@ public abstract class CardModel : MonoBehaviour
     public void RoundStart()
     {
         OnRoundStart?.Invoke();
+    }
+
+    public void RoundEnd()
+    {
+        OnRoundEnd?.Invoke();
     }
 
     /// <summary>
@@ -403,6 +419,7 @@ public abstract class CardModel : MonoBehaviour
     {
         return conditions.ContainsKey(conditionName);
     }
+
 
     // ----------------------------------------------------------------------------
     // Loading Assets & Overwriting Card Prefabs

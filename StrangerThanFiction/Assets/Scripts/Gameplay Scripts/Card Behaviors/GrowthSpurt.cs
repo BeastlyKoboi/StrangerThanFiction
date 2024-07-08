@@ -16,15 +16,16 @@ public sealed class GrowthSpurt : CardModel
     public override void Start()
     {
         base.Start();
-
-        OnPlay += () =>
-        {
-            CardModel weakestUnit = Board.GetWeakestUnit(Owner);
-
-            if (weakestUnit)
-            {
-                weakestUnit.GrantPower(4);
-            }
-        };
     }
+
+    protected override void PlayEffect()
+    {
+        CardModel weakestUnit = Board.GetWeakestUnit(Owner);
+
+        if (weakestUnit)
+        {
+            weakestUnit.GrantPower(4);
+        }
+    }
+
 }

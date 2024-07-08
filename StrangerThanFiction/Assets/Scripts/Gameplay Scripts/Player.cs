@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
 
         foreach (string card in cards)
         {
-            Deck.Add(CreateCard(card, isHidden, deckGameObject));
+            Deck.Add(CardFactory.Instance.CreateCard(card, isHidden, deckGameObject.transform, this, board));
         }
 
         Deck.Shuffle();
@@ -152,14 +152,16 @@ public class Player : MonoBehaviour
     /// Method to discard a card from the player's hand.
     /// </summary>
     /// <param name="card"></param>
-    public void DiscardCard(CardModel card)
+    public async void DiscardCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
         Discard.Add(card);
         card.gameObject.transform.SetParent(discardGameObject.transform, true);
-        RectTransform cardRect = card.gameObject.GetComponent<RectTransform>();
-        cardRect.anchoredPosition = Vector2.zero;
-        cardRect.rotation = Quaternion.identity;
+
+        StartCoroutine(card.AddComponent<Disappear>().AnimateDiscard(async () =>
+        {
+            await card.Discard(this);
+        }));
     }
 
     /// <summary>
@@ -169,7 +171,11 @@ public class Player : MonoBehaviour
     public async void DestroyCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
-        await card.Destroy();
+
+        StartCoroutine(card.AddComponent<Disappear>().AnimateDestroy(async () =>
+        {
+            await card.Destroy();
+        }));
     }
 
     /// <summary>
@@ -238,6 +244,11 @@ public class Player : MonoBehaviour
         OnRoundStart?.Invoke();
     }
 
+    public void RoundEnd()
+    {
+        OnRoundEnd?.Invoke();
+    }
+
     /// <summary>
     /// Method to invoke OnUnitSummoned event attached to player.
     /// </summary>
@@ -245,44 +256,6 @@ public class Player : MonoBehaviour
     public void UnitSummoned(CardModel unit)
     {
         OnUnitSummoned?.Invoke(unit);
-    }
-
-    /// <summary>
-    /// Method to create a card.
-    /// Probably should be moved to a factory class.
-    /// </summary>
-    /// <param name="cardName"></param>
-    /// <param name="isHidden"></param>
-    /// <param name="parent"></param>
-    /// <param name="creator"></param>
-    /// <returns></returns>
-    public CardModel CreateCard(string cardName, bool isHidden, GameObject parent, string creator = "")
-    {
-        GameObject cardObj = new GameObject(cardName, typeof(RectTransform));
-        cardObj.transform.SetParent(parent.transform, false);
-
-        Type cardScriptType = Type.GetType(cardName);
-        if (cardScriptType != null)
-        {
-            cardObj.AddComponent(cardScriptType);
-        }
-
-        Instantiate(cardPrefab, new Vector3(0, 0, 0), Quaternion.identity).transform.SetParent(cardObj.transform, false);
-
-        CardModel cardScript = cardObj.GetComponent<CardModel>();
-        cardScript.IsHidden = isHidden;
-        cardScript.Owner = this;
-        cardScript.Board = board;
-
-        cardScript.OverwriteCardPrefab();
-
-        if (cardScript.Type == CardType.Unit)
-        {
-            Instantiate(unitPrefab, new Vector3(0, 0, 0), Quaternion.identity).transform.SetParent(cardObj.transform, false);
-            cardScript.OverwriteUnitPrefab();
-        }
-
-        return cardScript;
     }
 
 }
