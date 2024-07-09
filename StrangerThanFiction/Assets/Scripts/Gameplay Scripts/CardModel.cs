@@ -430,7 +430,7 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="filename"></param>
     /// <returns></returns>
-    private static Sprite LoadSprite(string filename)
+    public static Sprite LoadSprite(string filename)
     {
         if (string.IsNullOrEmpty(filename)) return null;
 

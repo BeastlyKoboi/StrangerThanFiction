@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         //LocalStorageManager storage = gameObject.GetComponent<LocalStorageManager>();
         //storage.SaveData("Starter Deck", StarterDecksJSON.text);
 
-        CardFactory.Instance.Initialize(cardPrefab, unitPrefab.gameObject, discardPrefab);
+        CardFactory.Instance.Initialize(cardPrefab, unitPrefab, discardPrefab);
 
         player1.PopulateDeck(Pinocchio, false);
         player2.PopulateDeck(Pinocchio, true);

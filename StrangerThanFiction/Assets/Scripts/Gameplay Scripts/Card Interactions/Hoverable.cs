@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler, IPointerDownHandler, IPointerExitHandler
+public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public RectTransform rectTransform;
     public Draggable draggable;
@@ -51,14 +51,6 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerUpHandler,
         isHovered = true;
         orderIndex = transform.GetSiblingIndex();
         transform.SetAsLastSibling();
-    }
-    public void OnPointerUp(PointerEventData pointerEventData)
-    {
-        
-    }
-    public void OnPointerDown(PointerEventData pointerEventData)
-    {
-
     }
     public void OnPointerExit(PointerEventData pointerEventData)
     {

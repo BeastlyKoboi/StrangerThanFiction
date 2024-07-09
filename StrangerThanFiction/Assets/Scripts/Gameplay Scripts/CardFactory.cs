@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardFactory
 {
@@ -21,6 +22,9 @@ public class CardFactory
     // Make the constructor private so it can't be instantiated outside of this class
     private CardFactory() { }
 
+    // The script that handles card previews
+    public CardPreview cardPreview;
+
     // Example properties for prefabs
     public GameObject cardPrefab;
     public GameObject unitPrefab;
@@ -32,6 +36,7 @@ public class CardFactory
         this.cardPrefab = cardPrefab;
         this.unitPrefab = unitPrefab;
         this.discardPrefab = discardPrefab;
+        this.cardPreview = GameObject.Find("CardPreview").GetComponent<CardPreview>();
     }
 
     public CardModel CreateCard(string cardName, bool isHidden, Transform parent, Player owner, BoardManager board, string creator = "")
@@ -62,6 +67,11 @@ public class CardFactory
             cardScript.OverwriteUnitPrefab();
         }
 
+        cardObj.AddComponent<Clickable>();
+        cardObj.GetComponent<Clickable>().OnClickWithoutDrag += () =>
+        {
+            cardPreview.OnClick(cardScript);
+        };
 
         return cardScript;
     }
