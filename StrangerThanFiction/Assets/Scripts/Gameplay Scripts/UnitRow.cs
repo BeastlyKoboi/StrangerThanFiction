@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class UnitRow : MonoBehaviour
@@ -24,13 +25,13 @@ public class UnitRow : MonoBehaviour
     public void RemoveUnit(CardModel unitToRemove)
     {
         // test
-        //int index = units.IndexOf(unitToRemove);
-        //if (index != -1)
-        //{
-        //    units.RemoveAt(index);
-        //    unitRects.RemoveAt(index);
-        //    UpdateUnitPositions();
-        //}
+        int index = units.IndexOf(unitToRemove);
+        if (index != -1)
+        {
+            units.RemoveAt(index);
+            unitRects.RemoveAt(index);
+            UpdateUnitPositions();
+        }
     }
 
     public void UpdateUnitPositions()
@@ -50,9 +51,12 @@ public class UnitRow : MonoBehaviour
 
     }
     
-    public void ForEach(Action<CardModel> action)
+    public async Task ForEach(Func<CardModel, Task> func)
     {
-        units.ForEach(action);
+        for (int i = 0; i < units.Count; i++)
+        {
+            await func(units[i]);
+        }
     }
 
     // ----------------------------------------------------------------------------

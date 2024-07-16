@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -89,12 +90,9 @@ public class HandManager : MonoBehaviour
         }
     }
 
-    public void RoundStart()
+    public async Task RoundStart()
     {
-        Hand.ForEach(card =>
-        {
-            card.RoundStart();
-        });
+        await Hand.ForEach(async card => await card.RoundStart() );
     }
 
     /// <summary>

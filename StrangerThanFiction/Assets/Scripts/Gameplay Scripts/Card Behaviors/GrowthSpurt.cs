@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public sealed class GrowthSpurt : CardModel
@@ -18,13 +19,13 @@ public sealed class GrowthSpurt : CardModel
         base.Start();
     }
 
-    protected override void PlayEffect()
+    protected override async Task PlayEffect()
     {
         CardModel weakestUnit = Board.GetWeakestUnit(Owner);
 
         if (weakestUnit)
         {
-            weakestUnit.GrantPower(4);
+           await weakestUnit.GrantPower(4);
         }
     }
 

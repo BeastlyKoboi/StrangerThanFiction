@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class CardPreview : MonoBehaviour
 {
-
     public Transform cardView;
     public Transform blurPanel;
     public TextMeshProUGUI cardTextCost;

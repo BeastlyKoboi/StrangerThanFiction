@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public sealed class TallTale : CardModel
@@ -14,14 +15,14 @@ public sealed class TallTale : CardModel
 
 
     // Start is called before the first frame update
-    public override void Start()
+    public override async void Start()
     {
         base.Start();
 
-        ApplyCondition(Combust.GetName(), new Combust(this, 0));
+        await ApplyCondition(Combust.GetName(), new Combust(this, 0));
     }
 
-    protected override void PlayEffect()
+    protected override Task PlayEffect()
     {
         if (Owner.Deck.Count > 0)
         {
@@ -29,5 +30,6 @@ public sealed class TallTale : CardModel
 
             topUnit.CurrentCost -= 1;
         }
+        return Task.CompletedTask;
     }
 }

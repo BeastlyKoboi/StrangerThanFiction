@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Combust : ICondition
@@ -18,20 +19,20 @@ public class Combust : ICondition
         return "Combust";
     }
 
-    public void OnAdd()
+    public Task OnAdd()
     {
-
+        return Task.CompletedTask;
     }
-    public void OnTrigger()
+    public Task OnTrigger()
     {
-        
+        return Task.CompletedTask;
     }
-    public void OnSurplus(ICondition surplus)
+    public Task OnSurplus(ICondition surplus)
     {
-        
+        return Task.CompletedTask;
     }
-    public void OnRemove()
+    public Task OnRemove()
     {
-        
+        return Task.CompletedTask;
     }
 }

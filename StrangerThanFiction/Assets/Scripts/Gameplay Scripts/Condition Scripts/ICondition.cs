@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
+
 public interface ICondition 
 {
-    void OnAdd();
-    void OnTrigger();
-    void OnSurplus (ICondition surplus);
-    void OnRemove();
+    Task OnAdd();
+    Task OnTrigger();
+    Task OnSurplus (ICondition surplus);
+    Task OnRemove();
 }

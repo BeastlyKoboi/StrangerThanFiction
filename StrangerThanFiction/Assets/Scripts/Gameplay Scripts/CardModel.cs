@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Mathematics;
@@ -152,19 +153,19 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
 
     // Card Events - common to both units and spells.
-    public event Action OnPlay;
-    public event Action OnDraw;
-    public event Action OnDiscard;
-    public event Action OnDestroy;
+    public event Func<Task> OnPlay;
+    public event Func<Task> OnDraw;
+    public event Func<Task> OnDiscard;
+    public event Func<CardModel, Task> OnDestroy;
 
     // Unit Events - only called when in play, otherwise never.
-    public event Action OnSummon;
-    public event Action OnRoundStart;
-    public event Action OnRoundEnd;
-    public event Action OnTakeDamage;
-    public event Action OnGrantPower;
-    public event Action OnGrantPlotArmor;
-    public event Action OnHeal;
+    public event Func<Task> OnSummon;
+    public event Func<Task> OnRoundStart;
+    public event Func<Task> OnRoundEnd;
+    public event Func<int, Task> OnTakeDamage;
+    public event Func<int, Task> OnGrantPower;
+    public event Func<int, Task> OnGrantPlotArmor;
+    public event Func<int, Task> OnHeal;
 
 
     private void Awake()
@@ -187,10 +188,50 @@ public abstract class CardModel : MonoBehaviour
         //{
         //    OverwriteUnitPrefab();
         //}
+        OnPlay += PlayAnim;
+        OnSummon += SummonAnim;
+        OnDiscard += DiscardAnim;
+        OnDestroy += DestroyAnim;
+
         OnPlay += PlayEffect;
         OnSummon += SummonEffect;
         OnDiscard += DiscardEffect;
         OnDestroy += DestroyEffect;
+    }
+
+
+    // ----------------------------------------------------------------------------
+    // Card Animations
+    // ----------------------------------------------------------------------------
+    protected virtual Task PlayAnim()
+    {
+        return Task.CompletedTask;
+    }
+    protected virtual async Task SummonAnim()
+    {
+        float dur = 0.5f;
+        StartCoroutine(gameObject.AddComponent<UnitAnim>().Summoned(dur));
+
+        await Task.Delay((int)(dur * 1000));
+    }
+    protected virtual async Task DiscardAnim()
+    {
+        float delay = 0.5f;
+        float dur = 0.25f;
+        StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDiscard(pulseDur: delay, discardDur: dur));
+
+        await Task.Delay((int)((delay + dur) * 1000));
+    }
+    protected virtual async Task DestroyAnim(CardModel card)
+    {
+        Debug.Log("Destroy Anim Called");
+        float delay = 0.5f;
+        float dur = 0.5f;
+        StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDestroy(delay: delay, duration: dur, () => Debug.Log("Destroy Anim Finished")));
+
+        await Task.Delay((int)((delay + dur) * 1000));
+        Debug.Log("Destroy Anim Task Delay Finished");
+
     }
 
     // ----------------------------------------------------------------------------
@@ -198,10 +239,22 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
 
     // Should be overridden by cards if they have any effects.
-    protected virtual void PlayEffect() { }
-    protected virtual void SummonEffect() { }
-    protected virtual void DiscardEffect() { }
-    protected virtual void DestroyEffect() { }
+    protected virtual Task PlayEffect()
+    {
+        return Task.CompletedTask;
+    }
+    protected virtual Task SummonEffect()
+    {
+        return Task.CompletedTask;
+    }
+    protected virtual Task DiscardEffect()
+    {
+        return Task.CompletedTask;
+    }
+    protected virtual Task DestroyEffect(CardModel card)
+    {
+        return Task.CompletedTask;
+    }
 
 
     /// <summary>
@@ -209,29 +262,42 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public virtual async Task Play(Player player)
+    public async Task Play(CardPlayState cardPlayState)
     {
         Owner.CurrentMana -= CurrentCost;
-        
-        OnPlay?.Invoke();
+
+        if (OnPlay != null)
+        {
+            foreach (Func<Task> handler in OnPlay.GetInvocationList()
+                    .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
 
         if (Type == CardType.Unit)
         {
             await Summon();
         }
-
     }
 
     /// <summary>
     /// Method to summon this card as a unit.
     /// </summary>
     /// <returns></returns>
-    public virtual async Task Summon()
+    public async Task Summon()
     {
         cardView.gameObject.SetActive(false);
         unitView.gameObject.SetActive(true);
         Board.SummonUnit(this, SelectedArea);
-        OnSummon?.Invoke();
+        if (OnSummon != null)
+        {
+            foreach (Func<Task> handler in OnSummon.GetInvocationList()
+                    .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
@@ -239,32 +305,61 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public virtual async Task Discard(Player player)
+    public async Task Discard(Player player)
     {
-        OnDiscard?.Invoke();
+        if (OnDiscard != null)
+        {
+            foreach (Func<Task> handler in OnDiscard.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
     /// Method to destroy this card. 
     /// </summary>
     /// <returns></returns>
-    public virtual async Task Destroy()
+    public async Task Destroy()
     {
-        OnDestroy?.Invoke();
-        Destroy(cardView.gameObject);
+        OnDestroy += CardFactory.Instance.RecycleCard;
+
+        if (OnDestroy != null)
+        {
+            foreach (Func<CardModel, Task> handler in OnDestroy.GetInvocationList()
+                .Cast<Func<CardModel, Task>>())
+            {
+                await handler(this);
+            }
+        }
     }
 
     /// <summary>
     /// Method to trigger OnRoundStart event.
     /// </summary>
-    public void RoundStart()
+    public async Task RoundStart()
     {
-        OnRoundStart?.Invoke();
+        if (OnRoundStart != null)
+        {
+            foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
-    public void RoundEnd()
+    public async Task RoundEnd()
     {
-        OnRoundEnd?.Invoke();
+        if (OnRoundEnd != null)
+        {
+            foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
@@ -274,10 +369,10 @@ public abstract class CardModel : MonoBehaviour
     /// <param name="damage"></param>
     /// <param name="ignorePlotArmor">Whether the damage is affected by plot armor.</param>
     /// <returns></returns>
-    public int TakeDamage(int damage, bool ignorePlotArmor = false)
+    public async Task TakeDamage(int damage, bool ignorePlotArmor = false)
     {
         // Should NOT be called if in card form.
-        if (Type != CardType.Unit) return 0;
+        if (Type != CardType.Unit) return;
 
         // Applies damage mitigation effects, and separate conditions.
         damage -= DamageResistence;
@@ -304,9 +399,17 @@ public abstract class CardModel : MonoBehaviour
         // and the amount is finally returned
         CurrentPower = Math.Max(CurrentPower - damage, 0);
 
-        OnTakeDamage?.Invoke();
+        if (OnTakeDamage != null)
+        {
+            foreach (Func<Task> handler in OnTakeDamage.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
 
-        return damage;
+        if (CurrentPower == 0)
+            await this.Destroy();
     }
 
     /// <summary>
@@ -314,14 +417,19 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="powerAmount"></param>
     /// <returns></returns>
-    public int GrantPower(int powerAmount)
+    public async Task GrantPower(int powerAmount)
     {
         MaxPower += powerAmount;
         CurrentPower += powerAmount;
 
-        OnGrantPower?.Invoke();
-
-        return powerAmount;
+        if (OnGrantPower != null)
+        {
+            foreach (Func<Task> handler in OnGrantPower.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
@@ -329,13 +437,18 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="armorAmount"></param>
     /// <returns></returns>
-    public int GrantPlotArmor(int armorAmount)
+    public async Task GrantPlotArmor(int armorAmount)
     {
         CurrentPlotArmor += armorAmount;
 
-        OnGrantPlotArmor?.Invoke();
-
-        return armorAmount;
+        if (OnGrantPlotArmor != null)
+        {
+            foreach (Func<Task> handler in OnGrantPlotArmor.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
@@ -343,23 +456,28 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="healAmount"></param>
     /// <returns></returns>
-    public int Heal(int healAmount)
+    public async Task Heal(int healAmount)
     {
         // Should NOT be called if in card form.
-        if (Type != CardType.Unit) return 0;
+        if (Type != CardType.Unit) return;
 
         // should never be negative
         int totalHealPossible = MaxPower - CurrentPower;
 
-        if (totalHealPossible == 0) return 0;
+        if (totalHealPossible == 0) return;
 
         healAmount = Math.Min(totalHealPossible, healAmount);
 
         CurrentPower += healAmount;
 
-        OnHeal?.Invoke();
-
-        return healAmount;
+        if (OnHeal != null)
+        {
+            foreach (Func<Task> handler in OnHeal.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     // ----------------------------------------------------------------------------
@@ -372,16 +490,16 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="conditionName"></param>
     /// <param name="condition"></param>
-    public void ApplyCondition(string conditionName, ICondition condition)
+    public async Task ApplyCondition(string conditionName, ICondition condition)
     {
         if (!conditions.ContainsKey(conditionName))
         {
             conditions.Add(conditionName, condition);
-            condition.OnAdd();
+            await condition.OnAdd();
         }
         else
         {
-            conditions[conditionName].OnSurplus(condition);
+            await conditions[conditionName].OnSurplus(condition);
         }
     }
 
@@ -389,11 +507,11 @@ public abstract class CardModel : MonoBehaviour
     /// Method to remove a condition if possible
     /// </summary>
     /// <param name="conditionName"></param>
-    public void RemoveCondition(string conditionName)
+    public async Task RemoveCondition(string conditionName)
     {
         if (conditions.ContainsKey(conditionName))
         {
-            conditions[conditionName].OnRemove();
+            await conditions[conditionName].OnRemove();
             conditions.Remove(conditionName);
         }
     }
@@ -402,11 +520,11 @@ public abstract class CardModel : MonoBehaviour
     /// Method to trigger a condition, if possible
     /// </summary>
     /// <param name="conditionName"></param>
-    public void TriggerCondition(string conditionName)
+    public async Task TriggerCondition(string conditionName)
     {
         if (conditions.ContainsKey(conditionName))
         {
-            conditions[conditionName].OnTrigger();
+            await conditions[conditionName].OnTrigger();
         }
     }
 

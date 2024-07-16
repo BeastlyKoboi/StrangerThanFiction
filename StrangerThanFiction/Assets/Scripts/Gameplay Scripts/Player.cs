@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -16,12 +17,12 @@ using UnityEngine.XR;
 public class Player : MonoBehaviour
 {
     public event Action OnGameStart;
-    public event Action OnRoundStart;
-    public event Action OnRoundEnd;
+    public event Func<Task> OnRoundStart;
+    public event Func<Task> OnRoundEnd;
     public event Action OnGameOver;
 
-    public event Action<CardModel> OnUnitSummoned;
-    public event Action<CardModel> OnCardPlayed;
+    public event Func<CardModel, Task> OnUnitSummoned;
+    public event Func<CardPlayState, Task> OnCardPlayed;
     public event Action OnMyTurnStart;
 
     [HeaderAttribute("Game and Enemy Info")]
@@ -126,7 +127,6 @@ public class Player : MonoBehaviour
 
         if (handManager.playedCard)
         {
-            Debug.Log("Card Played");
             await PlayCard(handManager.playedCard);
 
             uiManager.UpdateTotalPower();
@@ -152,30 +152,25 @@ public class Player : MonoBehaviour
     /// Method to discard a card from the player's hand.
     /// </summary>
     /// <param name="card"></param>
-    public async void DiscardCard(CardModel card)
+    public async Task DiscardCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
+
         Discard.Add(card);
         card.gameObject.transform.SetParent(discardGameObject.transform, true);
 
-        StartCoroutine(card.AddComponent<Disappear>().AnimateDiscard(async () =>
-        {
-            await card.Discard(this);
-        }));
+        await card.Discard(this);
     }
 
     /// <summary>
     /// Method to destroy a card.
     /// </summary>
     /// <param name="card"></param>
-    public async void DestroyCard(CardModel card)
+    public async Task DestroyCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
 
-        StartCoroutine(card.AddComponent<Disappear>().AnimateDestroy(async () =>
-        {
-            await card.Destroy();
-        }));
+        await card.Destroy();
     }
 
     /// <summary>
@@ -204,20 +199,39 @@ public class Player : MonoBehaviour
     /// <returns></returns>
     private async Task PlayCard(CardModel card)
     {
-        OnCardPlayed?.Invoke(card);
-        await card.Play(this);
+        CardPlayState cardPlayState = new CardPlayState(
+            card: card,
+            player: this,
+            enemy: enemyPlayer,
+            allyUnitTargets: null,
+            enemyUnitTargets: null,
+            allyCardTargets: null,
+            enemyCardTargets: null
+        );
 
         if (card.Type == CardType.Unit)
             handManager.RemoveCardFromHand(card);
-        else
+
+        if (OnCardPlayed != null)
         {
-            if (card.HasCondition(Combust.GetName())) 
-                DestroyCard(card);
-            else 
-                DiscardCard(card);
+            foreach (Func<CardPlayState, Task> handler in OnCardPlayed.GetInvocationList()
+                .Cast<Func<CardPlayState, Task>>())
+            {
+                await handler(cardPlayState);
+            }
         }
 
+        await card.Play(cardPlayState);
+
         handManager.playedCard = null;
+
+        if (card.Type == CardType.Unit) return;
+
+        if (card.HasCondition(Combust.GetName()))
+            await DestroyCard(card);
+        else
+            await DiscardCard(card);
+
     }
 
     /// <summary>
@@ -239,14 +253,14 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Method to invoke OnRoundStart event attached to player.
     /// </summary>
-    public void RoundStart()
+    public async Task RoundStart()
     {
-        OnRoundStart?.Invoke();
+        await OnRoundStart?.Invoke();
     }
 
-    public void RoundEnd()
+    public async Task RoundEnd()
     {
-        OnRoundEnd?.Invoke();
+        await OnRoundEnd?.Invoke();
     }
 
     /// <summary>

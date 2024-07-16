@@ -25,8 +25,6 @@ public class EnemyAI_V1 : MonoBehaviour
     /// </summary>
     public void PlayTurn()
     {
-        Debug.Log("Enemy Turn PlayTurn is called.");
-
         CardModel cardToPlay = myPlayer.handManager.Hand[0];
 
         for (int cardIndex = 0; cardIndex < myPlayer.handManager.Hand.Count; cardIndex++)

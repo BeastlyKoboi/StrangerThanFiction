@@ -2,9 +2,12 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.Rendering.DebugUI.Table;
+using static UnityEngine.UI.CanvasScaler;
 
 /// <summary>
 /// The BoardManager will be responsible for managing the game board, 
@@ -32,6 +35,18 @@ public class BoardManager : MonoBehaviour
         row.AddUnit(unit);
 
         unit.Owner.UnitSummoned(unit);
+
+        unit.OnDestroy += DestroyUnit;
+    }
+
+    private Task DestroyUnit(CardModel unit)
+    {
+        if (unit.SelectedArea != null)
+            unit.SelectedArea.RemoveUnit(unit);
+
+        unit.OnDestroy -= DestroyUnit;
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -62,24 +77,26 @@ public class BoardManager : MonoBehaviour
 
     /// <summary>
     /// Performs the round start events on all units on the board.
+    /// This will start them, but will not wait for them to finish
     /// </summary>
-    public void RoundStart()
+    public async Task RoundStart()
     {
-        player1FrontRow.ForEach(unit => unit.RoundStart());
-        player1BackRow.ForEach(unit => unit.RoundStart());
-        player2FrontRow.ForEach(unit => unit.RoundStart());
-        player2BackRow.ForEach(unit => unit.RoundStart());
+        await player1FrontRow.ForEach(async unit => await unit.RoundStart());
+        await player1BackRow.ForEach(async unit => await unit.RoundStart());
+        await player2FrontRow.ForEach(async unit => await unit.RoundStart());
+        await player2BackRow.ForEach(async unit => await unit.RoundStart());
     }
 
     /// <summary>
     /// Performs the round end events on all units on the board.
+    /// This will start them, but will not wait for them to finish
     /// </summary>
-    public void RoundEnd()
+    public async Task RoundEnd()
     {
-        player1FrontRow.ForEach(unit => unit.RoundEnd());
-        player1BackRow.ForEach(unit => unit.RoundEnd());
-        player2FrontRow.ForEach(unit => unit.RoundEnd());
-        player2BackRow.ForEach(unit => unit.RoundEnd());
+        await player1FrontRow.ForEach(async unit => await unit.RoundEnd());
+        await player1BackRow.ForEach(async unit => await unit.RoundEnd());
+        await player2FrontRow.ForEach(async unit => await unit.RoundEnd());
+        await player2BackRow.ForEach(async unit => await unit.RoundEnd());
     }
 
     /// <summary>
@@ -130,6 +147,12 @@ public class BoardManager : MonoBehaviour
             return frontWeakest;
 
         return backWeakest;
+    }
+
+    public CardModel GetRandomUnit(Player player)
+    {
+        CardModel[] units = GetUnits(player);
+        return units.Length > 0? units[Random.Range(0, units.Length)]: null;
     }
 
     /// <summary>

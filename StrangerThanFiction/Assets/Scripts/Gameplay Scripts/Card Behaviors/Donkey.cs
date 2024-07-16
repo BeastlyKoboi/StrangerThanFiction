@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public sealed class Donkey : CardModel
@@ -22,21 +23,23 @@ public sealed class Donkey : CardModel
         base.Start();
     }
 
-    protected override void SummonEffect()
+    protected override Task SummonEffect()
     {
         Owner.OnUnitSummoned += OnCopySummonGrantMePower;
+        return Task.CompletedTask;
     }
 
-    protected override void DestroyEffect()
+    protected override Task DestroyEffect(CardModel card)
     {
         Owner.OnUnitSummoned -= OnCopySummonGrantMePower;
+        return Task.CompletedTask;
     }
 
-    private void OnCopySummonGrantMePower(CardModel unit)
+    private async Task OnCopySummonGrantMePower(CardModel unit)
     {
         if (unit.Title == Title && unit != this)
         {
-            GrantPower(1);
+            await GrantPower(1);
         }
     }
 }

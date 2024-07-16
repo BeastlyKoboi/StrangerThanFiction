@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -25,19 +26,22 @@ public sealed class Pinocchio : CardModel
         base.Start();
     }
 
-    protected override void SummonEffect()
+    protected override Task SummonEffect()
     {
         OnRoundStart += CreateTallTaleInHand;
+        return Task.CompletedTask;
     }
 
-    protected override void DestroyEffect()
+    protected override Task DestroyEffect(CardModel card)
     {
         OnRoundStart -= CreateTallTaleInHand;
+        return Task.CompletedTask;
     }
 
-    private void CreateTallTaleInHand()
+    private Task CreateTallTaleInHand()
     {
         CardModel card = CardFactory.Instance.CreateCard("TallTale", IsHidden, gameObject.transform, Owner, Board);
         Owner.handManager.AddCardToHandFromDeck(card);
+        return Task.CompletedTask;
     }
 }

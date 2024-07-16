@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 public class Poisoned : ICondition
 {
     private readonly CardModel card;
@@ -14,24 +16,27 @@ public class Poisoned : ICondition
         return "Poisoned";
     }
 
-    public void OnAdd()
+    public Task OnAdd()
     {
         card.OnRoundEnd += OnTrigger;
+        return Task.CompletedTask;
     }
-    public void OnTrigger()
+    public async Task OnTrigger()
     {
-        card.TakeDamage(amount, true);
+        await card.TakeDamage(amount, true);
         amount -= 1;
     }
-    public void OnSurplus(ICondition surplus)
+    public Task OnSurplus(ICondition surplus)
     {
         if (surplus is Poisoned poisonSurplus)
         {
             amount += poisonSurplus.amount;
         }
+        return Task.CompletedTask;
     }
-    public void OnRemove()
+    public Task OnRemove()
     {
         card.OnRoundEnd -= OnTrigger;
+        return Task.CompletedTask;
     }
 }

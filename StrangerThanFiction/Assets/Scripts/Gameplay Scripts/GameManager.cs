@@ -17,8 +17,8 @@ public class GameManager : MonoBehaviour
 {
     // Basic gameplay events that objects can add to
     public static event Action OnGameStart;
-    public static event Action OnRoundStart;
-    public static event Action OnRoundEnd;
+    public static event Func<Task> OnRoundStart;
+    public static event Func<Task> OnRoundEnd;
     public static event Action OnGameOver;
 
     [HeaderAttribute("The Players")]
@@ -59,7 +59,18 @@ public class GameManager : MonoBehaviour
         "Donkey",
         "TheBlueFairy",
         "Pinocchio",
-        "GrowthSpurt"
+        "Pinocchio",
+        "Pinocchio",
+        "Pinocchio",
+        "Pinocchio",
+        "Pinocchio",
+        "GrowthSpurt",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
     };
     private string[] TheBigBadWolf;
 
@@ -136,7 +147,7 @@ public class GameManager : MonoBehaviour
     {
         uiManager.RoundStart(roundNumber);
 
-        OnRoundStart?.Invoke();
+        await OnRoundStart?.Invoke();
 
         // Consider reseting mana before round start. 
         player1.ResetMana();
@@ -165,7 +176,7 @@ public class GameManager : MonoBehaviour
 
         await DiscardHands();
 
-        OnRoundEnd?.Invoke();
+        await OnRoundEnd?.Invoke();
     }
 
     /// <summary>
@@ -189,8 +200,8 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     private async Task DiscardHands()
     {
-        DiscardPlayerHand(player1);
-        DiscardPlayerHand(player2);
+        await DiscardPlayerHand(player1);
+        await DiscardPlayerHand(player2);
         await Task.Delay(2000);
     }
 
@@ -198,11 +209,11 @@ public class GameManager : MonoBehaviour
     /// Method to discard a player's hand.
     /// </summary>
     /// <param name="player"></param>
-    private void DiscardPlayerHand(Player player)
+    private async Task DiscardPlayerHand(Player player)
     {
         foreach (CardModel card in player.handManager.Hand.ToArray())
         {
-            player.DiscardCard(card);
+            await player.DiscardCard(card);
         }
     }
 

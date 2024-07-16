@@ -104,9 +104,9 @@ public class UIManager : MonoBehaviour
     public void UpdateDeck(Player player)
     {
         if (player == player1)
-            deckLabelPlayer1.text = $"Deck {player1.Deck.Count}";
+            deckLabelPlayer1.text = $"{player1.Deck.Count}";
         else if (player == player2)
-            deckLabelPlayer2.text = $"Deck {player2.Deck.Count}";
+            deckLabelPlayer2.text = $"{player2.Deck.Count}";
     }
 
     /// <summary>
@@ -116,9 +116,9 @@ public class UIManager : MonoBehaviour
     public void UpdateDiscard(Player player)
     {
         if (player == player1)
-            discardLabelPlayer1.text = $"Disc {player1.Discard.Count}";
+            discardLabelPlayer1.text = $"{player1.Discard.Count}";
         else if (player == player2)
-            discardLabelPlayer2.text = $"Disc {player2.Discard.Count}";
+            discardLabelPlayer2.text = $"{player2.Discard.Count}";
     }
 
     /// <summary>

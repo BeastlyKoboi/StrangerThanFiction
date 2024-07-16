@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class TheBlueFairy : CardModel
@@ -21,21 +22,24 @@ public class TheBlueFairy : CardModel
         base.Start();
     }
 
-    protected override void SummonEffect()
+    protected override Task SummonEffect()
     {
         Owner.OnCardPlayed += IfCardPlayedIsCostReducedDrawCard;
+        return Task.CompletedTask;
     }
 
-    protected override void DestroyEffect()
+    protected override Task DestroyEffect(CardModel card)
     {
         Owner.OnCardPlayed -= IfCardPlayedIsCostReducedDrawCard;
+        return Task.CompletedTask;
     }
 
-    private void IfCardPlayedIsCostReducedDrawCard(CardModel card)
+    private Task IfCardPlayedIsCostReducedDrawCard(CardPlayState cardPlayState)
     {
-        if (card.BaseCost > card.CurrentCost)
+        if (cardPlayState.card.BaseCost > cardPlayState.card.CurrentCost)
         {
             Owner.DrawCard();
         }
+        return Task.CompletedTask;
     }
 }
