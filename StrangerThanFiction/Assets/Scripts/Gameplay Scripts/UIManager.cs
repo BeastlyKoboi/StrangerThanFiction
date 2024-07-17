@@ -37,6 +37,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI frontPowerPlayer2;
     [SerializeField] private TextMeshProUGUI backPowerPlayer2;
 
+    [HeaderAttribute("Paused Menu")]
+    [SerializeField] private GameObject PausedMenu;
+
     [HeaderAttribute("Game Over UI")]
     [SerializeField] private TextMeshProUGUI playerTotalPowerCount;
     [SerializeField] private TextMeshProUGUI enemyTotalPowerCount;
@@ -153,4 +156,8 @@ public class UIManager : MonoBehaviour
         backPowerPlayer2.text = backPower.ToString();
     }
 
+    public void TogglePausedMenu(bool isActive)
+    {
+        PausedMenu.SetActive(isActive);
+    }
 }

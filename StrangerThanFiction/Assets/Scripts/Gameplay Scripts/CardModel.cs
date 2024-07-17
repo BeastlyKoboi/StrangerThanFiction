@@ -224,13 +224,11 @@ public abstract class CardModel : MonoBehaviour
     }
     protected virtual async Task DestroyAnim(CardModel card)
     {
-        Debug.Log("Destroy Anim Called");
         float delay = 0.5f;
         float dur = 0.5f;
-        StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDestroy(delay: delay, duration: dur, () => Debug.Log("Destroy Anim Finished")));
+        StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDestroy(delay: delay, duration: dur));
 
         await Task.Delay((int)((delay + dur) * 1000));
-        Debug.Log("Destroy Anim Task Delay Finished");
 
     }
 
@@ -293,7 +291,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnSummon != null)
         {
             foreach (Func<Task> handler in OnSummon.GetInvocationList()
-                    .Cast<Func<Task>>())
+                .Cast<Func<Task>>())
             {
                 await handler();
             }

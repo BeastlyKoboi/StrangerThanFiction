@@ -16,15 +16,28 @@ public class MagicalWoodcarving : CardModel
     public override int BasePlotArmor => 0;
 
     public override void Start() => base.Start();
+    
+    public bool isSubscribedToRoundEnd = false;
+
     protected override Task SummonEffect()
     {
-        OnRoundEnd += RoundEndEffect;
+        Debug.Log($"MWC Summon Effect Added By: {Owner.gameObject.name}");
+        if (!isSubscribedToRoundEnd)
+        {
+            OnRoundEnd += RoundEndEffect;
+            isSubscribedToRoundEnd = true;
+        }
         return Task.CompletedTask;
     }
 
     protected override Task DestroyEffect(CardModel card)
     {
-        OnRoundEnd -= RoundEndEffect;
+        Debug.Log($"MWC Summon Effect Removed By: {Owner.gameObject.name}");
+        if (!isSubscribedToRoundEnd)
+        {
+            OnRoundEnd -= RoundEndEffect;
+            isSubscribedToRoundEnd = false;
+        }
         return Task.CompletedTask;
     }
 
@@ -34,7 +47,15 @@ public class MagicalWoodcarving : CardModel
         CardModel randomEnemy = Board.GetRandomUnit(Owner.enemyPlayer);
         if (randomEnemy)
         {
+            Debug.Log($"Targeting: {randomEnemy.gameObject.name}");
+            StartCoroutine(GetComponent<UnitAnim>().Strike(1.0f));
             await randomEnemy.TakeDamage(CurrentPower);
         }
+        else
+        {
+            Debug.Log($"Targeting: Noone.");
+        }
+
+        await Destroy();
     }
 }

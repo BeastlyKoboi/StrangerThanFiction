@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 /// <summary>
@@ -24,6 +25,9 @@ public class GameManager : MonoBehaviour
     [HeaderAttribute("The Players")]
     public Player player1; // The human player
     public Player player2; // The AI eventually 
+
+    [HeaderAttribute("Input Actions")]
+    [SerializeField]private InputActionReference pause;
 
     [HeaderAttribute("Managers")]
     public UIManager uiManager;
@@ -48,23 +52,16 @@ public class GameManager : MonoBehaviour
         "GrowthSpurt",
         "Donkey",
         "GrowthSpurt",
-        "TheBlueFairy",
-        "GrowthSpurt",
-        "Donkey",
-        "GrowthSpurt",
-        "TheBlueFairy",
-        "GrowthSpurt",
-        "Donkey",
-        "GrowthSpurt",
         "Donkey",
         "TheBlueFairy",
         "Pinocchio",
         "Pinocchio",
         "Pinocchio",
-        "Pinocchio",
-        "Pinocchio",
-        "Pinocchio",
         "GrowthSpurt",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
+        "MagicalWoodcarving",
         "MagicalWoodcarving",
         "MagicalWoodcarving",
         "MagicalWoodcarving",
@@ -83,6 +80,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Start()
     {
+        pause.action.performed += ctx => TogglePause();
+
         // initialize all needed stuff for beginning of game 
 
         JsonUtility.FromJsonOverwrite(StarterDecksJSON.text, this);
@@ -224,6 +223,20 @@ public class GameManager : MonoBehaviour
     {
         uiManager.GameOver(); // Maybe add this to event
         OnGameOver?.Invoke();
+    }
+
+    private void TogglePause()
+    {
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 0;
+            uiManager.TogglePausedMenu(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            uiManager.TogglePausedMenu(false);
+        }
     }
 
     /// <summary>

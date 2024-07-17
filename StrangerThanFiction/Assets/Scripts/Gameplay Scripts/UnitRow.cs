@@ -53,9 +53,11 @@ public class UnitRow : MonoBehaviour
     
     public async Task ForEach(Func<CardModel, Task> func)
     {
-        for (int i = 0; i < units.Count; i++)
+        // Units are removing themselves during the loop, so we need to copy the list
+        CardModel[] unitsSnapshot = units.ToArray();
+        for (int i = 0; i < unitsSnapshot.Length; i++)
         {
-            await func(units[i]);
+            await func(unitsSnapshot[i]);
         }
     }
 

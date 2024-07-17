@@ -26,4 +26,28 @@ public class UnitAnim : MonoBehaviour
 
         onComplete?.Invoke();
     }
+
+    public IEnumerator Strike(float dur = 0.5f, Action onComplete = null)
+    {
+        RectTransform rectTransform = GetComponent<RectTransform>();
+
+        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
+        {
+            rectTransform.localRotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0,0,45), t);
+        });
+        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
+        {
+            rectTransform.localRotation = Quaternion.Lerp(Quaternion.Euler(0, 0, 45), Quaternion.identity, t);
+        });
+        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
+        {
+            rectTransform.localRotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0, 0, -45), t);
+        });
+        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
+        {
+            rectTransform.localRotation = Quaternion.Lerp(Quaternion.Euler(0, 0, -45), Quaternion.identity, t);
+        });
+
+        onComplete?.Invoke();
+    }
 }
