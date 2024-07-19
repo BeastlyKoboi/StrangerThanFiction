@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
+using static UnityEngine.UI.CanvasScaler;
 
 /// <summary>
 /// My thinking is that all player input will be filtered in from here, human or AI. 
@@ -21,7 +22,9 @@ public class Player : MonoBehaviour
     public event Func<Task> OnRoundEnd;
     public event Action OnGameOver;
 
+    public event Func<CardModel, Task> OnCardDrawn;
     public event Func<CardModel, Task> OnUnitSummoned;
+    public event Func<CardModel, Task> OnUnitDestroyed;
     public event Func<CardPlayState, Task> OnCardPlayed;
     public event Action OnMyTurnStart;
 
@@ -53,6 +56,7 @@ public class Player : MonoBehaviour
     }
 
     [HeaderAttribute("Game State Info")]
+    public bool hasCardsHidden;
     public int totalDepth = 0;
     public bool hasEndedTurn = false;
     public bool hasEndedRound = false;
@@ -75,7 +79,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         OnRoundStart += handManager.RoundStart;
-
+        OnRoundEnd += handManager.RoundEnd;
     }
 
     /// <summary>
@@ -85,6 +89,8 @@ public class Player : MonoBehaviour
     /// <param name="isHidden"></param>
     public void PopulateDeck(string[] cards, bool isHidden)
     {
+        hasCardsHidden = isHidden;
+
         Deck = new CardPile();
         //Deck.OnChange += UpdateDeck;
         Deck.OnChange += () =>
@@ -104,6 +110,22 @@ public class Player : MonoBehaviour
         {
             uiManager.UpdateDiscard(this);
         };
+    }
+
+    public CardModel CreateCardInDeck(string cardName)
+    {
+        CardModel card = CardFactory.Instance.CreateCard(cardName, hasCardsHidden, deckGameObject.transform, this, board);
+        Deck.Add(card);
+        Deck.Shuffle();
+        return card;
+    }
+
+    public CardModel CreateCardinDiscard(string cardName)
+    {
+        CardModel card = CardFactory.Instance.CreateCard(cardName, hasCardsHidden, deckGameObject.transform, this, board);
+        Discard.Add(card);
+        Discard.Shuffle();
+        return card;
     }
 
     /// <summary>
@@ -138,13 +160,23 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Method to draw a card from the player's deck.
     /// </summary>
-    public void DrawCard()
+    public async Task DrawCard()
     {
         if (Deck.Count == 0) ShuffleDiscardIntoDeck();
         if (Deck.Count == 0) return;
 
         CardModel drawnCard = Deck[Deck.Count - 1];
         Deck.RemoveAt(Deck.Count - 1);
+
+        if (OnCardDrawn != null)
+        {
+            foreach (Func<CardModel, Task> handler in OnCardDrawn.GetInvocationList()
+                .Cast<Func<CardModel, Task>>())
+            {
+                await handler(drawnCard);
+            }
+        }
+
         handManager.AddCardToHandFromDeck(drawnCard);
     }
 
@@ -255,21 +287,54 @@ public class Player : MonoBehaviour
     /// </summary>
     public async Task RoundStart()
     {
-        await OnRoundStart?.Invoke();
+        if (OnRoundStart != null)
+        {
+            foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     public async Task RoundEnd()
     {
-        await OnRoundEnd?.Invoke();
+        if (OnRoundEnd != null)
+        {
+            foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
     /// Method to invoke OnUnitSummoned event attached to player.
     /// </summary>
     /// <param name="unit"></param>
-    public void UnitSummoned(CardModel unit)
+    public async Task UnitSummoned(CardModel unit)
     {
-        OnUnitSummoned?.Invoke(unit);
+        if (OnUnitSummoned != null)
+        {
+            foreach (Func<CardModel, Task> handler in OnUnitSummoned.GetInvocationList()
+                .Cast<Func<CardModel, Task>>())
+            {
+                await handler(unit);
+            }
+        }
+    }
+
+    public async Task UnitDestroyed(CardModel unit)
+    {
+        if (OnUnitDestroyed != null)
+        {
+            foreach (Func<CardModel, Task> handler in OnUnitDestroyed.GetInvocationList()
+                .Cast<Func<CardModel, Task>>())
+            {
+                await handler(unit);
+            }
+        }
     }
 
 }

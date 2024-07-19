@@ -95,6 +95,11 @@ public class HandManager : MonoBehaviour
         await Hand.ForEach(async card => await card.RoundStart() );
     }
 
+    public async Task RoundEnd()
+    {
+        await Hand.ForEach(async card => await card.RoundStart());
+    }
+
     /// <summary>
     /// This will eventually be called every time an action is 
     /// taken that can change whether a card is playable. It should 
@@ -111,6 +116,36 @@ public class HandManager : MonoBehaviour
             card.Playable = isPlayable;
             if (isPlayable) NumPlayableCards++;
         });
+    }
+
+    public CardModel GetHighestCostCard()
+    {
+        if (Hand.Count == 0) return null;
+
+        CardModel highestCostCard = Hand[0];
+        for (int i = 0; i < Hand.Count; i++)
+        {
+            if (highestCostCard.CurrentCost < Hand[i].CurrentCost)
+            {
+                highestCostCard = Hand[i];
+            }
+        }
+        return highestCostCard;
+    }
+
+    public CardModel GetLowestCostCard()
+    {
+        if (Hand.Count == 0) return null;
+
+        CardModel lowestCostCard = Hand[0];
+        for (int i = 0; i < Hand.Count; i++)
+        {
+            if (lowestCostCard.CurrentCost > Hand[i].CurrentCost)
+            {
+                lowestCostCard = Hand[i];
+            }
+        }
+        return lowestCostCard;
     }
 
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -44,32 +45,8 @@ public class GameManager : MonoBehaviour
 
     [HeaderAttribute("Text Assets")]
     [SerializeField] private TextAsset StarterDecksJSON;
-    private string[] Pinocchio = new string[]
-    {
-        "Donkey",
-        "GrowthSpurt",
-        "Donkey",
-        "GrowthSpurt",
-        "Donkey",
-        "GrowthSpurt",
-        "Donkey",
-        "TheBlueFairy",
-        "Pinocchio",
-        "Pinocchio",
-        "Pinocchio",
-        "GrowthSpurt",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-        "MagicalWoodcarving",
-    };
-    private string[] TheBigBadWolf;
+    [SerializeField] private List<String> player1Deck;
+    [SerializeField] private List<String> player2Deck;
 
     // Something for battlefield conditions
     //  - 
@@ -92,8 +69,8 @@ public class GameManager : MonoBehaviour
 
         CardFactory.Instance.Initialize(cardPrefab, unitPrefab, discardPrefab);
 
-        player1.PopulateDeck(Pinocchio, false);
-        player2.PopulateDeck(Pinocchio, true);
+        player1.PopulateDeck(player1Deck.ToArray(), false);
+        player2.PopulateDeck(player2Deck.ToArray(), true);
 
         OnRoundStart += player1.RoundStart;
         OnRoundStart += player2.RoundStart;
@@ -146,7 +123,14 @@ public class GameManager : MonoBehaviour
     {
         uiManager.RoundStart(roundNumber);
 
-        await OnRoundStart?.Invoke();
+        if (OnRoundStart != null)
+        {
+            foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
 
         // Consider reseting mana before round start. 
         player1.ResetMana();
@@ -157,12 +141,12 @@ public class GameManager : MonoBehaviour
         // Draw Cards
         do
         {
-            await Task.Delay(1000);
+            await Task.Delay(100);
 
             if (player1.CanDoSomething())
                 await player1.PlayerTurn();
 
-            await Task.Delay(1000);
+            await Task.Delay(100);
 
             if (player2.CanDoSomething())
                 await player2.PlayerTurn();
@@ -175,7 +159,14 @@ public class GameManager : MonoBehaviour
 
         await DiscardHands();
 
-        await OnRoundEnd?.Invoke();
+        if (OnRoundEnd != null)
+        {
+            foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
@@ -187,8 +178,8 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < numCards; i++)
         {
-            player1.DrawCard();
-            player2.DrawCard();
+            await player1.DrawCard();
+            await player2.DrawCard();
             await Task.Delay(500);
         }
     }

@@ -34,12 +34,11 @@ public class TheBlueFairy : CardModel
         return Task.CompletedTask;
     }
 
-    private Task IfCardPlayedIsCostReducedDrawCard(CardPlayState cardPlayState)
+    private async Task IfCardPlayedIsCostReducedDrawCard(CardPlayState cardPlayState)
     {
         if (cardPlayState.card.BaseCost > cardPlayState.card.CurrentCost)
         {
-            Owner.DrawCard();
+            await Owner.DrawCard();
         }
-        return Task.CompletedTask;
     }
 }

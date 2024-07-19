@@ -53,16 +53,13 @@ public abstract class CardModel : MonoBehaviour
     // Stats that reflect gameplay and can be changed.
     //  - Max properties will automatically increase when current goes above it.
     // ----------------------------------------------------------------------------
-    public virtual int MaxCost { get; set; }
     public virtual int MaxPower { get; set; }
-    public virtual int MaxPlotArmor { get; set; }
-
 
     private int _currentCost;
     public virtual int CurrentCost
     {
         get { return _currentCost; }
-        set
+        private set
         {
             _currentCost = value;
             UpdateCardStatText();
@@ -75,7 +72,7 @@ public abstract class CardModel : MonoBehaviour
     public virtual int CurrentPower
     {
         get { return _currentPower; }
-        set
+        private set
         {
             _currentPower = value;
             UpdateCardStatText();
@@ -88,7 +85,7 @@ public abstract class CardModel : MonoBehaviour
     public virtual int CurrentPlotArmor
     {
         get { return _currentPlotArmor; }
-        set
+        private set
         {
             _currentPlotArmor = value;
             UpdateCardStatText();
@@ -163,6 +160,7 @@ public abstract class CardModel : MonoBehaviour
     public event Func<Task> OnRoundStart;
     public event Func<Task> OnRoundEnd;
     public event Func<int, Task> OnTakeDamage;
+    public event Func<int, Task> OnGrantCostModification;
     public event Func<int, Task> OnGrantPower;
     public event Func<int, Task> OnGrantPlotArmor;
     public event Func<int, Task> OnHeal;
@@ -174,9 +172,7 @@ public abstract class CardModel : MonoBehaviour
         CurrentPower = BasePower;
         CurrentPlotArmor = BasePlotArmor;
 
-        MaxCost = CurrentCost;
         MaxPower = CurrentPower;
-        MaxPlotArmor = CurrentPlotArmor;
     }
 
     // Start is called before the first frame update
@@ -287,7 +283,7 @@ public abstract class CardModel : MonoBehaviour
     {
         cardView.gameObject.SetActive(false);
         unitView.gameObject.SetActive(true);
-        Board.SummonUnit(this, SelectedArea);
+        await Board.SummonUnit(this, SelectedArea);
         if (OnSummon != null)
         {
             foreach (Func<Task> handler in OnSummon.GetInvocationList()
@@ -408,6 +404,25 @@ public abstract class CardModel : MonoBehaviour
 
         if (CurrentPower == 0)
             await this.Destroy();
+    }
+
+    /// <summary>
+    /// Method to increase or decrease the cost of a card. 
+    /// </summary>
+    /// <param name="costMod"></param>
+    /// <returns></returns>
+    public async Task GrantCostModification(int costMod)
+    {
+        CurrentCost += costMod;
+
+        if (OnGrantCostModification != null)
+        {
+            foreach (Func<Task> handler in OnGrantCostModification.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     /// <summary>
@@ -571,6 +586,8 @@ public abstract class CardModel : MonoBehaviour
     public void OverwriteCardPrefab()
     {
         cardView = transform.Find("CardPrefab(Clone)");
+        cardView.gameObject.SetActive(true);
+
         if (cardView == null)
             return;
 
@@ -606,9 +623,7 @@ public abstract class CardModel : MonoBehaviour
 
         cardView.Find("Name").GetComponent<TextMeshProUGUI>().text = Title;
         cardView.Find("Description").GetComponent<TextMeshProUGUI>().text = Description;
-
-        if (IsHidden)
-            cardView.Find("Cardback").gameObject.SetActive(true);
+        cardView.Find("Cardback").gameObject.SetActive(IsHidden);
     }
 
     /// <summary>

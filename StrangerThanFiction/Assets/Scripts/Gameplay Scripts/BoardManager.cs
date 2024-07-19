@@ -28,25 +28,25 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="row"></param>
-    public void SummonUnit(CardModel unit, UnitRow row)
+    public async Task SummonUnit(CardModel unit, UnitRow row)
     {
         unit.IsHidden = false;
 
         row.AddUnit(unit);
 
-        unit.Owner.UnitSummoned(unit);
+        await unit.Owner.UnitSummoned(unit);
 
         unit.OnDestroy += DestroyUnit;
     }
 
-    private Task DestroyUnit(CardModel unit)
+    private async Task DestroyUnit(CardModel unit)
     {
         if (unit.SelectedArea != null)
             unit.SelectedArea.RemoveUnit(unit);
 
-        unit.OnDestroy -= DestroyUnit;
+        await unit.Owner.UnitDestroyed(unit);
 
-        return Task.CompletedTask;
+        unit.OnDestroy -= DestroyUnit;
     }
 
     /// <summary>

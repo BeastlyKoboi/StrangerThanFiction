@@ -22,14 +22,13 @@ public sealed class TallTale : CardModel
         await ApplyCondition(Combust.GetName(), new Combust(this, 0));
     }
 
-    protected override Task PlayEffect()
+    protected override async Task PlayEffect()
     {
         if (Owner.Deck.Count > 0)
         {
             CardModel topUnit = Owner.Deck[^1];
 
-            topUnit.CurrentCost -= 1;
+            await topUnit.GrantCostModification(-1);
         }
-        return Task.CompletedTask;
     }
 }

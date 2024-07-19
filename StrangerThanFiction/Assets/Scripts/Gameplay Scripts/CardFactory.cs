@@ -64,13 +64,14 @@ public class CardFactory
         cardScript.Owner = owner;
         cardScript.Board = board;
 
+        
         GameObject queuedCard = GetCardFromPool(cardScript.Type);
 
         if (queuedCard)
         {
-            for (int i = 0; i < queuedCard.transform.childCount; i++)
+            while (queuedCard.transform.childCount != 0)
             {
-                queuedCard.transform.GetChild(i).SetParent(cardObj.transform, false);
+                queuedCard.transform.GetChild(0).SetParent(cardObj.transform, false);
             }
 
             GameObject.Destroy(queuedCard);
@@ -151,10 +152,8 @@ public class CardFactory
         return null;
     }
 
-    public async Task RecycleCard(CardModel card)
+    public Task RecycleCard(CardModel card)
     {
-        await Task.Delay(1000);
-
         GameObject cardObj = card.gameObject;
         CardType cardType = card.Type;
 
@@ -166,6 +165,7 @@ public class CardFactory
         else
             spellCardPool.Enqueue(cardObj);
 
+        // Check how this affects the card's functionality
         //Component[] comps = cardObj.GetComponents(typeof(Component));
         //foreach (Component comp in comps)
         //{
@@ -173,5 +173,6 @@ public class CardFactory
         //        GameObject.Destroy(comp);
         //}
 
+        return Task.CompletedTask;
     }
 }

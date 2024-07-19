@@ -1966,6 +1966,34 @@ MonoBehaviour:
   unitPrefab: {fileID: 1809478321450799374, guid: fd56e59cc9f8a344daa2832031ed56e4, type: 3}
   discardPrefab: {fileID: 7178500215393901264, guid: fbb12b96ffa74774f80e9a25d1fd3be0, type: 3}
   StarterDecksJSON: {fileID: 4900000, guid: b0611db885be20443984961a8eecf5e8, type: 3}
+  player1Deck:
+  - AnimatedArtisan
+  - AnimatedArtisan
+  - Candlewick
+  - Candlewick
+  - TheLateLumberjane
+  - TheTalkingCricket
+  - Pinocchio
+  - Pinocchio
+  - TheLateLumberjane
+  - AnimatedArtisan
+  - TheTalkingCricket
+  - Donkey
+  - Donkey
+  player2Deck:
+  - AnimatedArtisan
+  - AnimatedArtisan
+  - Candlewick
+  - Candlewick
+  - TheLateLumberjane
+  - TheTalkingCricket
+  - Pinocchio
+  - Pinocchio
+  - TheLateLumberjane
+  - AnimatedArtisan
+  - TheTalkingCricket
+  - Donkey
+  - Donkey
 --- !u!4 &403953952
 Transform:
   m_ObjectHideFlags: 0
@@ -5702,6 +5730,7 @@ MonoBehaviour:
   uiManager: {fileID: 361155765}
   board: {fileID: 815251594}
   enemyPlayer: {fileID: 2079866878}
+  hasCardsHidden: 0
   totalDepth: 0
   hasEndedTurn: 0
   hasEndedRound: 0
@@ -11336,7 +11365,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1395, y: 649}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2011366784
@@ -11910,6 +11939,7 @@ MonoBehaviour:
   uiManager: {fileID: 361155765}
   board: {fileID: 815251594}
   enemyPlayer: {fileID: 1021245015}
+  hasCardsHidden: 0
   totalDepth: 0
   hasEndedTurn: 0
   hasEndedRound: 0
