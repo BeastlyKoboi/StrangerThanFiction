@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR;
@@ -82,25 +83,23 @@ public class Player : MonoBehaviour
         OnRoundEnd += handManager.RoundEnd;
     }
 
-    /// <summary>
-    /// Method to initialize the player's deck.
-    /// </summary>
-    /// <param name="cards"></param>
-    /// <param name="isHidden"></param>
-    public void PopulateDeck(string[] cards, bool isHidden)
+    public void PopulateDeck(DeckInventory deckInventory, bool isHidden)
     {
         hasCardsHidden = isHidden;
 
         Deck = new CardPile();
-        //Deck.OnChange += UpdateDeck;
+
         Deck.OnChange += () =>
         {
             uiManager.UpdateDeck(this);
         };
 
-        foreach (string card in cards)
+        foreach (DeckEntry entry in deckInventory.deckEntries)
         {
-            Deck.Add(CardFactory.Instance.CreateCard(card, isHidden, deckGameObject.transform, this, board));
+            for (int i = 0; i < entry.numCopies; i++)
+            {
+                Deck.Add(CardFactory.Instance.CreateCard(entry.cardName, isHidden, deckGameObject.transform, this, board));
+            }
         }
 
         Deck.Shuffle();

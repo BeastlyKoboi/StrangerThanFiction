@@ -15,7 +15,7 @@ using UnityEngine.UIElements;
 /// TODO: Rework save data 
 /// TODO:
 /// </summary>
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IDataPersistence
 {
     // Basic gameplay events that objects can add to
     public static event Action OnGameStart;
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public Player player2; // The AI eventually 
 
     [HeaderAttribute("Input Actions")]
-    [SerializeField]private InputActionReference pause;
+    [SerializeField] private InputActionReference pause;
 
     [HeaderAttribute("Managers")]
     public UIManager uiManager;
@@ -44,34 +44,47 @@ public class GameManager : MonoBehaviour
     public GameObject discardPrefab;
 
     [HeaderAttribute("Text Assets")]
-    [SerializeField] private TextAsset StarterDecksJSON;
-    [SerializeField] private List<String> player1Deck;
-    [SerializeField] private List<String> player2Deck;
+    [SerializeField] private bool usingInspector;
+    [SerializeField] private DeckInventory player1Deck;
+    [SerializeField] private DeckInventory player2Deck;
 
     // Something for battlefield conditions
     //  - 
 
+
+    public void LoadData(GameData data)
+    {
+        if (usingInspector) return;
+
+        player1Deck = data.player1Deck;
+        player2Deck = data.player2Deck;
+    }
+
+    public void SaveData(GameData data)
+    {
+        data.player1Deck = player1Deck;
+        data.player2Deck = player2Deck;
+    }
 
     /// <summary>
     /// Method to initialize the game.
     /// </summary>
     void Start()
     {
+
         pause.action.performed += ctx => TogglePause();
 
         // initialize all needed stuff for beginning of game 
 
-        JsonUtility.FromJsonOverwrite(StarterDecksJSON.text, this);
-
-        //gameObject.AddComponent<LocalStorageManager>();
-        //LocalStorageManager storage = gameObject.GetComponent<LocalStorageManager>();
-        //storage.SaveData("Starter Deck", StarterDecksJSON.text);
 
         CardFactory.Instance.Initialize(cardPrefab, unitPrefab, discardPrefab);
 
-        player1.PopulateDeck(player1Deck.ToArray(), false);
-        player2.PopulateDeck(player2Deck.ToArray(), true);
+        //player1.PopulateDeck(player1Deck.ToArray(), false);
+        //player2.PopulateDeck(player2Deck.ToArray(), true);
 
+        player1.PopulateDeck(player1Deck, false);
+        player2.PopulateDeck(player2Deck, true);
+        
         OnRoundStart += player1.RoundStart;
         OnRoundStart += player2.RoundStart;
         OnRoundStart += boardManager.RoundStart;
