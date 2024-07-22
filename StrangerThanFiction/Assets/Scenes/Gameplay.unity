@@ -1964,8 +1964,7 @@ MonoBehaviour:
   roundNumber: 0
   cardPrefab: {fileID: 1809478321450799374, guid: 8eb117f63706b9044a57923dbabb1dda, type: 3}
   unitPrefab: {fileID: 1809478321450799374, guid: fd56e59cc9f8a344daa2832031ed56e4, type: 3}
-  discardPrefab: {fileID: 7178500215393901264, guid: fbb12b96ffa74774f80e9a25d1fd3be0, type: 3}
-  usingInspector: 0
+  usingInspector: 1
   player1Deck:
     deckEntries:
     - cardName: AnimatedArtisan
@@ -1978,19 +1977,19 @@ MonoBehaviour:
       numCopies: 2
       items: []
     - cardName: GrowthSpurt
-      numCopies: 2
+      numCopies: 20
       items: []
     - cardName: MagicalWoodcarving
       numCopies: 2
       items: []
     - cardName: Pinocchio
-      numCopies: 2
+      numCopies: 20
       items: []
     - cardName: PortraitPainter
       numCopies: 2
       items: []
     - cardName: TheBlueFairy
-      numCopies: 2
+      numCopies: 20
       items: []
     - cardName: TheLateLumberjane
       numCopies: 2

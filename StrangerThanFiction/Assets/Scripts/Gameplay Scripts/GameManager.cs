@@ -18,10 +18,10 @@ using UnityEngine.UIElements;
 public class GameManager : MonoBehaviour, IDataPersistence
 {
     // Basic gameplay events that objects can add to
-    public static event Action OnGameStart;
+    public static event Func<Task> OnGameStart;
     public static event Func<Task> OnRoundStart;
     public static event Func<Task> OnRoundEnd;
-    public static event Action OnGameOver;
+    public static event Func<Task> OnGameOver;
 
     [HeaderAttribute("The Players")]
     public Player player1; // The human player
@@ -41,7 +41,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     [HeaderAttribute("Card Prefabs")]
     public GameObject cardPrefab;
     public GameObject unitPrefab;
-    public GameObject discardPrefab;
 
     [HeaderAttribute("Text Assets")]
     [SerializeField] private bool usingInspector;
@@ -77,7 +76,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
         // initialize all needed stuff for beginning of game 
 
 
-        CardFactory.Instance.Initialize(cardPrefab, unitPrefab, discardPrefab);
+        CardFactory.Instance.Initialize(cardPrefab, unitPrefab);
 
         //player1.PopulateDeck(player1Deck.ToArray(), false);
         //player2.PopulateDeck(player2Deck.ToArray(), true);
@@ -125,7 +124,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
         // Decide who has most power then grant win to player
 
-        EndGame();
+        await EndGame();
     }
 
     /// <summary>
@@ -223,10 +222,17 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// <summary>
     /// Method to end the game.
     /// </summary>
-    private void EndGame()
+    private async Task EndGame()
     {
         uiManager.GameOver(); // Maybe add this to event
-        OnGameOver?.Invoke();
+        if (OnGameOver != null)
+        {
+            foreach (Func<Task> handler in OnGameOver.GetInvocationList()
+                .Cast<Func<Task>>())
+            {
+                await handler();
+            }
+        }
     }
 
     private void TogglePause()

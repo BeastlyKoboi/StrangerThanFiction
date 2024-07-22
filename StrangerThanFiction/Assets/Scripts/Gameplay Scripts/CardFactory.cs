@@ -32,19 +32,17 @@ public class CardFactory
     // Example properties for prefabs
     public GameObject cardPrefab;
     public GameObject unitPrefab;
-    public GameObject discardPrefab;
 
     private Queue<GameObject> spellCardPool = new Queue<GameObject>();
     private Queue<GameObject> unitCardPool = new Queue<GameObject>();
 
 
     // Example method to set prefabs if needed
-    public void Initialize(GameObject cardPrefab, GameObject unitPrefab, GameObject discardPrefab)
+    public void Initialize(GameObject cardPrefab, GameObject unitPrefab)
     {
         this.cardStorage = GameObject.Find("Card Storage");
         this.cardPrefab = cardPrefab;
         this.unitPrefab = unitPrefab;
-        this.discardPrefab = discardPrefab;
         this.cardPreview = GameObject.Find("CardPreview").GetComponent<CardPreview>();
     }
 

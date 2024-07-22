@@ -18,10 +18,10 @@ using static UnityEngine.UI.CanvasScaler;
 
 public class Player : MonoBehaviour
 {
-    public event Action OnGameStart;
+    public event Func<Task> OnGameStart;
     public event Func<Task> OnRoundStart;
     public event Func<Task> OnRoundEnd;
-    public event Action OnGameOver;
+    public event Func<Task> OnGameOver;
 
     public event Func<CardModel, Task> OnCardDrawn;
     public event Func<CardModel, Task> OnUnitSummoned;
