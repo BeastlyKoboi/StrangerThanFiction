@@ -9,10 +9,10 @@ public class DeckEntry
     public int numCopies;
     public List<string> items; 
 
-    public DeckEntry()
+    public DeckEntry(string cardName = "", int numCopies = 1)
     {
-        cardName = "";
-        numCopies = 1;
+        this.cardName = cardName;
+        this.numCopies = numCopies;
         items = new List<string>();
     }
 }

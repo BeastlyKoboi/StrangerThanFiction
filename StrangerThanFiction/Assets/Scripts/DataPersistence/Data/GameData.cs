@@ -5,6 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
+    public long lastUpdated;
+
     public int totalRunsCount;
 
     public DeckInventory player1Deck;

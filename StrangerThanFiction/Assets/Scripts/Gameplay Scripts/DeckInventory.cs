@@ -11,4 +11,16 @@ public class DeckInventory
     {
         deckEntries = new List<DeckEntry>();
     }
+
+    public void SetDeckEntries(List<DeckEntry> deckEntries)
+    {
+        this.deckEntries = deckEntries;
+    }
+
+    public List<DeckEntry> GetDeckEntries()
+    {
+        return deckEntries;
+    }
+
+
 }

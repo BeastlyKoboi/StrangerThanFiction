@@ -21,22 +21,26 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene()
     {
-        StartCoroutine(StartLoad());
+        StartCoroutine(StartLoad(sceneToLoad));
+    }
+    public void LoadScene(string gameScene)
+    {
+        StartCoroutine(StartLoad(gameScene));
     }
 
-    IEnumerator StartLoad()
+    IEnumerator StartLoad(string gameScene)
     {
         loadingScreen.SetActive(true);
         yield return StartCoroutine(FadeLoadingScreen(1, 0.2f));
-        AsyncOperation load = SceneManager.LoadSceneAsync(sceneToLoad);
+        DataPersistenceManager.instance.SaveGame();
+        AsyncOperation load = SceneManager.LoadSceneAsync(gameScene);
         while (!load.isDone)
         {
             yield return null;
         }
         yield return StartCoroutine(FadeLoadingScreen(0, 0.2f));
         loadingScreen.SetActive(false);
-        if (fadeFinished != null)
-            fadeFinished.Invoke();
+        fadeFinished?.Invoke();
         Destroy(gameObject);
     }
 
