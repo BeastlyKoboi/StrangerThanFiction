@@ -558,6 +558,10 @@ public abstract class CardModel : MonoBehaviour
         return conditions.ContainsKey(conditionName);
     }
 
+    public Condition[] GetConditions()
+    {
+        return conditions.Values.ToArray();
+    }
 
     // ----------------------------------------------------------------------------
     // Loading Assets & Overwriting Card Prefabs

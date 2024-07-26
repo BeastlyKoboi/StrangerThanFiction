@@ -9,6 +9,7 @@ public class CardPreview : MonoBehaviour
 {
     public Transform cardView;
     public Transform blurPanel;
+    public Transform conditionsBox;
     public TextMeshProUGUI cardTextCost;
     public TextMeshProUGUI cardTextPower;
     public TextMeshProUGUI cardTextPlotArmor;
@@ -16,10 +17,13 @@ public class CardPreview : MonoBehaviour
     private Sprite spellCardFrame;
     private Sprite unitCardFrame;
 
+    [SerializeField] private GameObject conditionBoxPrefab;
+
     private void Start()
     {
         cardView = transform.Find("Sample Card");
         blurPanel = transform.Find("Blur");
+        conditionsBox = transform.Find("Conditions");
         cardTextCost = cardView.Find("Cost").GetComponent<TextMeshProUGUI>();
         cardTextPower = cardView.Find("Power").GetComponent<TextMeshProUGUI>();
         cardTextPlotArmor = cardView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
@@ -27,12 +31,21 @@ public class CardPreview : MonoBehaviour
 
         spellCardFrame = CardModel.LoadSprite("SpellCardFrontFrame.png");
         unitCardFrame = CardModel.LoadSprite("UnitCardFrontFrame.png");
+
+
     }
 
     public void Unfocus()
     {
         cardView.gameObject.SetActive(false);
         blurPanel.gameObject.SetActive(false);
+        conditionsBox.gameObject.SetActive(false);
+
+        // Clear all children from conditionsBox
+        foreach (Transform child in conditionsBox)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     public void OnClick(CardModel cardScript)
@@ -41,6 +54,7 @@ public class CardPreview : MonoBehaviour
         OverwriteCardPreview(cardScript);
         cardView.gameObject.SetActive(true);
         blurPanel.gameObject.SetActive(true);
+        conditionsBox.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -84,6 +98,19 @@ public class CardPreview : MonoBehaviour
         cardView.Find("Description").GetComponent<TextMeshProUGUI>().text = card.Description;
 
         if (card.IsHidden)
+        {
             cardView.Find("Cardback").gameObject.SetActive(true);
+            return;
+        }
+
+        Condition[] conditions = card.GetConditions();
+
+        for (int i = 0; i < conditions.Length; i++)
+        {
+            GameObject conditionBox = Instantiate(conditionBoxPrefab, conditionsBox);
+            conditionBox.transform.Translate(0, i * -100,0);
+            conditionBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
+                .text = conditions[i].ToString();
+        }
     }
 }

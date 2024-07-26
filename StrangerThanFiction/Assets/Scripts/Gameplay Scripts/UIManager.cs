@@ -15,7 +15,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private BoardManager board;
 
     [HeaderAttribute("Animators")]
-    [SerializeField] private Animator ActPopup;
     [SerializeField] private Animator RoundPopup;
     [SerializeField] private Animator GameOverPopup;
 

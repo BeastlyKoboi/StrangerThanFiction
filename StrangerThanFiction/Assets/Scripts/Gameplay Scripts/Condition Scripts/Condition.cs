@@ -20,4 +20,6 @@ public class Condition
     public virtual Task OnTrigger() => Task.CompletedTask;
     public virtual Task OnSurplus(Condition surplus) => Task.CompletedTask;
     public virtual Task OnRemove() => Task.CompletedTask;
+
+    public override string ToString() => $"{Name} {amount}: {Description}";
 }

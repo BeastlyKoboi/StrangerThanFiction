@@ -15,6 +15,16 @@ public class WittyWhittler : CardModel
     public override int BasePower => 2;
     public override int BasePlotArmor => 4;
 
+    public override async void Start()
+    {
+        base.Start();
+
+        await ApplyCondition(Guarded.StaticName, new Guarded(this, 0));
+        await ApplyCondition(Fated.StaticName, new Fated(this, 0));
+        await ApplyCondition(Resilient.StaticName, new Resilient(this, 0));
+
+    }
+
     protected override Task SummonEffect()
     {
         Owner.OnUnitSummoned += OnAllySummonedGrantPoison;
