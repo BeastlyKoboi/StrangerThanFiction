@@ -101,7 +101,7 @@ public abstract class CardModel : MonoBehaviour
     /// <summary>
     /// Holds labeled objects for the conditions applied to a card: Resilient, Poisoned, etc.
     /// </summary>
-    private Dictionary<string, ICondition> conditions = new Dictionary<string, ICondition>();
+    private Dictionary<string, Condition> conditions = new Dictionary<string, Condition>();
 
     /// <summary>
     /// Holds play requirements, if any: Target 1, Ally 1, etc. 
@@ -319,6 +319,13 @@ public abstract class CardModel : MonoBehaviour
     {
         OnDestroy += CardFactory.Instance.RecycleCard;
 
+        // Remove all conditions 
+        string[] conKeys = conditions.Keys.ToArray();
+        foreach (string conditionName in conKeys)
+        {
+            await RemoveCondition(conditionName);
+        }
+
         if (OnDestroy != null)
         {
             foreach (Func<CardModel, Task> handler in OnDestroy.GetInvocationList()
@@ -413,7 +420,7 @@ public abstract class CardModel : MonoBehaviour
     /// <returns></returns>
     public async Task GrantCostModification(int costMod)
     {
-        CurrentCost += costMod;
+        CurrentCost = Math.Max(0, CurrentCost + costMod);
 
         if (OnGrantCostModification != null)
         {
@@ -503,7 +510,7 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="conditionName"></param>
     /// <param name="condition"></param>
-    public async Task ApplyCondition(string conditionName, ICondition condition)
+    public async Task ApplyCondition(string conditionName, Condition condition)
     {
         if (!conditions.ContainsKey(conditionName))
         {

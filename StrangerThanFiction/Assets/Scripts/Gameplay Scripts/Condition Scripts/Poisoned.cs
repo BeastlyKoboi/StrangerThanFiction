@@ -1,32 +1,28 @@
 using System.Threading.Tasks;
 
-public class Poisoned : ICondition
+public class Poisoned : Condition
 {
-    private readonly CardModel card;
-    public int amount;
+    public static new string StaticName => typeof(Poisoned).Name;
+    public override string Name => StaticName;
+    public override string Description { get; } = "On Round End, unit takes # damage. Does stack.";
 
-    public Poisoned(CardModel card, int amount)
-    {
-        this.card = card;
-        this.amount = amount;
-    }
+    public Poisoned(CardModel card, int amount) : base(card, amount) { }
 
-    public static string GetName()
+    public override Task OnAdd()
     {
-        return "Poisoned";
-    }
-
-    public Task OnAdd()
-    {
-        card.OnRoundEnd += OnTrigger;
+        card.Owner.OnRoundEnd += OnTrigger;
         return Task.CompletedTask;
     }
-    public async Task OnTrigger()
+    public override async Task OnTrigger()
     {
         await card.TakeDamage(amount, true);
         amount -= 1;
+        if (amount == 0)
+        {
+            await card.RemoveCondition(Name);
+        }
     }
-    public Task OnSurplus(ICondition surplus)
+    public override Task OnSurplus(Condition surplus)
     {
         if (surplus is Poisoned poisonSurplus)
         {
@@ -34,9 +30,9 @@ public class Poisoned : ICondition
         }
         return Task.CompletedTask;
     }
-    public Task OnRemove()
+    public override Task OnRemove()
     {
-        card.OnRoundEnd -= OnTrigger;
+        card.Owner.OnRoundEnd -= OnTrigger;
         return Task.CompletedTask;
     }
 }

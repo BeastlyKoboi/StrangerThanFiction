@@ -19,7 +19,7 @@ public sealed class TallTale : CardModel
     {
         base.Start();
 
-        await ApplyCondition(Combust.GetName(), new Combust(this, 0));
+        await ApplyCondition(Combust.StaticName, new Combust(this, 0));
     }
 
     protected override async Task PlayEffect()

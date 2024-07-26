@@ -1977,19 +1977,19 @@ MonoBehaviour:
       numCopies: 2
       items: []
     - cardName: GrowthSpurt
-      numCopies: 20
+      numCopies: 2
       items: []
     - cardName: MagicalWoodcarving
       numCopies: 2
       items: []
     - cardName: Pinocchio
-      numCopies: 20
+      numCopies: 2
       items: []
     - cardName: PortraitPainter
       numCopies: 2
       items: []
-    - cardName: TheBlueFairy
-      numCopies: 20
+    - cardName: WittyWhittler
+      numCopies: 5
       items: []
     - cardName: TheLateLumberjane
       numCopies: 2

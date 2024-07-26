@@ -258,7 +258,7 @@ public class Player : MonoBehaviour
 
         if (card.Type == CardType.Unit) return;
 
-        if (card.HasCondition(Combust.GetName()))
+        if (card.HasCondition(Combust.StaticName))
             await DestroyCard(card);
         else
             await DiscardCard(card);

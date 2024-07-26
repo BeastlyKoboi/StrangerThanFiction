@@ -17,10 +17,7 @@ public class DeckInventory
         this.deckEntries = deckEntries;
     }
 
-    public List<DeckEntry> GetDeckEntries()
-    {
-        return deckEntries;
-    }
+    public List<DeckEntry> GetDeckEntries() => deckEntries;
 
 
 }
