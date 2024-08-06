@@ -409,6 +409,8 @@ public abstract class CardModel : MonoBehaviour
             }
         }
 
+        Owner.uiManager.UpdateTotalPower();
+
         if (CurrentPower == 0)
             await this.Destroy();
     }
@@ -450,6 +452,8 @@ public abstract class CardModel : MonoBehaviour
                 await handler();
             }
         }
+
+        Owner.uiManager.UpdateTotalPower();
     }
 
     /// <summary>
@@ -498,6 +502,7 @@ public abstract class CardModel : MonoBehaviour
                 await handler();
             }
         }
+        Owner.uiManager.UpdateTotalPower();
     }
 
     // ----------------------------------------------------------------------------

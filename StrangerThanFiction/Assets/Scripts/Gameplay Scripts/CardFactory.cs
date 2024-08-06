@@ -33,8 +33,8 @@ public class CardFactory
     public GameObject cardPrefab;
     public GameObject unitPrefab;
 
-    private Queue<GameObject> spellCardPool = new Queue<GameObject>();
-    private Queue<GameObject> unitCardPool = new Queue<GameObject>();
+    private Queue<GameObject> spellCardPool;
+    private Queue<GameObject> unitCardPool;
 
 
     // Example method to set prefabs if needed
@@ -44,6 +44,8 @@ public class CardFactory
         this.cardPrefab = cardPrefab;
         this.unitPrefab = unitPrefab;
         this.cardPreview = GameObject.Find("CardPreview").GetComponent<CardPreview>();
+        this.spellCardPool = new Queue<GameObject>();
+        this.unitCardPool = new Queue<GameObject>();
     }
 
     public CardModel CreateCard(string cardName, bool isHidden, Transform parent, Player owner, BoardManager board, string creator = "")

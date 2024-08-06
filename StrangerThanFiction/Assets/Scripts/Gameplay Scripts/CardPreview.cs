@@ -108,7 +108,7 @@ public class CardPreview : MonoBehaviour
         for (int i = 0; i < conditions.Length; i++)
         {
             GameObject conditionBox = Instantiate(conditionBoxPrefab, conditionsBox);
-            conditionBox.transform.Translate(0, i * -100,0);
+            conditionBox.transform.Translate(0, i * -175,0);
             conditionBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
                 .text = conditions[i].ToString();
         }

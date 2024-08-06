@@ -83,14 +83,20 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
         player1.PopulateDeck(player1Deck, false);
         player2.PopulateDeck(player2Deck, true);
-        
+
+        OnGameStart = null;
+
+        OnRoundStart = null;
         OnRoundStart += player1.RoundStart;
         OnRoundStart += player2.RoundStart;
         OnRoundStart += boardManager.RoundStart;
 
+        OnRoundEnd = null;
         OnRoundEnd += player1.RoundEnd;
         OnRoundEnd += player2.RoundEnd;
         OnRoundEnd += boardManager.RoundEnd;
+
+        OnGameOver = null;
 
         // Call on game start 
         StartGame();
