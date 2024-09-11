@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class Fated : Condition
 {
-    public static new string StaticName => typeof(Fated).Name;
-    public override string Name => StaticName;
-    public override string Description { get; } = "On Round End I gain # power. Does not stack.";
-
+    public override uint Id => 2;
     public Fated(CardModel card, int amount) : base(card, amount) { }
 
     public override Task OnAdd()

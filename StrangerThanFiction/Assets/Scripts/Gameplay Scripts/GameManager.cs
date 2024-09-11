@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// </summary>
     void Start()
     {
-
         pause.action.performed += ctx => TogglePause();
 
         // initialize all needed stuff for beginning of game 
@@ -144,7 +143,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
         if (OnRoundStart != null)
         {
             foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -180,7 +179,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
         if (OnRoundEnd != null)
         {
             foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -234,7 +233,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
         if (OnGameOver != null)
         {
             foreach (Func<Task> handler in OnGameOver.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }

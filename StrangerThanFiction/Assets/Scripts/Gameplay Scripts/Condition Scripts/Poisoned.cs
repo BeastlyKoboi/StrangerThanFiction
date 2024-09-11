@@ -2,9 +2,7 @@ using System.Threading.Tasks;
 
 public class Poisoned : Condition
 {
-    public static new string StaticName => typeof(Poisoned).Name;
-    public override string Name => StaticName;
-    public override string Description { get; } = "On Round End, unit takes # damage. Does stack.";
+    public override uint Id => 0;
 
     public Poisoned(CardModel card, int amount) : base(card, amount) { }
 

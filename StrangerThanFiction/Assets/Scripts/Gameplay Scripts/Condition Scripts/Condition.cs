@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
+using UnityEngine;
 
-public class Condition 
+public abstract class Condition 
 {
-    // public virtual string GetName() => typeof(Condition).ToString();
-    public static string StaticName => typeof(Condition).Name;
-    public virtual string Name => StaticName;
+    public static ConditionsDataMono conditionsData = GameObject.Find("ConditionsData").GetComponent<ConditionsDataMono>();
+    public abstract uint Id { get; }
+    public virtual string Name { get; } = "";
     public virtual string Description { get; } = "";
 
     protected CardModel card;
@@ -12,6 +13,8 @@ public class Condition
 
     public Condition(CardModel card, int amount)
     {
+        this.Name = conditionsData.conditionsList.conditions[Id].ConditionName;
+        this.Description = conditionsData.conditionsList.conditions[Id].Description;
         this.card = card;
         this.amount = amount;
     }

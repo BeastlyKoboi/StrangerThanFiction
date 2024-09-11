@@ -5,15 +5,7 @@ using UnityEngine;
 
 public class TheLateLumberjane : CardModel
 {
-    public override string Title => "The Late Lumberjane";
-    public override string Description => "When a unit dies, grant me +2 power.";
-    public override string FlavorText => base.FlavorText;
-    public override CardType Type => CardType.Unit;
-    public override string PortraitPath => "CardPortraits/Default.png";
-
-    public override int BaseCost => 2;
-    public override int BasePower => 1;
-    public override int BasePlotArmor => 7;
+    public override uint Id => 9;
 
     protected override Task SummonEffect()
     {

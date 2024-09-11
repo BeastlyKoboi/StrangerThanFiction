@@ -25,16 +25,18 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
     // Physical Descriptors of the card, that will effect how it is viewed.
     // ----------------------------------------------------------------------------
-    public virtual string Title { get; }
-    public virtual string Description { get; }
-    public virtual string FlavorText { get; }
-    public virtual CardType Type { get; set; }
+    public static CardDataMono cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
+    public abstract uint Id { get; }
+    public virtual string Title { get; private set; } 
+    public virtual string Description { get; private set; }
+    public virtual string FlavorText { get; private set; }
+    public virtual CardType Type { get; private set; }
 
     // These 3 paths are unused now, but intended for the ability to have card skins.
     public virtual string CardbackPath { get; } = "Cardback_Placeholder.png";
     public virtual string UnitFramePath { get; } = "UnitCardFrontFrame.png"; //
     public virtual string SpellFramePath { get; } = "SpellCardFrontFrame.png"; //
-    public virtual string PortraitPath { get; set; }
+    public virtual string PortraitPath { get; private set; }
     public virtual bool IsHidden { get; set; } = false;
 
     // ----------------------------------------------------------------------------
@@ -45,9 +47,9 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
     // Stats that will not be changed - Consider making children implement this as static somehow?
     // ----------------------------------------------------------------------------
-    public virtual int BaseCost { get; }
-    public virtual int BasePower { get; } = 0;
-    public virtual int BasePlotArmor { get; } = 0;
+    public virtual int BaseCost { get; private set; }
+    public virtual int BasePower { get; private set; }
+    public virtual int BasePlotArmor { get; private set; }
 
     // ----------------------------------------------------------------------------
     // Stats that reflect gameplay and can be changed.
@@ -165,9 +167,32 @@ public abstract class CardModel : MonoBehaviour
     public event Func<int, Task> OnGrantPlotArmor;
     public event Func<int, Task> OnHeal;
 
+    private void OnEnable()
+    {
+        
+    }
 
     private void Awake()
     {
+        Debug.Log($"ID: {Id}");
+        Debug.Log($"Title: {cardData.allCards.cards[Id].Title}");
+        Debug.Log($"Description: {cardData.allCards.cards[Id].Description}");
+        Debug.Log($"FlavorText: {cardData.allCards.cards[Id].FlavorText}");
+        Debug.Log($"Type: {cardData.allCards.cards[Id].Type}");
+        Debug.Log($"PortraitPath: {cardData.allCards.cards[Id].PortraitPath}");
+        Debug.Log($"BaseCost: {cardData.allCards.cards[Id].BaseCost}");
+        Debug.Log($"BasePower: {cardData.allCards.cards[Id].BasePower}");
+        Debug.Log($"BasePlotArmor: {cardData.allCards.cards[Id].BasePlotArmor}");
+
+        Title = cardData.allCards.cards[Id].Title;
+        Description = cardData.allCards.cards[Id].Description;
+        FlavorText = cardData.allCards.cards[Id].FlavorText;
+        Type = cardData.allCards.cards[Id].Type;
+        PortraitPath = cardData.allCards.cards[Id].PortraitPath;
+        BaseCost = cardData.allCards.cards[Id].BaseCost;
+        BasePower = cardData.allCards.cards[Id].BasePower;
+        BasePlotArmor = cardData.allCards.cards[Id].BasePlotArmor;
+
         CurrentCost = BaseCost;
         CurrentPower = BasePower;
         CurrentPlotArmor = BasePlotArmor;
@@ -263,7 +288,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnPlay != null)
         {
             foreach (Func<Task> handler in OnPlay.GetInvocationList()
-                    .Cast<Func<Task>>())
+                    .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -287,7 +312,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnSummon != null)
         {
             foreach (Func<Task> handler in OnSummon.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -304,7 +329,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnDiscard != null)
         {
             foreach (Func<Task> handler in OnDiscard.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -329,7 +354,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnDestroy != null)
         {
             foreach (Func<CardModel, Task> handler in OnDestroy.GetInvocationList()
-                .Cast<Func<CardModel, Task>>())
+                .Cast<Func<CardModel, Task>>().ToList())
             {
                 await handler(this);
             }
@@ -344,7 +369,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnRoundStart != null)
         {
             foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -356,7 +381,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnRoundEnd != null)
         {
             foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -403,7 +428,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnTakeDamage != null)
         {
             foreach (Func<Task> handler in OnTakeDamage.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -427,7 +452,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnGrantCostModification != null)
         {
             foreach (Func<Task> handler in OnGrantCostModification.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -447,7 +472,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnGrantPower != null)
         {
             foreach (Func<Task> handler in OnGrantPower.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -468,7 +493,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnGrantPlotArmor != null)
         {
             foreach (Func<Task> handler in OnGrantPlotArmor.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -497,7 +522,7 @@ public abstract class CardModel : MonoBehaviour
         if (OnHeal != null)
         {
             foreach (Func<Task> handler in OnHeal.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -515,16 +540,16 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="conditionName"></param>
     /// <param name="condition"></param>
-    public async Task ApplyCondition(string conditionName, Condition condition)
+    public async Task ApplyCondition(Condition condition)
     {
-        if (!conditions.ContainsKey(conditionName))
+        if (!conditions.ContainsKey(condition.Name))
         {
-            conditions.Add(conditionName, condition);
+            conditions.Add(condition.Name, condition);
             await condition.OnAdd();
         }
         else
         {
-            await conditions[conditionName].OnSurplus(condition);
+            await conditions[condition.Name].OnSurplus(condition);
         }
     }
 

@@ -5,21 +5,7 @@ using UnityEngine;
 
 public class WittyWhittler : CardModel
 {
-    public override string Title => "Witty Whittler";
-    public override string Description => "When you summon an ally, grant a random enemy Poison 1.";
-    public override string FlavorText => base.FlavorText;
-    public override CardType Type => CardType.Unit;
-    public override string PortraitPath => "CardPortraits/Default.png";
-
-    public override int BaseCost => 3;
-    public override int BasePower => 2;
-    public override int BasePlotArmor => 4;
-
-    public override async void Start()
-    {
-        base.Start();
-
-    }
+    public override uint Id => 11;
 
     protected override Task SummonEffect()
     {
@@ -37,7 +23,7 @@ public class WittyWhittler : CardModel
     {
         CardModel enemy = Board.GetRandomUnit(Owner.enemyPlayer);
         if (enemy)
-            await enemy.ApplyCondition(Poisoned.StaticName, new Poisoned(enemy, 1));
+            await enemy.ApplyCondition(new Poisoned(enemy, 1));
     }
 
 }

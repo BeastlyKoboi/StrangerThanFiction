@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class Guarded : Condition
 {
-    public static new string StaticName => typeof(Guarded).Name;
-    public override string Name => StaticName;
-    public override string Description { get; } = "On Round End, set Plot Armor to #. Does stack.";
-
+    public override uint Id => 3;
     public Guarded(CardModel card, int amount) : base(card, amount) { }
 
     public override Task OnAdd()

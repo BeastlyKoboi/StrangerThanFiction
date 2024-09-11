@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
+  m_Name: MagicalWoodcarving
+  m_EditorClassIdentifier: 
+  Title: Magical Woodcarving
+  Description: At round end, I strike a random enemy, then I am destroyed.
+  FlavorText: 
+  Type: 0
+  PortraitPath: CardPortraits/Magical_Woodcarving.png
+  BaseCost: 1
+  BasePower: 3
+  BasePlotArmor: 0

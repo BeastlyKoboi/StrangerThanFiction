@@ -170,7 +170,7 @@ public class Player : MonoBehaviour
         if (OnCardDrawn != null)
         {
             foreach (Func<CardModel, Task> handler in OnCardDrawn.GetInvocationList()
-                .Cast<Func<CardModel, Task>>())
+                .Cast<Func<CardModel, Task>>().ToList())
             {
                 await handler(drawnCard);
             }
@@ -246,7 +246,7 @@ public class Player : MonoBehaviour
         if (OnCardPlayed != null)
         {
             foreach (Func<CardPlayState, Task> handler in OnCardPlayed.GetInvocationList()
-                .Cast<Func<CardPlayState, Task>>())
+                .Cast<Func<CardPlayState, Task>>().ToList())
             {
                 await handler(cardPlayState);
             }
@@ -258,7 +258,7 @@ public class Player : MonoBehaviour
 
         if (card.Type == CardType.Unit) return;
 
-        if (card.HasCondition(Combust.StaticName))
+        if (card.HasCondition("Combust"))
             await DestroyCard(card);
         else
             await DiscardCard(card);
@@ -289,7 +289,7 @@ public class Player : MonoBehaviour
         if (OnRoundStart != null)
         {
             foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -301,7 +301,7 @@ public class Player : MonoBehaviour
         if (OnRoundEnd != null)
         {
             foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<Task>>())
+                .Cast<Func<Task>>().ToList())
             {
                 await handler();
             }
@@ -317,7 +317,7 @@ public class Player : MonoBehaviour
         if (OnUnitSummoned != null)
         {
             foreach (Func<CardModel, Task> handler in OnUnitSummoned.GetInvocationList()
-                .Cast<Func<CardModel, Task>>())
+                .Cast<Func<CardModel, Task>>().ToList())
             {
                 await handler(unit);
             }
@@ -329,7 +329,7 @@ public class Player : MonoBehaviour
         if (OnUnitDestroyed != null)
         {
             foreach (Func<CardModel, Task> handler in OnUnitDestroyed.GetInvocationList()
-                .Cast<Func<CardModel, Task>>())
+                .Cast<Func<CardModel, Task>>().ToList())
             {
                 await handler(unit);
             }

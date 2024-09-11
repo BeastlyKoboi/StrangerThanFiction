@@ -5,10 +5,7 @@ using UnityEngine;
 
 public class Resilient : Condition
 {
-    public static new string StaticName => typeof(Resilient).Name;
-    public override string Name => StaticName;
-    public override string Description { get; } = "Takes # less damage from all sources";
-
+    public override uint Id => 4;
     public Resilient(CardModel card, int amount) : base(card, amount) { }
 
     public override Task OnAdd()

@@ -97,7 +97,7 @@ public class HandManager : MonoBehaviour
 
     public async Task RoundEnd()
     {
-        await Hand.ForEach(async card => await card.RoundStart());
+        await Hand.ForEach(async card => await card.RoundEnd());
     }
 
     /// <summary>
