@@ -5056,7 +5056,6 @@ MonoBehaviour:
   handCenter: {x: 0, y: -500}
   hoveredCard: {fileID: 0}
   selectedCard: {fileID: 0}
-  playedCard: {fileID: 0}
 --- !u!224 &843313944
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5718,7 +5717,6 @@ MonoBehaviour:
   handCenter: {x: 0, y: -500}
   hoveredCard: {fileID: 0}
   selectedCard: {fileID: 0}
-  playedCard: {fileID: 0}
 --- !u!1001 &995712069
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12843,7 +12841,7 @@ MonoBehaviour:
   deckGameObject: {fileID: 1022669803}
   discardGameObject: {fileID: 386080822}
   cardPrefab: {fileID: 1809478321450799374, guid: 8eb117f63706b9044a57923dbabb1dda, type: 3}
-  unitPrefab: {fileID: 1809478321450799374, guid: fd56e59cc9f8a344daa2832031ed56e4, type: 3}
+  unitPrefab: {fileID: 594909419187587363, guid: fd56e59cc9f8a344daa2832031ed56e4, type: 3}
 --- !u!114 &2079866879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12856,8 +12854,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 099e163741ae57742bc4c88742e14d57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myPlayer: {fileID: 0}
-  opponent: {fileID: 0}
+  myPlayer: {fileID: 2079866878}
+  opponent: {fileID: 1021245015}
 --- !u!1 &2086791121
 GameObject:
   m_ObjectHideFlags: 0
