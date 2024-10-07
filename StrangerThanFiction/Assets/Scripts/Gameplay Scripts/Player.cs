@@ -61,6 +61,7 @@ public class Player : MonoBehaviour
     public int totalDepth = 0;
     public bool hasEndedTurn = false;
     public bool hasEndedRound = false;
+    public bool hasCanceledPlayCard = false;
 
     [HeaderAttribute("The Cards")]
     public HandManager handManager;
@@ -119,12 +120,55 @@ public class Player : MonoBehaviour
         return card;
     }
 
-    public CardModel CreateCardinDiscard(string cardName)
+    public CardModel CreateCardInDiscard(string cardName)
     {
         CardModel card = CardFactory.Instance.CreateCard(cardName, hasCardsHidden, deckGameObject.transform, this, board);
         Discard.Add(card);
         Discard.Shuffle();
         return card;
+    }
+
+    public CardModel CreateCardInHand(string cardName)
+    {
+        CardModel card = CardFactory.Instance.CreateCard(cardName, hasCardsHidden, deckGameObject.transform, this, board);
+        handManager.AddCardToHandFromDeck(card);
+        RefreshPlayableCards();
+        return card;
+    }
+
+    /// <summary>
+    /// This will eventually be called every time an action is 
+    /// taken that can change whether a card is playable. It should 
+    /// check each card's play requirements and make sure that they are 
+    /// met, and if not disable their draggable component. 
+    /// </summary>
+    public void RefreshPlayableCards()
+    {
+        handManager.NumPlayableCards = 0;
+
+        handManager.Hand.ForEach((card) =>
+        {
+            bool isPlayable = true;
+            
+            if (card.CurrentCost > card.Owner.CurrentMana)
+                isPlayable = false;
+
+            if (card.PlayRequirements.AllyUnitTargets > board.GetUnits(this).Length)
+                isPlayable = false;
+            if (card.PlayRequirements.EnemyUnitTargets > board.GetUnits(enemyPlayer).Length)
+                isPlayable = false;
+            if (card.PlayRequirements.AllyCardTargets > handManager.Hand.Count - 1)
+                isPlayable = false;
+            if (card.PlayRequirements.EnemyCardTargets > enemyPlayer.handManager.Hand.Count)
+                isPlayable = false;
+            if (card.PlayRequirements.AllyHandSize > handManager.Hand.Count)
+                isPlayable = false;
+            if (card.PlayRequirements.EnemyHandSize > enemyPlayer.handManager.Hand.Count)
+                isPlayable = false;
+
+            card.Playable = isPlayable;
+            if (isPlayable) handManager.NumPlayableCards++;
+        });
     }
 
     /// <summary>
@@ -134,24 +178,34 @@ public class Player : MonoBehaviour
     public async Task PlayerTurn()
     {
         hasEndedTurn = false;
+        bool playedSuccessfully = false;
 
-        handManager.RefreshPlayableCards();
+        uiManager.SetRightMiddleButton("End Turn", PassTurn);
+
+        RefreshPlayableCards();
 
         OnMyTurnStart?.Invoke();
 
-        handManager.RefreshPlayableCards();
-
-        while (handManager.playedCard == null && !hasEndedTurn)
+        do
         {
-            await Task.Yield();
-        }
+            while (handManager.PlayState == null && !hasEndedTurn)
+            {
+                await Task.Yield();
+            }
 
-        if (handManager.playedCard)
-        {
-            await PlayCard(handManager.playedCard);
+            if (handManager.PlayState != null)
+            {
+                playedSuccessfully = await PlayCard(handManager.PlayState);
+                if (!playedSuccessfully)
+                {
+                    handManager.SetCardPlayState(null);
+                }
+                uiManager.UpdateTotalPower();
+            }
 
-            uiManager.UpdateTotalPower();
-        }
+        } while (!playedSuccessfully && !hasEndedTurn);
+
+        uiManager.SetRightMiddleButton("", () => { });
 
         handManager.LockCards();
     }
@@ -177,6 +231,7 @@ public class Player : MonoBehaviour
         }
 
         handManager.AddCardToHandFromDeck(drawnCard);
+        RefreshPlayableCards();
     }
 
     /// <summary>
@@ -186,6 +241,7 @@ public class Player : MonoBehaviour
     public async Task DiscardCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
+        RefreshPlayableCards();
 
         Discard.Add(card);
         card.gameObject.transform.SetParent(discardGameObject.transform, true);
@@ -200,6 +256,7 @@ public class Player : MonoBehaviour
     public async Task DestroyCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
+        RefreshPlayableCards();
 
         await card.Destroy();
     }
@@ -214,7 +271,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public bool CanDoSomething()
     {
-        handManager.RefreshPlayableCards();
+        RefreshPlayableCards();
         return handManager.NumPlayableCards > 0;
     }
 
@@ -228,42 +285,113 @@ public class Player : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     /// <returns></returns>
-    private async Task PlayCard(CardModel card)
+    private async Task<bool> PlayCard(CardPlayState playState)
     {
-        CardPlayState cardPlayState = new CardPlayState(
-            card: card,
-            player: this,
-            enemy: enemyPlayer,
-            allyUnitTargets: null,
-            enemyUnitTargets: null,
-            allyCardTargets: null,
-            enemyCardTargets: null
-        );
+        // Check if the player has the requirements to play the card.
+        PlayRequirements playReqs = playState.card.PlayRequirements;
 
-        if (card.Type == CardType.Unit)
-            handManager.RemoveCardFromHand(card);
+        if (gameManager.player1 == this)
+        {
+            uiManager.SetRightMiddleButton("Cancel", CancelPlay);
+
+            CardModel clickedCard = null;
+            void onCardClicked(CardModel cardModel)
+            {
+                clickedCard = cardModel;
+            }
+
+            async Task getTargetsFromBoard(List<CardModel> targetList, int playReq)
+            {
+                await board.SetOnClickForPlayersUnits(this, onCardClicked);
+
+                do
+                {
+                    if (clickedCard == null)
+                        await Task.Yield();
+                    else
+                    {
+                        targetList.Add(clickedCard);
+                        clickedCard = null;
+                    }
+
+                } while (!hasCanceledPlayCard && targetList.Count != playReq);
+
+                await board.SetOnClickForPlayersUnits(this, CardFactory.Instance.CardPreviewClickHandler);
+            }
+
+            if (playReqs.AllyUnitTargets != 0)
+            {
+                await getTargetsFromBoard(playState.allyUnitTargets, playReqs.AllyUnitTargets);
+            }
+            if (playReqs.EnemyUnitTargets != 0)
+            {
+                await getTargetsFromBoard(playState.enemyUnitTargets, playReqs.EnemyUnitTargets);
+            }
+            if (playReqs.AllyCardTargets != 0)
+            {
+                // cardPlayState.allyCardTargets = new List<CardModel>();
+            }
+            if (playReqs.EnemyCardTargets != 0)
+            {
+                // cardPlayState.enemyCardTargets = new List<CardModel>();
+            }
+
+            if (hasCanceledPlayCard)
+            {
+                hasCanceledPlayCard = false;
+                return false;
+            }
+        }
+        else 
+        {
+            if (playReqs.AllyUnitTargets > playState.allyUnitTargets.Count)  
+                return false;
+            if (playReqs.EnemyUnitTargets > playState.enemyUnitTargets.Count)
+                return false;
+            if (playReqs.AllyCardTargets > playState.allyCardTargets.Count)
+                return false;
+            if (playReqs.EnemyCardTargets > playState.enemyCardTargets.Count)
+                return false;
+        }
+        
+
+        // The card is committed to being played, so remove it from the hand.
+        if (playState.card.Type == CardType.Unit)
+        {
+            handManager.RemoveCardFromHand(playState.card);
+            RefreshPlayableCards();
+        }
 
         if (OnCardPlayed != null)
         {
             foreach (Func<CardPlayState, Task> handler in OnCardPlayed.GetInvocationList()
                 .Cast<Func<CardPlayState, Task>>().ToList())
             {
-                await handler(cardPlayState);
+                await handler(playState);
             }
         }
 
-        await card.Play(cardPlayState);
+        await playState.card.Play(playState);
 
-        handManager.playedCard = null;
+        handManager.SetCardPlayState(null);
 
-        if (card.Type == CardType.Unit) return;
+        if (playState.card.Type == CardType.Unit) return true;
 
-        if (card.HasCondition("Combust"))
-            await DestroyCard(card);
+        if (playState.card.HasCondition("Combust"))
+            await DestroyCard(playState.card);
         else
-            await DiscardCard(card);
+            await DiscardCard(playState.card);
 
+        return true;
     }
+
+    private void CancelPlay()
+    {
+        Debug.Log("Cancel play called");
+        hasCanceledPlayCard = true;
+        uiManager.SetRightMiddleButton("End Turn", PassTurn); 
+    }
+        
 
     /// <summary>
     /// Method to shuffle the discard pile into the deck.

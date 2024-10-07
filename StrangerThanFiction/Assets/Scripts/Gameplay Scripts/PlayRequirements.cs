@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class PlayRequirements
+[Serializable]
+public class PlayRequirements
 {
-    public static string EnemyTargets => "EnemyTargets";
-    public static string AllyTargets => "AllyTargets";
-    public static string EnemyHandSize => "EnemyHandSize";
-    public static string AllyHandSize => "AllyHandSize";
+    public int AllyUnitTargets = 0;
+    public int EnemyUnitTargets = 0;
+    public int AllyCardTargets = 0;
+    public int EnemyCardTargets = 0;
+    public int AllyHandSize = 0;
+    public int EnemyHandSize = 0;
 }

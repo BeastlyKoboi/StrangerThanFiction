@@ -45,6 +45,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI overkillText;
     [SerializeField] private TextMeshProUGUI resultText;
 
+    [HeaderAttribute("Buttons")]
+    [SerializeField] private Button rightMiddleBtn;
+    [SerializeField] private TextMeshProUGUI rightMiddleBtnText;
+
     /// Used to test game over screen
     [ContextMenu("Trigger Game Over")]
     void TriggerGameOver()
@@ -158,5 +162,12 @@ public class UIManager : MonoBehaviour
     public void TogglePausedMenu(bool isActive)
     {
         PausedMenu.SetActive(isActive);
+    }
+
+    public void SetRightMiddleButton(string text, Action onClick)
+    {
+        rightMiddleBtnText.text = text;
+        rightMiddleBtn.onClick.RemoveAllListeners();
+        rightMiddleBtn.onClick.AddListener(() => onClick());
     }
 }

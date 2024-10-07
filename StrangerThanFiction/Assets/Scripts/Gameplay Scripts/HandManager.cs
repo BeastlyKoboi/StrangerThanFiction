@@ -20,7 +20,8 @@ public class HandManager : MonoBehaviour
 
     public CardModel hoveredCard; 
     public CardModel selectedCard;
-    public CardModel playedCard;
+
+    public CardPlayState PlayState { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +39,6 @@ public class HandManager : MonoBehaviour
         card.transform.SetParent(transform);
         Hand.Insert(0, card);
         UpdateTargetTransforms();
-        RefreshPlayableCards();
     }
 
     public void RemoveCardFromHand(CardModel card)
@@ -48,7 +48,23 @@ public class HandManager : MonoBehaviour
         Destroy(card.GetComponent<Draggable>());
         Hand.Remove(card);
         UpdateTargetTransforms();
-        RefreshPlayableCards();
+    }
+
+    public void SetCardPlayState(
+        CardModel card,
+        List<CardModel> allyUnitTargets = null,
+        List<CardModel> enemyUnitTargets = null,
+        List<CardModel> allyCardTargets = null,
+        List<CardModel> enemyCardTargets = null)
+    {
+        if (card != null)
+            PlayState = new CardPlayState(card, 
+                allyUnitTargets: allyUnitTargets,
+                enemyUnitTargets: enemyUnitTargets,
+                allyCardTargets: allyCardTargets,
+                enemyCardTargets: enemyCardTargets);
+        else 
+            PlayState = null;
     }
 
     private void UpdateTargetTransforms()
@@ -100,23 +116,7 @@ public class HandManager : MonoBehaviour
         await Hand.ForEach(async card => await card.RoundEnd());
     }
 
-    /// <summary>
-    /// This will eventually be called every time an action is 
-    /// taken that can change whether a card is playable. It should 
-    /// check each card's play requirements and make sure that they are 
-    /// met, and if not disable their draggable component. 
-    /// </summary>
-    public void RefreshPlayableCards()
-    {
-        NumPlayableCards = 0;
-
-        Hand.ForEach((card) =>
-        {
-            bool isPlayable = card.CurrentCost <= card.Owner.CurrentMana;
-            card.Playable = isPlayable;
-            if (isPlayable) NumPlayableCards++;
-        });
-    }
+    
 
     public CardModel GetHighestCostCard()
     {

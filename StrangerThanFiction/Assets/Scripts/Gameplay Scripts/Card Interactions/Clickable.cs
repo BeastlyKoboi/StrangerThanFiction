@@ -8,7 +8,7 @@ public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler,
 {
     private Vector2 downPos;
 
-    public event Action OnClickWithoutDrag;
+    public event Action<CardModel> OnClickWithoutDrag;
     public event Action OnDoubleClick;
 
     public void OnPointerClick(PointerEventData eventData)
@@ -25,7 +25,12 @@ public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler,
     {
         if (downPos == eventData.position)
         {
-            OnClickWithoutDrag?.Invoke();
+            OnClickWithoutDrag?.Invoke(GetComponent<CardModel>());
         }
+    }
+
+    public void SetOnClickWithoutDrag(Action<CardModel> action)
+    {
+        OnClickWithoutDrag = action;
     }
 }

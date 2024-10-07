@@ -64,7 +64,7 @@ public class CardFactory
         cardScript.Owner = owner;
         cardScript.Board = board;
 
-        
+
         GameObject queuedCard = GetCardFromPool(cardScript.Type);
 
         if (queuedCard)
@@ -94,18 +94,17 @@ public class CardFactory
             cardScript.OverwriteUnitPrefab();
 
         cardObj.AddComponent<Clickable>();
-        cardObj.GetComponent<Clickable>().OnClickWithoutDrag += () =>
-        {
-            cardPreview.OnClick(cardScript);
-        };
+        cardObj.GetComponent<Clickable>().OnClickWithoutDrag += CardPreviewClickHandler;
 
         return cardScript;
 
     }
 
+    public void CardPreviewClickHandler(CardModel cardModel) { if (cardPreview) cardPreview.OnClick(cardModel); }
+
     // Additional methods for card comparison or other functionalities can be added here.
-    
-    
+
+
     private GameObject GetCardFromPool(CardType cardType)
     {
         if (cardType == CardType.Spell && spellCardPool.Count > 0)

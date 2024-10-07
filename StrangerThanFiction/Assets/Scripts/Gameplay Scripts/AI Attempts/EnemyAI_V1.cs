@@ -25,23 +25,59 @@ public class EnemyAI_V1 : MonoBehaviour
     /// </summary>
     public void PlayTurn()
     {
-        CardModel cardToPlay = myPlayer.handManager.Hand[0];
+        CardPlayState playState = new CardPlayState(myPlayer.handManager.Hand[0]);
 
         for (int cardIndex = 0; cardIndex < myPlayer.handManager.Hand.Count; cardIndex++)
         {
-            if (myPlayer.handManager.Hand[cardIndex].Playable)
+            if (myPlayer.handManager.Hand[cardIndex].Playable)  
             {
-                cardToPlay = myPlayer.handManager.Hand[cardIndex];
+                playState.card = myPlayer.handManager.Hand[cardIndex];
                 break;
             }
         }
 
-        if (cardToPlay.Type == CardType.Unit)
+        Debug.Log("Playing " + playState.card.Title);
+        Debug.Log("Hand count " + myPlayer.handManager.Hand.Count);
+
+        if (playState.card.PlayRequirements.AllyUnitTargets != 0)
         {
-            cardToPlay.SelectedArea = cardToPlay.Board.GetRandomEnemyRow();
+            for (int i = 0; i < playState.card.PlayRequirements.AllyUnitTargets; i++)
+            {
+                CardModel target;
+                do
+                {
+                    target = myPlayer.board.GetRandomUnit(myPlayer);
+                } while (playState.allyUnitTargets.Contains(target));
+                playState.allyUnitTargets.Add(target);
+            }
+        }
+        if (playState.card.PlayRequirements.EnemyUnitTargets != 0)
+        {
+            for (int i = 0; i < playState.card.PlayRequirements.EnemyUnitTargets; i++)
+            {
+                CardModel target;
+                do
+                {
+                    target = opponent.board.GetRandomUnit(opponent);
+                } while (playState.enemyUnitTargets.Contains(target));
+                playState.enemyUnitTargets.Add(target);
+            }
+        }
+        if (playState.card.PlayRequirements.AllyCardTargets != 0)
+            ;
+        if (playState.card.PlayRequirements.EnemyCardTargets != 0)
+            ;
+
+        if (playState.card.Type == CardType.Unit)
+        {
+            playState.card.SelectedArea = playState.card.Board.GetRandomEnemyRow();
         }
 
-        myPlayer.handManager.playedCard = cardToPlay;
+        myPlayer.handManager.SetCardPlayState(playState.card,
+            allyUnitTargets: playState.allyUnitTargets,
+            enemyUnitTargets: playState.enemyUnitTargets, 
+            allyCardTargets: playState.allyCardTargets,
+            enemyCardTargets: playState.enemyCardTargets);
 
     }
 }

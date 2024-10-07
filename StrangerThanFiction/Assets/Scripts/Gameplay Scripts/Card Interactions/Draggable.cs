@@ -41,7 +41,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (card.Type == CardType.Unit && !card.Board.CheckPointerAboveArea(eventData, card))
             return;
 
-        card.Owner.handManager.playedCard = card;
+        card.Owner.handManager.SetCardPlayState(card);
     }
 
 

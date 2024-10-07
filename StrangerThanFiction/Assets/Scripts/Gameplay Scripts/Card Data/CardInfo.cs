@@ -15,4 +15,5 @@ public class CardInfo : ScriptableObject
     public int BaseCost;
     public int BasePower;
     public int BasePlotArmor;
+    public PlayRequirements PlayRequirements;
 }

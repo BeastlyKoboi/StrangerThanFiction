@@ -5,8 +5,6 @@ using UnityEngine;
 public class CardPlayState
 {
     public CardModel card;
-    public Player player;
-    public Player enemy;
 
     public List<CardModel> allyUnitTargets;
     public List<CardModel> enemyUnitTargets;
@@ -16,19 +14,31 @@ public class CardPlayState
 
     public CardPlayState(
         CardModel card,
-        Player player = null, 
-        Player enemy = null, 
-        List<CardModel> allyUnitTargets = null, 
-        List<CardModel> enemyUnitTargets = null, 
-        List<CardModel> allyCardTargets = null, 
+        List<CardModel> allyUnitTargets = null,
+        List<CardModel> enemyUnitTargets = null,
+        List<CardModel> allyCardTargets = null,
         List<CardModel> enemyCardTargets = null)
     {
         this.card = card;
-        this.player = player;
-        this.enemy = enemy;
-        this.allyUnitTargets = allyUnitTargets;
-        this.enemyUnitTargets = enemyUnitTargets;
-        this.allyCardTargets = allyCardTargets;
-        this.enemyCardTargets = enemyCardTargets;
+
+        if (allyUnitTargets != null)
+            this.allyUnitTargets = allyUnitTargets;
+        else
+            this.allyUnitTargets = new List<CardModel>();
+
+        if (enemyUnitTargets != null)
+            this.enemyUnitTargets = enemyUnitTargets;
+        else
+            this.enemyUnitTargets = new List<CardModel>();
+
+        if (allyCardTargets != null)
+            this.allyCardTargets = allyCardTargets;
+        else
+            this.allyCardTargets = new List<CardModel>();
+
+        if (enemyCardTargets != null)
+            this.enemyCardTargets = enemyCardTargets;
+        else
+            this.enemyCardTargets = new List<CardModel>();
     }
 }

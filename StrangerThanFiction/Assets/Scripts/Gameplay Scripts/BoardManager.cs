@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -99,6 +100,22 @@ public class BoardManager : MonoBehaviour
         await player2BackRow.ForEach(async unit => await unit.RoundEnd());
     }
 
+
+    public async Task SetOnClickForPlayersUnits(Player player, Action<CardModel> action)
+    {
+        UnitRow frontline = player == gameManager.player1 ? player1FrontRow : player2FrontRow;
+        UnitRow backline = player == gameManager.player1 ? player1BackRow : player2BackRow;
+
+        await frontline.ForEach(unit => { 
+            unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
+            return Task.CompletedTask;
+        });
+        await backline.ForEach(unit => {
+            unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
+            return Task.CompletedTask;
+        });
+    }
+
     /// <summary>
     /// Returns the strongest unit of a specific player on the board.
     /// </summary>
@@ -152,7 +169,7 @@ public class BoardManager : MonoBehaviour
     public CardModel GetRandomUnit(Player player)
     {
         CardModel[] units = GetUnits(player);
-        return units.Length > 0? units[Random.Range(0, units.Length)]: null;
+        return units.Length > 0? units[UnityEngine.Random.Range(0, units.Length)]: null;
     }
 
     /// <summary>
@@ -191,7 +208,7 @@ public class BoardManager : MonoBehaviour
     /// <returns></returns>
     public UnitRow GetRandomEnemyRow()
     {
-        return (Random.value > 0.5) ? player2BackRow : player2FrontRow;
+        return (UnityEngine.Random.value > 0.5) ? player2BackRow : player2FrontRow;
     }
 
     /// <summary>

@@ -108,7 +108,7 @@ public abstract class CardModel : MonoBehaviour
     /// <summary>
     /// Holds play requirements, if any: Target 1, Ally 1, etc. 
     /// </summary>
-    public Dictionary<string, int> PlayRequirements { get; set; }
+    public PlayRequirements PlayRequirements { get; private set; }
 
     // Used to set whether the card is playable and if it should indicate as such.
     [SerializeField] private bool _playable = true;
@@ -152,7 +152,7 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
 
     // Card Events - common to both units and spells.
-    public event Func<Task> OnPlay;
+    public event Func<CardPlayState, Task> OnPlay;
     public event Func<Task> OnDraw;
     public event Func<Task> OnDiscard;
     public event Func<CardModel, Task> OnDestroy;
@@ -174,16 +174,6 @@ public abstract class CardModel : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log($"ID: {Id}");
-        Debug.Log($"Title: {cardData.allCards.cards[Id].Title}");
-        Debug.Log($"Description: {cardData.allCards.cards[Id].Description}");
-        Debug.Log($"FlavorText: {cardData.allCards.cards[Id].FlavorText}");
-        Debug.Log($"Type: {cardData.allCards.cards[Id].Type}");
-        Debug.Log($"PortraitPath: {cardData.allCards.cards[Id].PortraitPath}");
-        Debug.Log($"BaseCost: {cardData.allCards.cards[Id].BaseCost}");
-        Debug.Log($"BasePower: {cardData.allCards.cards[Id].BasePower}");
-        Debug.Log($"BasePlotArmor: {cardData.allCards.cards[Id].BasePlotArmor}");
-
         Title = cardData.allCards.cards[Id].Title;
         Description = cardData.allCards.cards[Id].Description;
         FlavorText = cardData.allCards.cards[Id].FlavorText;
@@ -192,6 +182,7 @@ public abstract class CardModel : MonoBehaviour
         BaseCost = cardData.allCards.cards[Id].BaseCost;
         BasePower = cardData.allCards.cards[Id].BasePower;
         BasePlotArmor = cardData.allCards.cards[Id].BasePlotArmor;
+        PlayRequirements = cardData.allCards.cards[Id].PlayRequirements;
 
         CurrentCost = BaseCost;
         CurrentPower = BasePower;
@@ -224,7 +215,7 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
     // Card Animations
     // ----------------------------------------------------------------------------
-    protected virtual Task PlayAnim()
+    protected virtual Task PlayAnim(CardPlayState cardPlayState)
     {
         return Task.CompletedTask;
     }
@@ -258,7 +249,7 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
 
     // Should be overridden by cards if they have any effects.
-    protected virtual Task PlayEffect()
+    protected virtual Task PlayEffect(CardPlayState cardPlayState)
     {
         return Task.CompletedTask;
     }
@@ -287,10 +278,10 @@ public abstract class CardModel : MonoBehaviour
 
         if (OnPlay != null)
         {
-            foreach (Func<Task> handler in OnPlay.GetInvocationList()
-                    .Cast<Func<Task>>().ToList())
+            foreach (Func<CardPlayState, Task> handler in OnPlay.GetInvocationList()
+                    .Cast<Func<CardPlayState, Task>>().ToList())
             {
-                await handler();
+                await handler(cardPlayState);
             }
         }
 

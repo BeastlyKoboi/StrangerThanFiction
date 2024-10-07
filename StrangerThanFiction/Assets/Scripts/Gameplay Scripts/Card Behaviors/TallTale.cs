@@ -15,7 +15,7 @@ public sealed class TallTale : CardModel
         await ApplyCondition(new Combust(this, 0));
     }
 
-    protected override async Task PlayEffect()
+    protected override async Task PlayEffect(CardPlayState cardPlayState)
     {
         if (Owner.Deck.Count > 0)
         {

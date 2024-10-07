@@ -25,8 +25,7 @@ public sealed class Pinocchio : CardModel
 
     private Task CreateTallTaleInHand()
     {
-        CardModel card = CardFactory.Instance.CreateCard("TallTale", IsHidden, gameObject.transform, Owner, Board);
-        Owner.handManager.AddCardToHandFromDeck(card);
+        Owner.CreateCardInHand("TallTale");
         return Task.CompletedTask;
     }
 }
