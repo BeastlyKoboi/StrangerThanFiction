@@ -300,8 +300,11 @@ public class Player : MonoBehaviour
                 clickedCard = cardModel;
             }
 
-            async Task getTargetsFromBoard(List<CardModel> targetList, int playReq)
+            async Task getTargetsFromBoard(Player player, List<CardModel> targetList, int playReq)
             {
+                uiManager.SetPrompt(true, $"Select {playReq} " +
+                    $"{(gameManager.player1 == player? "allied" : "enemy")} " +
+                    $"unit{(playReq > 1? "s": "")}");
                 await board.SetOnClickForPlayersUnits(this, onCardClicked);
 
                 do
@@ -310,22 +313,24 @@ public class Player : MonoBehaviour
                         await Task.Yield();
                     else
                     {
-                        targetList.Add(clickedCard);
+                        if (!targetList.Contains(clickedCard))
+                            targetList.Add(clickedCard);
                         clickedCard = null;
                     }
 
                 } while (!hasCanceledPlayCard && targetList.Count != playReq);
 
-                await board.SetOnClickForPlayersUnits(this, CardFactory.Instance.CardPreviewClickHandler);
+                uiManager.SetPrompt(false);
+                await board.SetOnClickForPlayersUnits(player, CardFactory.Instance.CardPreviewClickHandler);
             }
 
             if (playReqs.AllyUnitTargets != 0)
             {
-                await getTargetsFromBoard(playState.allyUnitTargets, playReqs.AllyUnitTargets);
+                await getTargetsFromBoard(this, playState.allyUnitTargets, playReqs.AllyUnitTargets);
             }
             if (playReqs.EnemyUnitTargets != 0)
             {
-                await getTargetsFromBoard(playState.enemyUnitTargets, playReqs.EnemyUnitTargets);
+                await getTargetsFromBoard(enemyPlayer, playState.enemyUnitTargets, playReqs.EnemyUnitTargets);
             }
             if (playReqs.AllyCardTargets != 0)
             {

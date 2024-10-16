@@ -49,6 +49,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button rightMiddleBtn;
     [SerializeField] private TextMeshProUGUI rightMiddleBtnText;
 
+    [HeaderAttribute("Prompt")]
+    [SerializeField] private GameObject prompt;
+    [SerializeField] private TextMeshProUGUI promptText;
+
     /// Used to test game over screen
     [ContextMenu("Trigger Game Over")]
     void TriggerGameOver()
@@ -169,5 +173,11 @@ public class UIManager : MonoBehaviour
         rightMiddleBtnText.text = text;
         rightMiddleBtn.onClick.RemoveAllListeners();
         rightMiddleBtn.onClick.AddListener(() => onClick());
+    }
+
+    public void SetPrompt(bool isActive, string text = "Default")
+    {
+        prompt.SetActive(isActive);
+        promptText.text = text;
     }
 }
