@@ -71,13 +71,19 @@ public class EnemyAI_V1 : MonoBehaviour
         if (playState.card.Type == CardType.Unit)
         {
             playState.card.SelectedArea = playState.card.Board.GetRandomEnemyRow();
+
+            if (playState.card.SelectedArea.GetIsFull())
+            {
+                playState.replacedCard = playState.card.SelectedArea.GetWeakestUnit();
+            }
         }
 
         myPlayer.handManager.SetCardPlayState(playState.card,
             allyUnitTargets: playState.allyUnitTargets,
             enemyUnitTargets: playState.enemyUnitTargets, 
             allyCardTargets: playState.allyCardTargets,
-            enemyCardTargets: playState.enemyCardTargets);
+            enemyCardTargets: playState.enemyCardTargets,
+            replacedCard: playState.replacedCard);
 
     }
 }

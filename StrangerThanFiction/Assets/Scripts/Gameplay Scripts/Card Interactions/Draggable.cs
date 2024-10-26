@@ -38,7 +38,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         // Needs to check if intersecting with player board areas,
         // or if a spell, the center of the screen
         // the connections here need a rework
-        if (card.Type == CardType.Unit && !card.Board.CheckPointerAboveArea(eventData, card))
+        if (card.Type == CardType.Unit && !card.Board.CheckValidPlacement(eventData, card))
             return;
 
         card.Owner.handManager.SetCardPlayState(card);

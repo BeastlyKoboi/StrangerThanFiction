@@ -8,9 +8,17 @@ using UnityEngine;
 
 public class UnitRow : MonoBehaviour
 {
-    public List<CardModel> units;
-    public List<RectTransform> unitRects;
+    private List<CardModel> units;
+    private List<RectTransform> unitRects;
     delegate bool filterDelegate(CardModel unit);
+
+    private int maxUnits = 6;
+
+    private void Awake()
+    {
+        units = new List<CardModel>();
+        unitRects = new List<RectTransform>();
+    }
 
     public void AddUnit(CardModel newUnit)
     {
@@ -59,6 +67,11 @@ public class UnitRow : MonoBehaviour
         {
             await func(unitsSnapshot[i]);
         }
+    }
+
+    public bool GetIsFull()
+    {
+        return units.Count >= maxUnits;
     }
 
     // ----------------------------------------------------------------------------

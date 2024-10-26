@@ -33,6 +33,12 @@ public class BoardManager : MonoBehaviour
     {
         unit.IsHidden = false;
 
+        if (row.GetIsFull())
+        {
+            await unit.Destroy();
+            return;
+        }
+
         row.AddUnit(unit);
 
         await unit.Owner.UnitSummoned(unit);
@@ -50,13 +56,15 @@ public class BoardManager : MonoBehaviour
         unit.OnDestroy -= DestroyUnit;
     }
 
+
+
     /// <summary>
     /// Checks if the pointer is above a valid placeable area for the player. 
     /// </summary>
     /// <param name="eventData"></param>
     /// <param name="card"></param>
     /// <returns></returns>
-    public bool CheckPointerAboveArea(PointerEventData eventData, CardModel card)
+    public bool CheckValidPlacement(PointerEventData eventData, CardModel card)
     {
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, raycastResults);
@@ -68,7 +76,9 @@ public class BoardManager : MonoBehaviour
         {
             if (frontline.gameObject == raycastResults[i].gameObject || backline.gameObject == raycastResults[i].gameObject)
             {
-                card.SelectedArea = raycastResults[i].gameObject == frontline.gameObject ? frontline : backline;
+                UnitRow unitRow = raycastResults[i].gameObject == frontline.gameObject ? frontline : backline;
+
+                card.SelectedArea = unitRow;
                 return true;
             }
         }
@@ -111,6 +121,14 @@ public class BoardManager : MonoBehaviour
             return Task.CompletedTask;
         });
         await backline.ForEach(unit => {
+            unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
+            return Task.CompletedTask;
+        });
+    }
+
+    public async Task SetOnClickForUnitRowsUnits(UnitRow specificRow, Action<CardModel> action)
+    {
+        await specificRow.ForEach(unit => {
             unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
             return Task.CompletedTask;
         });
@@ -210,6 +228,18 @@ public class BoardManager : MonoBehaviour
     {
         return (UnityEngine.Random.value > 0.5) ? player2BackRow : player2FrontRow;
     }
+
+    //public UnitRow GetRandomValidEnemyRow()
+    //{
+    //    if (!player2BackRow.GetIsFull() && !player2FrontRow.GetIsFull())
+    //        return UnityEngine.Random.value > 0.5 ? player2BackRow : player2FrontRow;
+    //    if (player2FrontRow.GetIsFull() && player2BackRow.GetIsFull())
+    //        return null;
+    //    if (player2FrontRow.GetIsFull())
+    //        return player2BackRow;
+    //    if (player2BackRow.GetIsFull())
+    //        return player2FrontRow;
+    //}
 
     /// <summary>
     /// Returns the units of a specific player.

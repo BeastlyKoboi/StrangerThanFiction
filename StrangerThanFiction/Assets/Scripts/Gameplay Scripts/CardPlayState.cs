@@ -12,12 +12,15 @@ public class CardPlayState
     public List<CardModel> allyCardTargets;
     public List<CardModel> enemyCardTargets;
 
+    public CardModel replacedCard;
+
     public CardPlayState(
         CardModel card,
         List<CardModel> allyUnitTargets = null,
         List<CardModel> enemyUnitTargets = null,
         List<CardModel> allyCardTargets = null,
-        List<CardModel> enemyCardTargets = null)
+        List<CardModel> enemyCardTargets = null,
+        CardModel replacedCard = null)
     {
         this.card = card;
 
@@ -40,5 +43,7 @@ public class CardPlayState
             this.enemyCardTargets = enemyCardTargets;
         else
             this.enemyCardTargets = new List<CardModel>();
+
+        this.replacedCard = replacedCard;
     }
 }

@@ -55,14 +55,16 @@ public class HandManager : MonoBehaviour
         List<CardModel> allyUnitTargets = null,
         List<CardModel> enemyUnitTargets = null,
         List<CardModel> allyCardTargets = null,
-        List<CardModel> enemyCardTargets = null)
+        List<CardModel> enemyCardTargets = null,
+        CardModel replacedCard = null)
     {
         if (card != null)
             PlayState = new CardPlayState(card, 
                 allyUnitTargets: allyUnitTargets,
                 enemyUnitTargets: enemyUnitTargets,
                 allyCardTargets: allyCardTargets,
-                enemyCardTargets: enemyCardTargets);
+                enemyCardTargets: enemyCardTargets,
+                replacedCard: replacedCard);
         else 
             PlayState = null;
     }

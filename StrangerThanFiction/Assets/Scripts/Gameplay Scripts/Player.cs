@@ -305,7 +305,7 @@ public class Player : MonoBehaviour
                 uiManager.SetPrompt(true, $"Select {playReq} " +
                     $"{(gameManager.player1 == player? "allied" : "enemy")} " +
                     $"unit{(playReq > 1? "s": "")}");
-                await board.SetOnClickForPlayersUnits(this, onCardClicked);
+                await board.SetOnClickForPlayersUnits(player, onCardClicked);
 
                 do
                 {
@@ -313,7 +313,7 @@ public class Player : MonoBehaviour
                         await Task.Yield();
                     else
                     {
-                        if (!targetList.Contains(clickedCard))
+                        if (!targetList.Contains(clickedCard) && clickedCard != playState.replacedCard)
                             targetList.Add(clickedCard);
                         clickedCard = null;
                     }
@@ -322,6 +322,23 @@ public class Player : MonoBehaviour
 
                 uiManager.SetPrompt(false);
                 await board.SetOnClickForPlayersUnits(player, CardFactory.Instance.CardPreviewClickHandler);
+            }
+
+            if (playState.card.Type == CardType.Unit && playState.card.SelectedArea.GetIsFull())
+            {
+                uiManager.SetPrompt(true, $"Select a unit in that row to replace.");
+                await board.SetOnClickForUnitRowsUnits(playState.card.SelectedArea, onCardClicked);
+
+                do
+                {
+                    await Task.Yield();
+                } while (!hasCanceledPlayCard && clickedCard == null);
+
+                playState.replacedCard = clickedCard;
+                clickedCard = null;
+
+                uiManager.SetPrompt(false);
+                await board.SetOnClickForUnitRowsUnits(playState.card.SelectedArea, CardFactory.Instance.CardPreviewClickHandler);
             }
 
             if (playReqs.AllyUnitTargets != 0)
@@ -375,6 +392,9 @@ public class Player : MonoBehaviour
                 await handler(playState);
             }
         }
+
+        if (playState.replacedCard != null)
+            await playState.replacedCard.Destroy();
 
         await playState.card.Play(playState);
 
