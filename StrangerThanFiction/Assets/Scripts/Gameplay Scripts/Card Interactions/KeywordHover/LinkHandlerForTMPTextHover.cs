@@ -18,6 +18,7 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
     private RectTransform _textBoxRectTransform;
 
     private int _currentlyActiveLinkedElement;
+    private bool _hasClosedTooltip = true;
 
     public delegate void HoverOnLinkEvent(string keyword, Vector3 mousePos);
     public static event HoverOnLinkEvent OnHoverOnLinkEvent;
@@ -35,6 +36,8 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
             _cameraToUse = null;
         else
             _cameraToUse = _canvasToCheck.worldCamera;
+
+        OnCloseTooltipEvent += () => _hasClosedTooltip = true;
     }
 
     private void Update()
@@ -53,11 +56,16 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
         bool isIntersectingRectTransform = TMP_TextUtilities.IsIntersectingRectTransform(_textBoxRectTransform, mousePosition, null);
 
         if (!isIntersectingRectTransform)
+        {
+            if (!_hasClosedTooltip)
+                OnCloseTooltipEvent?.Invoke();
+
             return;
+        }
 
         int intersectingLink = TMP_TextUtilities.FindIntersectingLink(_tmpTextBox, mousePosition, null);
 
-        if (_currentlyActiveLinkedElement != intersectingLink)
+        if (_currentlyActiveLinkedElement != intersectingLink && !_hasClosedTooltip)
             OnCloseTooltipEvent?.Invoke();
 
         if (intersectingLink == -1)
@@ -92,5 +100,6 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
 
         OnHoverOnLinkEvent?.Invoke(linkInfo.GetLinkID(), centerPosition);
         _currentlyActiveLinkedElement = intersectingLink;
+        _hasClosedTooltip = false;
     }
 }
