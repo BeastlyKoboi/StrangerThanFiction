@@ -14,9 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: Portrait Painter
   Description: When you draw a unit, grant it +2 Power.
-  FlavorText: 
+  FlavorText: "\u201CWhere has my muse gone?\u201D"
   Type: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 1
   BasePlotArmor: 4
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
+  m_Name: TheBigBadWolf
+  m_EditorClassIdentifier: 
+  Title: The Big Bad Wolf
+  Description: Whenever a unit dies, summon a crow.
+  FlavorText: '"Wherever I go death, destruction, and devastation follow. That is
+    my fate, and I cannot abide any other. I know not of dreams and what is not,
+    only of what is. What is, is what I must preserve. Nothing more."'
+  Type: 0
+  PortraitPath: CardPortraits/The_Big_Bad_Wolf.png
+  BaseCost: 3
+  BasePower: 5
+  BasePlotArmor: 1
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0

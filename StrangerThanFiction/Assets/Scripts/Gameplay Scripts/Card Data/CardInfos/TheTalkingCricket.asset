@@ -15,9 +15,17 @@ MonoBehaviour:
   Title: The Talking Cricket
   Description: On summon, grant the highest cost card in hand -1 cost. On destroy,
     create The Talking Cricket in deck.
-  FlavorText: 
+  FlavorText: '"I have lived for over a century Pinocchio, and even I still have
+    much to learn."'
   Type: 0
   PortraitPath: CardPortraits/The_Talking_Cricket.png
   BaseCost: 1
   BasePower: 2
   BasePlotArmor: 0
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0

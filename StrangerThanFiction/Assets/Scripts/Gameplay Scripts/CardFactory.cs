@@ -33,6 +33,9 @@ public class CardFactory
     public GameObject cardPrefab;
     public GameObject unitPrefab;
 
+    private Queue<GameObject> lockedSpellCardPool;
+    private Queue<GameObject> lockedUnitCardPool;
+
     private Queue<GameObject> spellCardPool;
     private Queue<GameObject> unitCardPool;
 
@@ -44,6 +47,8 @@ public class CardFactory
         this.cardPrefab = cardPrefab;
         this.unitPrefab = unitPrefab;
         this.cardPreview = GameObject.Find("CardPreview").GetComponent<CardPreview>();
+        this.lockedSpellCardPool = new Queue<GameObject>();
+        this.lockedUnitCardPool = new Queue<GameObject>();
         this.spellCardPool = new Queue<GameObject>();
         this.unitCardPool = new Queue<GameObject>();
     }
@@ -120,20 +125,22 @@ public class CardFactory
         CardType cardType = card.Type;
 
         cardObj.transform.SetParent(cardStorage.transform, false);
-        cardObj.SetActive(false);
+        //cardObj.SetActive(false);
 
         if (cardType == CardType.Unit)
-            unitCardPool.Enqueue(cardObj);
+            lockedUnitCardPool.Enqueue(cardObj);
         else
-            spellCardPool.Enqueue(cardObj);
+            lockedSpellCardPool.Enqueue(cardObj);
 
-        // Check how this affects the card's functionality
-        //Component[] comps = cardObj.GetComponents(typeof(Component));
-        //foreach (Component comp in comps)
-        //{
-        //    if (comp.GetType() != typeof(RectTransform))
-        //        GameObject.Destroy(comp);
-        //}
+        return Task.CompletedTask;
+    }
+     
+    public Task QueueLockedCards()
+    {
+        while (lockedUnitCardPool.Count > 0)
+            unitCardPool.Enqueue(lockedUnitCardPool.Dequeue());
+        while (lockedSpellCardPool.Count > 0)
+            spellCardPool.Enqueue(lockedSpellCardPool.Dequeue());
 
         return Task.CompletedTask;
     }

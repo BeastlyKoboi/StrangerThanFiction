@@ -13,7 +13,7 @@ public class WittyWhittler : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         Owner.OnUnitSummoned -= OnAllySummonedGrantPoison;
         return Task.CompletedTask;

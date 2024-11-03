@@ -17,7 +17,7 @@ public sealed class Pinocchio : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         OnRoundStart -= CreateTallTaleInHand;
         return Task.CompletedTask;

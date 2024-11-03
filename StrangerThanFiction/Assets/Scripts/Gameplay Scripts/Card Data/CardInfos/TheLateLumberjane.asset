@@ -14,9 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: The Late Lumberjane
   Description: When a unit dies, grant me +2 power.
-  FlavorText: 
+  FlavorText: '"In death I wonder, by cutting down that pine, did I doom you to a
+    life of suffering or one of wonder."'
   Type: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 0
   BasePlotArmor: 3
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0

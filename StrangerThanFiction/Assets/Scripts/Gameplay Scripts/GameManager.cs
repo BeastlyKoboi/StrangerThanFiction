@@ -65,23 +65,9 @@ public class GameManager : MonoBehaviour, IDataPersistence
         data.player2Deck = player2Deck;
     }
 
-    /// <summary>
-    /// Method to initialize the game.
-    /// </summary>
-    void Start()
+    private void Awake()
     {
-        pause.action.performed += ctx => TogglePause();
-
-        // initialize all needed stuff for beginning of game 
-
-
         CardFactory.Instance.Initialize(cardPrefab, unitPrefab);
-
-        //player1.PopulateDeck(player1Deck.ToArray(), false);
-        //player2.PopulateDeck(player2Deck.ToArray(), true);
-
-        player1.PopulateDeck(player1Deck, false);
-        player2.PopulateDeck(player2Deck, true);
 
         OnGameStart = null;
 
@@ -96,7 +82,24 @@ public class GameManager : MonoBehaviour, IDataPersistence
         OnRoundEnd += boardManager.RoundEnd;
 
         OnGameOver = null;
+    }
 
+    /// <summary>
+    /// Method to initialize the game.
+    /// </summary>
+    void Start()
+    { 
+        pause.action.performed += ctx => TogglePause();
+
+        // initialize all needed stuff for beginning of game 
+
+        //player1.PopulateDeck(player1Deck.ToArray(), false);
+        //player2.PopulateDeck(player2Deck.ToArray(), true);
+
+        player1.PopulateDeck(player1Deck, false);
+        player2.PopulateDeck(player2Deck, true);
+
+       
         // Call on game start 
         StartGame();
 
@@ -119,6 +122,15 @@ public class GameManager : MonoBehaviour, IDataPersistence
     private async void GameLoop()
     {
         await Task.Delay(1000);
+
+        if (OnGameStart != null)
+        {
+            foreach (Func<Task> handler in OnGameStart.GetInvocationList()
+                .Cast<Func<Task>>().ToList())
+            {
+                await handler();
+            }
+        }
 
         do
         {
@@ -184,6 +196,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
                 await handler();
             }
         }
+
+        await CardFactory.Instance.QueueLockedCards();
     }
 
     /// <summary>

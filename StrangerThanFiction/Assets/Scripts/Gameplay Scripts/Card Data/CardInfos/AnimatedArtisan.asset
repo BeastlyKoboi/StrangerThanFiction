@@ -14,9 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: Animated Artisan
   Description: On Round Start, create a Magical Woodcarving in deck.
-  FlavorText: 
+  FlavorText: '"I am. I dream. I ponder. I make. I am."'
   Type: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 2
   BasePlotArmor: 4
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0

@@ -33,17 +33,12 @@ public class BoardManager : MonoBehaviour
     {
         unit.IsHidden = false;
 
-        if (row.GetIsFull())
-        {
-            await unit.Destroy();
-            return;
-        }
-
         row.AddUnit(unit);
 
         await unit.Owner.UnitSummoned(unit);
 
         unit.OnDestroy += DestroyUnit;
+        unit.OnRemove += RemoveUnit;
     }
 
     private async Task DestroyUnit(CardModel unit)
@@ -52,8 +47,15 @@ public class BoardManager : MonoBehaviour
             unit.SelectedArea.RemoveUnit(unit);
 
         await unit.Owner.UnitDestroyed(unit);
-
         unit.OnDestroy -= DestroyUnit;
+    }
+
+    private async Task RemoveUnit(CardModel unit)
+    {
+        if (unit.SelectedArea != null)
+            unit.SelectedArea.RemoveUnit(unit);
+
+        unit.OnRemove -= RemoveUnit;
     }
 
 
@@ -229,17 +231,35 @@ public class BoardManager : MonoBehaviour
         return (UnityEngine.Random.value > 0.5) ? player2BackRow : player2FrontRow;
     }
 
-    //public UnitRow GetRandomValidEnemyRow()
-    //{
-    //    if (!player2BackRow.GetIsFull() && !player2FrontRow.GetIsFull())
-    //        return UnityEngine.Random.value > 0.5 ? player2BackRow : player2FrontRow;
-    //    if (player2FrontRow.GetIsFull() && player2BackRow.GetIsFull())
-    //        return null;
-    //    if (player2FrontRow.GetIsFull())
-    //        return player2BackRow;
-    //    if (player2BackRow.GetIsFull())
-    //        return player2FrontRow;
-    //}
+    public UnitRow[] GetPlayersRows(Player player)
+    {
+        UnitRow[] player1Rows = new UnitRow[] { player1FrontRow, player1BackRow };
+        UnitRow[] player2Rows = new UnitRow[] { player2FrontRow, player2BackRow };
+
+        return player == gameManager.player1 ? player1Rows : player2Rows;
+    }
+
+    public UnitRow GetRandomValidRow(Player player)
+    {
+        UnitRow[] playerRows = GetPlayersRows(player);
+
+        if (!playerRows[0].GetIsFull() && !playerRows[1].GetIsFull())
+            return UnityEngine.Random.value > 0.5 ? playerRows[0] : playerRows[1];
+        if (playerRows[0].GetIsFull() && playerRows[1].GetIsFull())
+            return null;
+        if (playerRows[0].GetIsFull())
+            return playerRows[1];
+        if (playerRows[1].GetIsFull())
+            return playerRows[0];
+
+        return null;
+    }
+
+    public UnitRow GetRandomRow(Player player)
+    {
+        UnitRow[] playerRows = GetPlayersRows(player);
+        return UnityEngine.Random.value > 0.5 ? playerRows[0] : playerRows[1];
+    }
 
     /// <summary>
     /// Returns the units of a specific player.

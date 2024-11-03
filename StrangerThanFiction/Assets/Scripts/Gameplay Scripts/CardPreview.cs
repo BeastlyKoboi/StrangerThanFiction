@@ -10,9 +10,11 @@ public class CardPreview : MonoBehaviour
     public Transform cardView;
     public Transform blurPanel;
     public Transform conditionsBox;
+    public Transform flavorBox;
     public TextMeshProUGUI cardTextCost;
     public TextMeshProUGUI cardTextPower;
     public TextMeshProUGUI cardTextPlotArmor;
+    public TextMeshProUGUI flavorText;
     public Image cardBackground;
     private Sprite spellCardFrame;
     private Sprite unitCardFrame;
@@ -29,6 +31,9 @@ public class CardPreview : MonoBehaviour
         cardTextPlotArmor = cardView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
         cardBackground = cardView.Find("Background").GetComponent<Image>();
 
+        flavorBox = transform.Find("Flavor");
+        flavorText = flavorBox.Find("FlavorText").GetComponent<TextMeshProUGUI>();
+
         spellCardFrame = CardModel.LoadSprite("SpellCardFrontFrame.png");
         unitCardFrame = CardModel.LoadSprite("UnitCardFrontFrame.png");
 
@@ -40,6 +45,7 @@ public class CardPreview : MonoBehaviour
         cardView.gameObject.SetActive(false);
         blurPanel.gameObject.SetActive(false);
         conditionsBox.gameObject.SetActive(false);
+        flavorBox.gameObject.SetActive(false);
 
         // Clear all children from conditionsBox
         foreach (Transform child in conditionsBox)
@@ -55,6 +61,7 @@ public class CardPreview : MonoBehaviour
         cardView.gameObject.SetActive(true);
         blurPanel.gameObject.SetActive(true);
         conditionsBox.gameObject.SetActive(true);
+        flavorBox.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -112,5 +119,7 @@ public class CardPreview : MonoBehaviour
             conditionBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
                 .text = conditions[i].ToString();
         }
+
+        flavorText.text = card.FlavorText;
     }
 }

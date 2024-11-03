@@ -13,7 +13,7 @@ public class AnimatedArtisan : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         Owner.OnRoundStart -= RoundStartEffect;
         return Task.CompletedTask;

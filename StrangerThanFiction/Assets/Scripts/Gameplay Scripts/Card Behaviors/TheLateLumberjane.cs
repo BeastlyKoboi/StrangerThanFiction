@@ -14,7 +14,7 @@ public class TheLateLumberjane : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         Owner.OnUnitDestroyed -= OnDestroyEffect;
         Owner.enemyPlayer.OnUnitDestroyed -= OnDestroyEffect;

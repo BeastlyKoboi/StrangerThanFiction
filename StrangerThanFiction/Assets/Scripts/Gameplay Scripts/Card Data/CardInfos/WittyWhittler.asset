@@ -15,9 +15,17 @@ MonoBehaviour:
   Title: Witty Whittler
   Description: When you summon an ally, grant a random enemy <link="Poisoned"><color=#bf9b30>Poisoned</color></link>
     1.
-  FlavorText: 
+  FlavorText: "\"Pinocchio! I have not seen you so wooden since you tried doing an
+    impression of your father!\" \nHis words are poison, as is his knife."
   Type: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 2
   BasePlotArmor: 4
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0

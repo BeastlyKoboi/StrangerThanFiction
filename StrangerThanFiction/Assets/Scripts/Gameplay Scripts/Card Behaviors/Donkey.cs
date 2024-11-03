@@ -14,7 +14,7 @@ public sealed class Donkey : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         Owner.OnUnitSummoned -= OnCopySummonGrantMePower;
         return Task.CompletedTask;

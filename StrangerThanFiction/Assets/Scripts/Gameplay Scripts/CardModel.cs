@@ -156,6 +156,7 @@ public abstract class CardModel : MonoBehaviour
     public event Func<Task> OnDraw;
     public event Func<Task> OnDiscard;
     public event Func<CardModel, Task> OnDestroy;
+    public event Func<CardModel, Task> OnRemove;
 
     // Unit Events - only called when in play, otherwise never.
     public event Func<Task> OnSummon;
@@ -189,6 +190,17 @@ public abstract class CardModel : MonoBehaviour
         CurrentPlotArmor = BasePlotArmor;
 
         MaxPower = CurrentPower;
+
+        OnPlay += PlayAnim;
+        OnSummon += SummonAnim;
+        OnDiscard += DiscardAnim;
+        OnDestroy += DestroyAnim;
+
+        OnPlay += PlayEffect;
+        OnSummon += SummonEffect;
+        OnDiscard += DiscardEffect;
+        OnDestroy += DestroyEffect;
+        OnRemove += RemoveEffect;
     }
 
     // Start is called before the first frame update
@@ -200,15 +212,7 @@ public abstract class CardModel : MonoBehaviour
         //{
         //    OverwriteUnitPrefab();
         //}
-        OnPlay += PlayAnim;
-        OnSummon += SummonAnim;
-        OnDiscard += DiscardAnim;
-        OnDestroy += DestroyAnim;
-
-        OnPlay += PlayEffect;
-        OnSummon += SummonEffect;
-        OnDiscard += DiscardEffect;
-        OnDestroy += DestroyEffect;
+        
     }
 
 
@@ -241,7 +245,15 @@ public abstract class CardModel : MonoBehaviour
         StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDestroy(delay: delay, duration: dur));
 
         await Task.Delay((int)((delay + dur) * 1000));
+    }
 
+    protected virtual async Task RemoveAnim(CardModel card)
+    {
+        float delay = 0.5f;
+        float dur = 0.5f;
+        StartCoroutine(gameObject.AddComponent<Disappear>().AnimateRemove(delay: delay, duration: dur));
+
+        await Task.Delay((int)((delay + dur) * 1000));
     }
 
     // ----------------------------------------------------------------------------
@@ -262,6 +274,10 @@ public abstract class CardModel : MonoBehaviour
         return Task.CompletedTask;
     }
     protected virtual Task DestroyEffect(CardModel card)
+    {
+        return Task.CompletedTask;
+    }
+    protected virtual Task RemoveEffect(CardModel card)
     {
         return Task.CompletedTask;
     }
@@ -295,11 +311,24 @@ public abstract class CardModel : MonoBehaviour
     /// Method to summon this card as a unit.
     /// </summary>
     /// <returns></returns>
-    public async Task Summon()
+    public async Task<bool> Summon()
     {
         cardView.gameObject.SetActive(false);
         unitView.gameObject.SetActive(true);
+
+        if (SelectedArea == null)
+        {
+            SelectedArea = Board.GetRandomValidRow(Owner);
+
+            if (SelectedArea == null)
+            {
+                await Remove();
+                return false;
+            }
+        }
+
         await Board.SummonUnit(this, SelectedArea);
+
         if (OnSummon != null)
         {
             foreach (Func<Task> handler in OnSummon.GetInvocationList()
@@ -308,6 +337,7 @@ public abstract class CardModel : MonoBehaviour
                 await handler();
             }
         }
+        return true;
     }
 
     /// <summary>
@@ -333,8 +363,22 @@ public abstract class CardModel : MonoBehaviour
     /// <returns></returns>
     public async Task Destroy()
     {
-        OnDestroy += CardFactory.Instance.RecycleCard;
+        if (OnDestroy != null)
+        {
+            foreach (Func<CardModel, Task> handler in OnDestroy.GetInvocationList()
+                .Cast<Func<CardModel, Task>>().ToList())
+            {
+                await handler(this);
+            }
+        }
 
+        await Remove();
+    }
+
+    public async Task Remove()
+    {
+        OnRemove += CardFactory.Instance.RecycleCard;
+        
         // Remove all conditions 
         string[] conKeys = conditions.Keys.ToArray();
         foreach (string conditionName in conKeys)
@@ -342,9 +386,9 @@ public abstract class CardModel : MonoBehaviour
             await RemoveCondition(conditionName);
         }
 
-        if (OnDestroy != null)
+        if (OnRemove != null)
         {
-            foreach (Func<CardModel, Task> handler in OnDestroy.GetInvocationList()
+            foreach (Func<CardModel, Task> handler in OnRemove.GetInvocationList()
                 .Cast<Func<CardModel, Task>>().ToList())
             {
                 await handler(this);

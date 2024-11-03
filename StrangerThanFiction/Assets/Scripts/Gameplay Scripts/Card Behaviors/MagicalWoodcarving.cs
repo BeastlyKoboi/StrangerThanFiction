@@ -13,7 +13,7 @@ public class MagicalWoodcarving : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         OnRoundEnd -= RoundEndEffect;
         return Task.CompletedTask;

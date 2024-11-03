@@ -13,7 +13,7 @@ public class Candlewick : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         Owner.OnUnitSummoned -= CandlewickEffect;
         return Task.CompletedTask;

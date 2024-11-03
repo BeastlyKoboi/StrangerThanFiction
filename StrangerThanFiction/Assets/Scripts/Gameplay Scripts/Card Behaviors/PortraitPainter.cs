@@ -13,7 +13,7 @@ public class PortraitPainter : CardModel
         return Task.CompletedTask;
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override Task RemoveEffect(CardModel card)
     {
         Owner.OnCardDrawn -= OnDrawEffect;
         return Task.CompletedTask;

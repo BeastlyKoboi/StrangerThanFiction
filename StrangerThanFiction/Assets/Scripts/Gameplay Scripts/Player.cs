@@ -180,7 +180,8 @@ public class Player : MonoBehaviour
         hasEndedTurn = false;
         bool playedSuccessfully = false;
 
-        uiManager.SetRightMiddleButton("End Turn", PassTurn);
+        if (gameManager.player1 == this)
+            uiManager.SetRightMiddleButton("End Turn", PassTurn);
 
         RefreshPlayableCards();
 
@@ -205,7 +206,8 @@ public class Player : MonoBehaviour
 
         } while (!playedSuccessfully && !hasEndedTurn);
 
-        uiManager.SetRightMiddleButton("", () => { });
+        if (gameManager.player1 == this)
+            uiManager.SetRightMiddleButton("", () => { });
 
         handManager.LockCards();
     }
@@ -394,7 +396,7 @@ public class Player : MonoBehaviour
         }
 
         if (playState.replacedCard != null)
-            await playState.replacedCard.Destroy();
+            await playState.replacedCard.Remove();
 
         await playState.card.Play(playState);
 
