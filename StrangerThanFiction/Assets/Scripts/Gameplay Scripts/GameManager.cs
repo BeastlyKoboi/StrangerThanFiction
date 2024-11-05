@@ -152,6 +152,12 @@ public class GameManager : MonoBehaviour, IDataPersistence
     {
         uiManager.RoundStart(roundNumber);
 
+        // Consider reseting mana before round start. 
+        player1.ResetMana();
+        player2.ResetMana();
+
+        await DrawHands(); // ITF maybe put this in event with numCards to draw as a variable
+
         if (OnRoundStart != null)
         {
             foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
@@ -160,12 +166,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
                 await handler();
             }
         }
-
-        // Consider reseting mana before round start. 
-        player1.ResetMana();
-        player2.ResetMana();
-
-        await DrawHands(); // ITF maybe put this in event with numCards to draw as a variable
 
         // Draw Cards
         do
@@ -186,8 +186,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
             (player2.CanDoSomething() && !player2.hasEndedTurn));
         // 
 
-        await DiscardHands();
-
         if (OnRoundEnd != null)
         {
             foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
@@ -196,6 +194,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
                 await handler();
             }
         }
+
+        await DiscardHands();
 
         await CardFactory.Instance.QueueLockedCards();
     }

@@ -56,7 +56,7 @@ public class CardPreview : MonoBehaviour
 
     public void OnClick(CardModel cardScript)
     {
-        Debug.Log($"{cardScript.name} was clicked.");
+        //Debug.Log($"{cardScript.name} was clicked.");
         OverwriteCardPreview(cardScript);
         cardView.gameObject.SetActive(true);
         blurPanel.gameObject.SetActive(true);

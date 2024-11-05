@@ -29,8 +29,6 @@ public class Crow : CardModel
             }
         }
 
-        Debug.Log($"Allied crows before merge check: {alliedCrows.Count}");
-
         if (alliedCrows.Count >= 2)
         {
             await alliedCrows[0].Remove();

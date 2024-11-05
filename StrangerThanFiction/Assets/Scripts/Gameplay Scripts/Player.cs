@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
 
     public CardModel CreateCardInDiscard(string cardName)
     {
-        CardModel card = CardFactory.Instance.CreateCard(cardName, hasCardsHidden, deckGameObject.transform, this, board);
+        CardModel card = CardFactory.Instance.CreateCard(cardName, hasCardsHidden, discardGameObject.transform, this, board);
         Discard.Add(card);
         Discard.Shuffle();
         return card;

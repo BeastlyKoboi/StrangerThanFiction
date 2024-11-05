@@ -36,8 +36,7 @@ public class EnemyAI_V1 : MonoBehaviour
             }
         }
 
-        Debug.Log("Playing " + playState.card.Title);
-        Debug.Log("Hand count " + myPlayer.handManager.Hand.Count);
+        Debug.Log("Enemy playing " + playState.card.Title);
 
         if (playState.card.PlayRequirements.AllyUnitTargets != 0)
         {

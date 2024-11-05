@@ -9,14 +9,12 @@ public class TheBigBadWolf : CardModel
 
     protected override Task SummonEffect()
     {
-        Owner.enemyPlayer.OnUnitDestroyed += SummonCrow;
         Owner.OnUnitDestroyed += SummonCrow;
         return Task.CompletedTask;
     }
 
     protected override Task RemoveEffect(CardModel card)
     {
-        Owner.enemyPlayer.OnUnitDestroyed -= SummonCrow;
         Owner.OnUnitDestroyed -= SummonCrow;
         return Task.CompletedTask;
     }

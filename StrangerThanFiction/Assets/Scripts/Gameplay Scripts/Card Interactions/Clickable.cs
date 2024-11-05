@@ -23,7 +23,7 @@ public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler,
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (downPos == eventData.position)
+        if (Vector3.Distance(downPos, eventData.position) < 7)
         {
             OnClickWithoutDrag?.Invoke(GetComponent<CardModel>());
         }

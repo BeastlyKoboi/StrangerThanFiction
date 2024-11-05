@@ -117,13 +117,18 @@ public abstract class CardModel : MonoBehaviour
         get { return _playable; }
         set
         {
+            bool oldValue = _playable;
             //if (_playable == value) 
             //    return; 
             _playable = value;
 
-            if (IsHidden && _playable)
+            if (IsHidden)
+            {
+                GetComponent<Draggable>().enabled = false;
                 return;
+            }
 
+            // Not the most efficient, but it works for now.
             cardView.Find("Glow").gameObject.SetActive(value);
             GetComponent<Draggable>().enabled = value;
         }
@@ -162,6 +167,7 @@ public abstract class CardModel : MonoBehaviour
     public event Func<Task> OnSummon;
     public event Func<Task> OnRoundStart;
     public event Func<Task> OnRoundEnd;
+    public event Func<UnitStrikeState, Task> OnStrike;
     public event Func<int, Task> OnTakeDamage;
     public event Func<int, Task> OnGrantCostModification;
     public event Func<int, Task> OnGrantPower;
@@ -419,6 +425,21 @@ public abstract class CardModel : MonoBehaviour
                 .Cast<Func<Task>>().ToList())
             {
                 await handler();
+            }
+        }
+    }
+
+    public async Task Strike(CardModel target)
+    {
+        await target.TakeDamage(CurrentPower);
+
+        // trigger event
+        if (OnStrike != null)
+        {
+            foreach (Func<UnitStrikeState, Task> handler in OnStrike.GetInvocationList()
+                .Cast<Func<UnitStrikeState, Task>>().ToList())
+            {
+                await handler(new UnitStrikeState(this, target));
             }
         }
     }

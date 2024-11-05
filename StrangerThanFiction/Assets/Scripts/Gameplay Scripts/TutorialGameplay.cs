@@ -12,14 +12,15 @@ public class TutorialGameplay : MonoBehaviour
     [HeaderAttribute("Input Actions")]
     [SerializeField] private InputActionReference click;
 
-    [TextArea]
-    [SerializeField] private string[] OnGameStartPrompts;
-    [SerializeField] private string[] OnRound1StartPrompts;
-    [SerializeField] private string[] OnFirstCardPlayedPrompts;
-    [SerializeField] private string[] OnFirstUnitPlayedPrompts;
-    [SerializeField] private string[] OnFirstSpellPlayedPrompts;
+    
+    [SerializeField][TextArea] private string[] OnGameStartPrompts;
+    [SerializeField][TextArea] private string[] OnRound1StartPrompts;
+    [SerializeField][TextArea] private string[] OnRound1EndPrompts;
+    [SerializeField][TextArea] private string[] OnFirstCardPlayedPrompts;
+    [SerializeField][TextArea] private string[] OnFirstUnitPlayedPrompts;
+    [SerializeField][TextArea] private string[] OnFirstSpellPlayedPrompts;
 
-    private bool _nextPromptRequested = false;
+    private bool _promptClosed = false;
 
     private void Awake()
     {
@@ -32,7 +33,11 @@ public class TutorialGameplay : MonoBehaviour
         gameManager = GetComponent<GameManager>();
 
         GameManager.OnGameStart += OnGameStart;
-        //gameManager.player1.OnCardPlayed += ;
+        GameManager.OnRoundStart += OnRound1Start;
+        gameManager.player1.OnCardPlayed += OnFirstCardPlayed;
+        gameManager.player1.OnCardPlayed += OnFirstUnitPlayed;
+        gameManager.player1.OnCardPlayed += OnFirstSpellPlayed;
+
     }
 
     // Update is called once per frame
@@ -44,48 +49,85 @@ public class TutorialGameplay : MonoBehaviour
     private void ClosePrompt(InputAction.CallbackContext context)
     {
         gameManager.uiManager.SetPrompt(false);
+        _promptClosed = true;
         click.action.performed -= ClosePrompt;
-        Debug.Log("Prompt Closed");
     }
 
     private void NextPromptRequested(InputAction.CallbackContext context)
     { 
-        _nextPromptRequested = true;
+        _promptClosed = true;
         click.action.performed -= NextPromptRequested;
-        Debug.Log("Next Prompt Requested");
     }
 
-    private async Task OnGameStart()
+    private async Task CyclePrompts(string[] prompts)
     {
-        Debug.Log("Game Start called in tutorial");
-
-        for (int i = 0; i < OnGameStartPrompts.Length; i++)
+        for (int i = 0; i < prompts.Length; i++)
         {
-            gameManager.uiManager.SetPrompt(true, OnGameStartPrompts[i]);
+            gameManager.uiManager.SetPrompt(true, prompts[i]);
 
-            if (i < OnGameStartPrompts.Length - 1)
+            if (i < prompts.Length - 1)
             {
                 click.action.performed += NextPromptRequested;
-                
-                do
-                {
-                    await Task.Yield();
-                } while (!_nextPromptRequested);
-
-                _nextPromptRequested = false;
             }
             else
             {
                 click.action.performed += ClosePrompt;
-
             }
 
+            do
+            {
+                await Task.Yield();
+            } while (!_promptClosed);
+
+            _promptClosed = false;
         }
-
-        GameManager.OnGameStart -= OnGameStart;
-
     }
 
+    private async Task OnGameStart()
+    {
+        await CyclePrompts(OnGameStartPrompts);
+
+        GameManager.OnGameStart -= OnGameStart;
+    }
+
+    private async Task OnRound1Start()
+    {
+        await CyclePrompts(OnRound1StartPrompts);
+
+        GameManager.OnRoundStart -= OnRound1Start;
+    }
+
+    private async Task OnRound1End()
+    {
+        await CyclePrompts(OnRound1EndPrompts);
+
+        GameManager.OnRoundEnd -= OnRound1End;
+    }
+
+    private async Task OnFirstCardPlayed(CardPlayState playState)
+    {
+        await CyclePrompts(OnFirstCardPlayedPrompts);
+
+        gameManager.player1.OnCardPlayed -= OnFirstCardPlayed;
+    }
+
+    private async Task OnFirstUnitPlayed(CardPlayState playState)
+    {
+        if (playState.card.Type != CardType.Unit) return;
+
+        await CyclePrompts(OnFirstUnitPlayedPrompts);
+
+        gameManager.player1.OnCardPlayed -= OnFirstUnitPlayed;
+    }
+
+    private async Task OnFirstSpellPlayed(CardPlayState playState)
+    {
+        if (playState.card.Type != CardType.Spell) return;
+
+        await CyclePrompts(OnFirstSpellPlayedPrompts);
+
+        gameManager.player1.OnCardPlayed -= OnFirstSpellPlayed;
+    }
 
 
 }

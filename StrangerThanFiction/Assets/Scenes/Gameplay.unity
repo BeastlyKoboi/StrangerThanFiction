@@ -2073,13 +2073,7 @@ MonoBehaviour:
     - cardName: BuiltDifferent
       numCopies: 3
       items: []
-    - cardName: TheBigBadWolf
-      numCopies: 3
-      items: []
-    - cardName: Crow
-      numCopies: 3
-      items: []
-    - cardName: MurderOfCrows
+    - cardName: IWillHuff
       numCopies: 3
       items: []
   player2Deck:
@@ -2143,11 +2137,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   click: {fileID: -6591835136077631477, guid: b1bdfa56a321e854dbe8da6eac338d1e, type: 3}
   OnGameStartPrompts:
+  - 'This is the board. Play units and spells to get the most power. '
+  OnRound1StartPrompts:
   - 'Drag a card to the board to play it. '
-  OnRound1StartPrompts: []
+  OnRound1EndPrompts:
+  - All cards are put into Discard at round end. At round start you draw 5 more.
   OnFirstCardPlayedPrompts: []
-  OnFirstUnitPlayedPrompts: []
-  OnFirstSpellPlayedPrompts: []
+  OnFirstUnitPlayedPrompts:
+  - 'Units have 2 stats, Power and Plot Armor. When both go to 0, the unit is destroyed. '
+  OnFirstSpellPlayedPrompts:
+  - Spells are played, then put into your Discard, unless they say Combust.
 --- !u!1 &413601969
 GameObject:
   m_ObjectHideFlags: 0
@@ -7613,8 +7612,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: End Turn
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}
+  m_sharedMaterial: {fileID: 2694622330320015122, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7638,8 +7637,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 38
+  m_fontSizeBase: 38
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9072,15 +9071,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.5803922, b: 0.54901963, a: 1}
+  m_Color: {r: 1, g: 0.8726415, b: 0.8726415, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: c248e007056c38d45847f87bdb7df058, type: 3}
+  m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -9088,7 +9087,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!222 &1483779933
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9637,15 +9636,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.54901963, g: 0.9956431, b: 1, a: 1}
+  m_Color: {r: 0.8632076, g: 1, b: 0.9773867, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: c248e007056c38d45847f87bdb7df058, type: 3}
+  m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -9653,7 +9652,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!222 &1648063954
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10081,15 +10080,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5509434, g: 0.9956431, b: 1, a: 1}
+  m_Color: {r: 0.8632076, g: 1, b: 0.9773867, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: c248e007056c38d45847f87bdb7df058, type: 3}
+  m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -10097,7 +10096,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!222 &1677344606
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11936,7 +11935,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &2049381786
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11978,7 +11977,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ae969a910a6773745acde1bd6c13c3bb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0b41b6a62691b86499c1357742d1ed93, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11998,7 +11997,7 @@ Transform:
   m_GameObject: {fileID: 2049381785}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.91, y: 0.91, z: 0.91}
+  m_LocalScale: {x: 0.26267642, y: 0.26267642, z: 0.26267642}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -12183,15 +12182,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.57807356, b: 0.54901963, a: 1}
+  m_Color: {r: 1, g: 0.8726415, b: 0.8726415, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: c248e007056c38d45847f87bdb7df058, type: 3}
+  m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -12199,7 +12198,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 2
 --- !u!222 &2075136939
 CanvasRenderer:
   m_ObjectHideFlags: 0

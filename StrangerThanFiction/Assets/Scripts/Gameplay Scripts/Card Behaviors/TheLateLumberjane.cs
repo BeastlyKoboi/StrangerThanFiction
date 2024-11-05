@@ -23,6 +23,6 @@ public class TheLateLumberjane : CardModel
 
     private async Task OnDestroyEffect(CardModel unit)
     {
-        await GrantPower(2);
+        await GrantPower(1);
     }
 }

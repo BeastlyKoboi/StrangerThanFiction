@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TheBigBadWolf
   m_EditorClassIdentifier: 
   Title: The Big Bad Wolf
-  Description: Whenever a unit dies, summon a crow.
+  Description: Whenever an ally dies, summon a crow.
   FlavorText: '"Wherever I go death, destruction, and devastation follow. That is
     my fate, and I cannot abide any other. I know not of dreams and what is not,
     only of what is. What is, is what I must preserve. Nothing more."'

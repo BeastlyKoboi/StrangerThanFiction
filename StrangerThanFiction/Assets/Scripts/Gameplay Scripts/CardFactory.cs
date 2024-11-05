@@ -53,6 +53,12 @@ public class CardFactory
         this.unitCardPool = new Queue<GameObject>();
     }
 
+    public CardModel CreateCard(Type type, bool isHidden, Transform parent, Player owner, BoardManager board, string creator = "")
+    {
+        string cardName = type.Name;
+        return CreateCard(cardName, isHidden, parent, owner, board, creator);
+    }
+
     public CardModel CreateCard(string cardName, bool isHidden, Transform parent, Player owner, BoardManager board, string creator = "")
     {
         GameObject cardObj = new GameObject(cardName, typeof(RectTransform));

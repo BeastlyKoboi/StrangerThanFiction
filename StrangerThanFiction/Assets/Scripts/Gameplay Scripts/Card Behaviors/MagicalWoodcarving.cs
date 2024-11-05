@@ -25,7 +25,7 @@ public class MagicalWoodcarving : CardModel
         if (randomEnemy)
         {
             StartCoroutine(GetComponent<UnitAnim>().Strike(1.0f));
-            await randomEnemy.TakeDamage(CurrentPower);
+            await Strike(randomEnemy);
         }
 
         await Destroy();
