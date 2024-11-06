@@ -9,8 +9,6 @@ public class DoubleLife : CardModel
     /// <summary>
     /// Needs to wait for responsive description implemntation before usning this card makes sense.
     /// </summary>
-    public override uint Id => throw new NotImplementedException();
-
     private int _damage = 8;
 
     protected override async Task PlayEffect(CardPlayState cardPlayState)

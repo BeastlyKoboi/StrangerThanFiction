@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class IWillHuff : CardModel
 {
-    public override uint Id => 19;
-
     public override async void Start()
     {
         base.Start();

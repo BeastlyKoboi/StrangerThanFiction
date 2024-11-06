@@ -11,6 +11,7 @@ public class CardInfo : ScriptableObject
     [TextArea]
     public string FlavorText;
     public CardType Type;
+    public Faction Faction;
     public string PortraitPath;
     public int BaseCost;
     public int BasePower;

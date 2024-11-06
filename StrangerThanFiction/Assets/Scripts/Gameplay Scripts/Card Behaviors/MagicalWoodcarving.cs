@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class MagicalWoodcarving : CardModel
 {
-    public override uint Id => 4;
-
     protected override Task SummonEffect()
     {
         OnRoundEnd += RoundEndEffect;

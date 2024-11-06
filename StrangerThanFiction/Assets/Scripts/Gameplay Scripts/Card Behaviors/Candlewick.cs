@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Candlewick : CardModel
 {
-    public override uint Id => 1;
-
     protected override Task SummonEffect()
     {
         Owner.OnUnitSummoned += CandlewickEffect;

@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Crow : CardModel
 {
-    public override uint Id => 13;
-
     protected override async Task SummonEffect()
     {
         CardModel randomEnemy = Board.GetRandomUnit(Owner.enemyPlayer);

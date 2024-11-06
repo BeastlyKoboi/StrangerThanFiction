@@ -52,6 +52,8 @@ public class CardPreview : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        flavorText.text = "";
     }
 
     public void OnClick(CardModel cardScript)
@@ -103,10 +105,10 @@ public class CardPreview : MonoBehaviour
 
         cardView.Find("Name").GetComponent<TextMeshProUGUI>().text = card.Title;
         cardView.Find("Description").GetComponent<TextMeshProUGUI>().text = card.Description;
+        cardView.Find("Cardback").gameObject.SetActive(card.IsHidden);
 
         if (card.IsHidden)
         {
-            cardView.Find("Cardback").gameObject.SetActive(true);
             return;
         }
 

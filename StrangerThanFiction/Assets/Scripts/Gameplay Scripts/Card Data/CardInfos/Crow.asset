@@ -17,6 +17,7 @@ MonoBehaviour:
     3 of me in play, combine us to summon A Murder of Crows.
   FlavorText: 
   Type: 0
+  Faction: 3
   PortraitPath: CardPortraits/Crow.png
   BaseCost: 1
   BasePower: 1

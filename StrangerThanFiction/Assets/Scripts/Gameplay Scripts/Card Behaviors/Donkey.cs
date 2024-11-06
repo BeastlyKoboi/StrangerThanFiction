@@ -6,8 +6,6 @@ using UnityEngine;
 
 public sealed class Donkey : CardModel
 {
-    public override uint Id => 2;
-
     protected override Task SummonEffect()
     {
         Owner.OnUnitSummoned += OnCopySummonGrantMePower;

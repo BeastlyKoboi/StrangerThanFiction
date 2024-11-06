@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class MurderOfCrows : CardModel
 {
-    public override uint Id => 14;
-
     protected override async Task SummonEffect()
     {
         CardModel[] enemies = Board.GetUnits(Owner.enemyPlayer);

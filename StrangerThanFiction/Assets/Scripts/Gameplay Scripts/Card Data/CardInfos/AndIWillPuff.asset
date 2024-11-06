@@ -17,6 +17,7 @@ MonoBehaviour:
     You Away in deck. <link="Combust"><color=#bf9b30>Combust</color></link>
   FlavorText: 
   Type: 1
+  Faction: 3
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 0

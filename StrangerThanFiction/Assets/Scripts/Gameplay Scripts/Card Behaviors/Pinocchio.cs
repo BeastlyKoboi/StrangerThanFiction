@@ -9,8 +9,6 @@ using UnityEngine;
 /// </summary>
 public sealed class Pinocchio : CardModel
 {
-    public override uint Id => 5;
-
     protected override Task SummonEffect()
     {
         OnRoundStart += CreateTallTaleInHand;

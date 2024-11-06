@@ -18,6 +18,7 @@ MonoBehaviour:
     my fate, and I cannot abide any other. I know not of dreams and what is not,
     only of what is. What is, is what I must preserve. Nothing more."'
   Type: 0
+  Faction: 3
   PortraitPath: CardPortraits/The_Big_Bad_Wolf.png
   BaseCost: 3
   BasePower: 5

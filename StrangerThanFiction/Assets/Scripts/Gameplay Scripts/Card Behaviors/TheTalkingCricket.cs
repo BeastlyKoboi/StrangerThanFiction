@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TheTalkingCricket : CardModel
 {
-    public override uint Id => 10;
-
     protected override async Task SummonEffect()
     {
         CardModel highestCostCard = Owner.handManager.GetHighestCostCard();

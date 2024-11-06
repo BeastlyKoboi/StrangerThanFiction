@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class AndIWillBlowYouAway : CardModel
 {
-    public override uint Id => 21;
-
     protected override async Task PlayEffect(CardPlayState cardPlayState)
     {
         await cardPlayState.enemyUnitTargets[0].TakeDamage(3);

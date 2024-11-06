@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class WittyWhittler : CardModel
 {
-    public override uint Id => 11;
-
     protected override Task SummonEffect()
     {
         Owner.OnUnitSummoned += OnAllySummonedGrantPoison;

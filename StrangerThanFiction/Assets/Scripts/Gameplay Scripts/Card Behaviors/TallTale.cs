@@ -5,8 +5,6 @@ using UnityEngine;
 
 public sealed class TallTale : CardModel
 {
-    public override uint Id => 7;
-
     // Start is called before the first frame update
     public override async void Start()
     {

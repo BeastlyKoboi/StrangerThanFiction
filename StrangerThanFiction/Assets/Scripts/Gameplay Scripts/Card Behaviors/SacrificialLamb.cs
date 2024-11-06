@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class SacrificialLamb : CardModel
 {
-    public override uint Id => 18;
-
     protected override Task SummonEffect()
     {
         Owner.OnUnitSummoned += Sacrifice;

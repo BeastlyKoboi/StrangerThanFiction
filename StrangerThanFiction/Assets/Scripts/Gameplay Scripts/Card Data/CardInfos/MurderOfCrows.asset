@@ -16,6 +16,7 @@ MonoBehaviour:
   Description: When I am summoned, deal 1 damage to all enemies.
   FlavorText: 
   Type: 0
+  Faction: 3
   PortraitPath: CardPortraits/A_Murder_Of_Crows.png
   BaseCost: 1
   BasePower: 3

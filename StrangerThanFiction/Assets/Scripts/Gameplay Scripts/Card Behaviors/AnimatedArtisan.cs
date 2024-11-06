@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class AnimatedArtisan : CardModel
 {
-    public override uint Id => 0;
-
     protected override Task SummonEffect()
     {
         Owner.OnRoundStart += RoundStartEffect;

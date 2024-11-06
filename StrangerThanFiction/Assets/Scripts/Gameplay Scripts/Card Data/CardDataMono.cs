@@ -4,7 +4,5 @@ using UnityEngine;
 
 public class CardDataMono : MonoBehaviour
 {
-    public CardList allCards;
-
-
+    public CardDictionary cardDictionary;
 }

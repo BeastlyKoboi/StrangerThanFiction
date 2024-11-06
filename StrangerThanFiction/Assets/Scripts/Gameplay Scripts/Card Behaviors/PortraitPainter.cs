@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PortraitPainter : CardModel
 {
-    public override uint Id => 6;
-
     protected override Task SummonEffect()
     {
         Owner.OnCardDrawn += OnDrawEffect;

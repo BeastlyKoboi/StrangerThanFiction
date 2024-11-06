@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TheLateLumberjane : CardModel
 {
-    public override uint Id => 9;
-
     protected override Task SummonEffect()
     {
         Owner.OnUnitDestroyed += OnDestroyEffect;

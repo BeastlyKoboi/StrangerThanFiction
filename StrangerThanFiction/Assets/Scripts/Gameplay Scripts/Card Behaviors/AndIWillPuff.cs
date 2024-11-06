@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class AndIWillPuff : CardModel
 {
-    public override uint Id => 20;
-
     public override async void Start()
     {
         base.Start();

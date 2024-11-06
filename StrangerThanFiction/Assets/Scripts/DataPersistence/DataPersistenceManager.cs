@@ -85,17 +85,22 @@ public class DataPersistenceManager : MonoBehaviour
         switch (profile)
         {
             case "LittleRed": 
+
+
+
                 break;
             case "Pinocchio":
                 defaultCardList.Add(new DeckEntry("Pinocchio", 2));
+                defaultCardList.Add(new DeckEntry("TheCoachman", 2));
                 defaultCardList.Add(new DeckEntry("Donkey", 2));
-                defaultCardList.Add(new DeckEntry("TheTalkingCricket", 2));
                 defaultCardList.Add(new DeckEntry("Candlewick", 2));
                 defaultCardList.Add(new DeckEntry("GrowthSpurt", 2));
-
+                defaultCardList.Add(new DeckEntry("TheBoonsOfPlanning", 2));
 
                 break;
             case "HumptyDumpty":
+
+
                 break;
         }
 

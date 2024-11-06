@@ -16,6 +16,7 @@ MonoBehaviour:
   Description: When an ally is summoned, it strikes me. Then grant that ally my power.
   FlavorText: 
   Type: 0
+  Faction: 3
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 1

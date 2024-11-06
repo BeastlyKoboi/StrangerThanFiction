@@ -2076,6 +2076,12 @@ MonoBehaviour:
     - cardName: IWillHuff
       numCopies: 3
       items: []
+    - cardName: TheBoonsOfPlanning
+      numCopies: 3
+      items: []
+    - cardName: TheCoachman
+      numCopies: 3
+      items: []
   player2Deck:
     deckEntries:
     - cardName: AnimatedArtisan
@@ -7854,7 +7860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c565ff4a2cc593c4a9f039c89462f65a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allCards: {fileID: 11400000, guid: 8f329b0bc3da6d84b8cedd8e909ddd2e, type: 2}
+  cardDictionary: {fileID: 11400000, guid: 79e48c56a8a4e404f981a2fc528c0dc1, type: 2}
 --- !u!4 &1406151295
 Transform:
   m_ObjectHideFlags: 0

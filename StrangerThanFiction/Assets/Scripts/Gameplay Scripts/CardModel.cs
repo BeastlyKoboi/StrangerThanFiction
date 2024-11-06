@@ -15,6 +15,7 @@ using UnityEngine.UI;
 /// especially when dealing with different behavior. 
 /// </summary>
 public enum CardType { Unit, Spell }
+public enum Faction { Pinocchio, LittleRed, HumptyDumpty, TheBigBadWolf }
 
 /// <summary>
 /// Defines the basic members and behaviors for all cards. Meant to be 
@@ -26,7 +27,6 @@ public abstract class CardModel : MonoBehaviour
     // Physical Descriptors of the card, that will effect how it is viewed.
     // ----------------------------------------------------------------------------
     public static CardDataMono cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
-    public abstract uint Id { get; }
     public virtual string Title { get; private set; } 
     public virtual string Description { get; private set; }
     public virtual string FlavorText { get; private set; }
@@ -181,15 +181,17 @@ public abstract class CardModel : MonoBehaviour
 
     private void Awake()
     {
-        Title = cardData.allCards.cards[Id].Title;
-        Description = cardData.allCards.cards[Id].Description;
-        FlavorText = cardData.allCards.cards[Id].FlavorText;
-        Type = cardData.allCards.cards[Id].Type;
-        PortraitPath = cardData.allCards.cards[Id].PortraitPath;
-        BaseCost = cardData.allCards.cards[Id].BaseCost;
-        BasePower = cardData.allCards.cards[Id].BasePower;
-        BasePlotArmor = cardData.allCards.cards[Id].BasePlotArmor;
-        PlayRequirements = cardData.allCards.cards[Id].PlayRequirements;
+        CardInfo cardInfo = cardData.cardDictionary.GetCardDataByName(name);
+
+        Title = cardInfo.Title;
+        Description = cardInfo.Description;
+        FlavorText = cardInfo.FlavorText;
+        Type = cardInfo.Type;
+        PortraitPath = cardInfo.PortraitPath;
+        BaseCost = cardInfo.BaseCost;
+        BasePower = cardInfo.BasePower;
+        BasePlotArmor = cardInfo.BasePlotArmor;
+        PlayRequirements = cardInfo.PlayRequirements;
 
         CurrentCost = BaseCost;
         CurrentPower = BasePower;

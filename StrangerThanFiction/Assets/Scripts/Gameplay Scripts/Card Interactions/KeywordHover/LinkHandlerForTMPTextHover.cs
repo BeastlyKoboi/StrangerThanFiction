@@ -55,7 +55,7 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
 
         bool isIntersectingRectTransform = TMP_TextUtilities.IsIntersectingRectTransform(_textBoxRectTransform, mousePosition, null);
 
-        if (!isIntersectingRectTransform)
+        if (!isIntersectingRectTransform && !_hasClosedTooltip)
         {
             OnCloseTooltipEvent?.Invoke();
             return;
@@ -63,7 +63,7 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
 
         int intersectingLink = TMP_TextUtilities.FindIntersectingLink(_tmpTextBox, mousePosition, null);
 
-        if (_currentlyActiveLinkedElement != intersectingLink)
+        if (_currentlyActiveLinkedElement != intersectingLink && !_hasClosedTooltip)
             OnCloseTooltipEvent?.Invoke();
 
         if (intersectingLink == -1)

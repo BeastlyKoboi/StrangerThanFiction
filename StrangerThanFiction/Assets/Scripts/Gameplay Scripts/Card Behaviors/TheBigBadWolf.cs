@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TheBigBadWolf : CardModel
 {
-    public override uint Id => 15;
-
     protected override Task SummonEffect()
     {
         Owner.OnUnitDestroyed += SummonCrow;

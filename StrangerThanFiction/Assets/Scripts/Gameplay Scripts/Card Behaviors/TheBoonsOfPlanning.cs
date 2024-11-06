@@ -7,8 +7,6 @@ using UnityEngine.Playables;
 
 public class TheBoonsOfPlanning : CardModel
 {
-    public override uint Id => 16;
-
     protected override Task PlayEffect(CardPlayState cardPlayState)
     {
         cardPlayState.card.Owner.OnCardPlayed += CreateCopyOfNextCardPlayed;

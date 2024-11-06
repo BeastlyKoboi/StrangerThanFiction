@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TheBlueFairy : CardModel
 {
-    public override uint Id => 8;
-
     protected override Task SummonEffect()
     {
         Owner.OnCardPlayed += IfCardPlayedIsCostReducedDrawCard;

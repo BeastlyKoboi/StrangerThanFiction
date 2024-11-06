@@ -16,6 +16,7 @@ MonoBehaviour:
   Description: Deal 3 damage to 3 enemy units.
   FlavorText: 
   Type: 1
+  Faction: 3
   PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 0
