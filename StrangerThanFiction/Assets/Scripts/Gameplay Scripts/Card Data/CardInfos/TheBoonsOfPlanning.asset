@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: The Boons of Planning
   Description: Create a copy of the next card played in discard.
-  FlavorText: 
+  FlavorText: 'With a bit of foresight, anything is possible. '
   Type: 1
+  Faction: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 0
@@ -27,3 +28,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

@@ -17,6 +17,7 @@ MonoBehaviour:
   FlavorText: '"In death I wonder, by cutting down that pine, did I doom you to a
     life of suffering or one of wonder."'
   Type: 0
+  Faction: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 0
@@ -28,3 +29,5 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: '"I know not how I still walk amongst the living, yet I must help
+    while I still can."'

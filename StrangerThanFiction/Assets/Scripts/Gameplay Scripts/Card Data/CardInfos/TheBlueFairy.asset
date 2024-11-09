@@ -14,9 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: The Blue Fairy
   Description: 'When you play a card with a cost reduction, draw a card. '
-  FlavorText: 
+  FlavorText: 'An unseeen guardian among the terrors of the world. '
   Type: 0
+  Faction: 0
   PortraitPath: CardPortraits/The_Blue_Fairy.png
   BaseCost: 2
   BasePower: 2
   BasePlotArmor: 1
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0
+  EncounterText: '"I have seen of your plight, you really picked a fight, so we must
+    join our might, above all set things right!!"'

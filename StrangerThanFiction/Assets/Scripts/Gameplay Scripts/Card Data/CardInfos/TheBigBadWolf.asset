@@ -30,3 +30,5 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: '"I know not of preservation or of kindness, yet as the world changes,
+    so must I."'

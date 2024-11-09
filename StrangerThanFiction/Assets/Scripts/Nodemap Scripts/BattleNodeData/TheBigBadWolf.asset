@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 814d3bd79d78ceb448c82a337986d4f4, type: 3}
+  m_Script: {fileID: 11500000, guid: cfb29faad67f8334fa1c73160cf525ac, type: 3}
   m_Name: TheBigBadWolf
   m_EditorClassIdentifier: 
   Title: The Big Bad Wolf
   Description: 'You have your place in this story, as I do. There is no other path.
     There is no fighting it. There is only your end. '
-  Type: 0
   Icon: {fileID: 21300000, guid: d26bd652305916244aef47e66aeb4d0f, type: 3}
   DeckInventory:
     deckEntries:

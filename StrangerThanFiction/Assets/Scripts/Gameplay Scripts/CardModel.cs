@@ -458,6 +458,8 @@ public abstract class CardModel : MonoBehaviour
         // Should NOT be called if in card form.
         if (Type != CardType.Unit) return;
 
+        if (CurrentPower == 0) return;
+
         // Applies damage mitigation effects, and separate conditions.
         damage -= DamageResistence;
 
@@ -703,7 +705,7 @@ public abstract class CardModel : MonoBehaviour
         // Placeholder has Unit Card frame automatically, so replace it if needed
         if (Type == CardType.Spell)
         {
-            Sprite spellCardFrame = LoadSprite("SpellCardFrontFrame.png");
+            Sprite spellCardFrame = LoadSprite("SpellCardFramePlaceholder.png");
             Transform background = cardView.Find("Background");
             background.GetComponent<Image>().sprite = spellCardFrame;
 

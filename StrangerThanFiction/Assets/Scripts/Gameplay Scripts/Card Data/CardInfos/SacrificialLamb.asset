@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: Sacrificial Lamb
   Description: When an ally is summoned, it strikes me. Then grant that ally my power.
-  FlavorText: 
+  FlavorText: Always ask yourself what you are willing to lose, in the face of your
+    vision.
   Type: 0
   Faction: 3
   PortraitPath: CardPortraits/Default.png
@@ -28,3 +29,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: You find a lamb with an X painted on the side?

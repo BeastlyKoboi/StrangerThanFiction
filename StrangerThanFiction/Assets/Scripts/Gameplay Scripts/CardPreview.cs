@@ -34,8 +34,8 @@ public class CardPreview : MonoBehaviour
         flavorBox = transform.Find("Flavor");
         flavorText = flavorBox.Find("FlavorText").GetComponent<TextMeshProUGUI>();
 
-        spellCardFrame = CardModel.LoadSprite("SpellCardFrontFrame.png");
-        unitCardFrame = CardModel.LoadSprite("UnitCardFrontFrame.png");
+        spellCardFrame = CardModel.LoadSprite("SpellCardFramePlaceholder.png");
+        unitCardFrame = CardModel.LoadSprite("UnitCardFramePlaceholder.png");
 
 
     }

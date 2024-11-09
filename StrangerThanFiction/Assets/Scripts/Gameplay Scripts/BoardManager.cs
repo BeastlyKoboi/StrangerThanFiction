@@ -43,11 +43,11 @@ public class BoardManager : MonoBehaviour
 
     private async Task DestroyUnit(CardModel unit)
     {
-        if (unit.SelectedArea != null)
-            unit.SelectedArea.RemoveUnit(unit);
-
         await unit.Owner.UnitDestroyed(unit);
         unit.OnDestroy -= DestroyUnit;
+        
+        if (unit.SelectedArea != null)
+            unit.SelectedArea.RemoveUnit(unit);
     }
 
     private async Task RemoveUnit(CardModel unit)

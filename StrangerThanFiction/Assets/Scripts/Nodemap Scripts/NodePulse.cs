@@ -27,7 +27,7 @@ public class NodePulse : MonoBehaviour
 
 
 
-    public IEnumerator Pulse(float dur = 0.5f, Action onComplete = null)
+    public IEnumerator Pulse(float dur = 1.0f, Action onComplete = null)
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
 

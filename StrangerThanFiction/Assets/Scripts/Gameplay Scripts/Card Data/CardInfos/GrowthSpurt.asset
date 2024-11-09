@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: Growth Spurt
   Description: Grant an ally +4 power.
-  FlavorText: 
+  FlavorText: '"Why don''t my clothes fit anymore!?"'
   Type: 1
+  Faction: 0
   PortraitPath: CardPortraits/Affable_Nipper.png
   BaseCost: 2
   BasePower: 0
@@ -27,3 +28,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

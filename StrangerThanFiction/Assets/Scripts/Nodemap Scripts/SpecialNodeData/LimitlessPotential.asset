@@ -10,11 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 814d3bd79d78ceb448c82a337986d4f4, type: 3}
-  m_Name: Pinocchio
+  m_Name: LimitlessPotential
   m_EditorClassIdentifier: 
-  Title: Pinocchio
+  Title: 
   Description: 
-  Type: 0
-  Icon: {fileID: 21300000, guid: d26bd652305916244aef47e66aeb4d0f, type: 3}
-  DeckInventory:
-    deckEntries: []
+  Icon: {fileID: 0}

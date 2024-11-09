@@ -15,9 +15,20 @@ MonoBehaviour:
   Title: Candlewick
   Description: When you summon a unit with a cost of 1 or less, grant it +1 power
     and +1 plot armor.
-  FlavorText: 
+  FlavorText: "Pinocchio's best friend and long-time companion. \n\"Now is the time
+    for mistakes! Let's try to make the right ones!\""
   Type: 0
+  Faction: 0
   PortraitPath: CardPortraits/CandleWick.png
   BaseCost: 2
   BasePower: 2
   BasePlotArmor: 1
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0
+  EncounterText: '"I heard someone wanted to make a ruckus. That happens to be my
+    specialty!"'

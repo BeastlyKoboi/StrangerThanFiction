@@ -17,4 +17,7 @@ public class CardInfo : ScriptableObject
     public int BasePower;
     public int BasePlotArmor;
     public PlayRequirements PlayRequirements;
+
+    [TextArea] public string EncounterText;
+   
 }

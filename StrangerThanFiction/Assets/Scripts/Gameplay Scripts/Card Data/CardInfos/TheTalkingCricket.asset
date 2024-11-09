@@ -18,6 +18,7 @@ MonoBehaviour:
   FlavorText: '"I have lived for over a century Pinocchio, and even I still have
     much to learn."'
   Type: 0
+  Faction: 0
   PortraitPath: CardPortraits/The_Talking_Cricket.png
   BaseCost: 1
   BasePower: 2
@@ -29,3 +30,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: '"Time to teach those authors some manners."'

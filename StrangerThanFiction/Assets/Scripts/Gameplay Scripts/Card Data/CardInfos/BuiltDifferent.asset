@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: Built Different
   Description: Grant an ally <link="Fated"><color=#bf9b30>Fated</color></link> 2.
-  FlavorText: 
+  FlavorText: '"I''m as strong as balsa and flexible as bamboo!"'
   Type: 1
+  Faction: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 0
@@ -27,3 +28,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

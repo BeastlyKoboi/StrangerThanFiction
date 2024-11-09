@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: Murder of Crows
   Description: When I am summoned, deal 1 damage to all enemies.
-  FlavorText: 
+  FlavorText: 'You never see one of these for good reasons. '
   Type: 0
   Faction: 3
   PortraitPath: CardPortraits/A_Murder_Of_Crows.png
@@ -28,3 +28,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

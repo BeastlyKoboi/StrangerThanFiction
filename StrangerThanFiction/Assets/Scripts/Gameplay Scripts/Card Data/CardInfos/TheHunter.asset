@@ -15,7 +15,7 @@ MonoBehaviour:
   Title: The Hunter
   Description: When I am played, select an ally and an enemy. That ally strikes that
     enemy, then I kill the ally.
-  FlavorText: 
+  FlavorText: Always on target.
   Type: 0
   Faction: 3
   PortraitPath: CardPortraits/Default.png
@@ -29,3 +29,5 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: '"You have your sights set on a fantastic beast! I must join the
+    fray!"'

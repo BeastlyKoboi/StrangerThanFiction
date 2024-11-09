@@ -18,6 +18,7 @@ MonoBehaviour:
   FlavorText: "\"Pinocchio! I have not seen you so wooden since you tried doing an
     impression of your father!\" \nHis words are poison, as is his knife."
   Type: 0
+  Faction: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 2
@@ -29,3 +30,5 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: '"What a sight you are! I''ve not seen such a ragtag band since
+    animals broke into my woodshop."'

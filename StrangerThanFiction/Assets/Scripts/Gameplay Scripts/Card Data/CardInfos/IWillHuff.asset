@@ -29,3 +29,5 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 'You feel a chill in the air, a soft breeze that you sense can be
+    harnessed. '

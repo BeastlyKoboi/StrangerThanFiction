@@ -14,9 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Title: Magical Woodcarving
   Description: At round end, I strike a random enemy, then I am destroyed.
-  FlavorText: 
+  FlavorText: '"STAB STAB STAB..."'
   Type: 0
+  Faction: 0
   PortraitPath: CardPortraits/Magical_Woodcarving.png
   BaseCost: 1
   BasePower: 3
   BasePlotArmor: 0
+  PlayRequirements:
+    AllyUnitTargets: 0
+    EnemyUnitTargets: 0
+    AllyCardTargets: 0
+    EnemyCardTargets: 0
+    AllyHandSize: 0
+    EnemyHandSize: 0
+  EncounterText: 

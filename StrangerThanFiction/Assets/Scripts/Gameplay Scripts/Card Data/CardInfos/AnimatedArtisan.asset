@@ -16,6 +16,7 @@ MonoBehaviour:
   Description: On Round Start, create a Magical Woodcarving in deck.
   FlavorText: '"I am. I dream. I ponder. I make. I am."'
   Type: 0
+  Faction: 0
   PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 2
@@ -27,3 +28,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: '"I see. I wonder. I fear. I help. I must."'

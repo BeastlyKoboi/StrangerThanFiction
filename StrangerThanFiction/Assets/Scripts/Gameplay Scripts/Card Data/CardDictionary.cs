@@ -33,4 +33,11 @@ public class CardDictionary : ScriptableObject
             InitializeDictionary();
         return cardDictionary.TryGetValue(name, out var cardData) ? cardData : null;
     }
+
+    public CardInfo GetCardDataByIndex(int index)
+    {
+        if (cardDictionary == null)
+            InitializeDictionary();
+        return cardDictionary.TryGetValue(cardEntries[index].cardName, out var cardData) ? cardData : null;
+    }
 }

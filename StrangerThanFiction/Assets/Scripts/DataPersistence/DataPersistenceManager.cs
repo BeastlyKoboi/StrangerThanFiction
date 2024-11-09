@@ -22,6 +22,11 @@ public class DataPersistenceManager : MonoBehaviour
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
 
+    [Header("Starter Decks")]
+    [SerializeField] private List<DeckEntry> littleRedDeck;
+    [SerializeField] private List<DeckEntry> pinocchioDeck;
+    [SerializeField] private List<DeckEntry> humptyDumptyDeck;
+
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
@@ -84,23 +89,14 @@ public class DataPersistenceManager : MonoBehaviour
 
         switch (profile)
         {
-            case "LittleRed": 
-
-
-
+            case "LittleRed":
+                defaultCardList = littleRedDeck;
                 break;
             case "Pinocchio":
-                defaultCardList.Add(new DeckEntry("Pinocchio", 2));
-                defaultCardList.Add(new DeckEntry("TheCoachman", 2));
-                defaultCardList.Add(new DeckEntry("Donkey", 2));
-                defaultCardList.Add(new DeckEntry("Candlewick", 2));
-                defaultCardList.Add(new DeckEntry("GrowthSpurt", 2));
-                defaultCardList.Add(new DeckEntry("TheBoonsOfPlanning", 2));
-
+                defaultCardList = pinocchioDeck;   
                 break;
             case "HumptyDumpty":
-
-
+                defaultCardList = humptyDumptyDeck;
                 break;
         }
 

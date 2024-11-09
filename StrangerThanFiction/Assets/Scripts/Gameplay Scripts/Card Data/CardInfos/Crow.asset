@@ -15,7 +15,7 @@ MonoBehaviour:
   Title: Crow
   Description: When I am summoned, deal 1 damage to a random enemy. If there are
     3 of me in play, combine us to summon A Murder of Crows.
-  FlavorText: 
+  FlavorText: 'A bad omen that proves even tragedies have their upsides for someone. '
   Type: 0
   Faction: 3
   PortraitPath: CardPortraits/Crow.png
@@ -29,3 +29,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

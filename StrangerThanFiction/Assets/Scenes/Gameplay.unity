@@ -2049,37 +2049,25 @@ MonoBehaviour:
   roundNumber: 0
   cardPrefab: {fileID: 1809478321450799374, guid: 8eb117f63706b9044a57923dbabb1dda, type: 3}
   unitPrefab: {fileID: 594909419187587363, guid: fd56e59cc9f8a344daa2832031ed56e4, type: 3}
-  usingInspector: 1
+  usingInspector: 0
   player1Deck:
     deckEntries:
-    - cardName: AnimatedArtisan
-      numCopies: 2
-      items: []
-    - cardName: MagicalWoodcarving
-      numCopies: 2
-      items: []
-    - cardName: Pinocchio
-      numCopies: 2
-      items: []
-    - cardName: WittyWhittler
+    - cardName: TheBigBadWolf
       numCopies: 3
       items: []
-    - cardName: TheLateLumberjane
-      numCopies: 2
+    - cardName: TheHunter
+      numCopies: 3
       items: []
-    - cardName: TheTalkingCricket
-      numCopies: 2
+    - cardName: SacrificialLamb
+      numCopies: 3
       items: []
-    - cardName: BuiltDifferent
+    - cardName: SacrificialLamb
+      numCopies: 3
+      items: []
+    - cardName: Crow
       numCopies: 3
       items: []
     - cardName: IWillHuff
-      numCopies: 3
-      items: []
-    - cardName: TheBoonsOfPlanning
-      numCopies: 3
-      items: []
-    - cardName: TheCoachman
       numCopies: 3
       items: []
   player2Deck:
