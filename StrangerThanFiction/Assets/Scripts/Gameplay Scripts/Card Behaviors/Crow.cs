@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Crow : CardModel
 {
-    protected override async Task SummonEffect()
+    protected override async UniTask SummonEffect()
     {
         CardModel randomEnemy = Board.GetRandomUnit(Owner.enemyPlayer);
 
@@ -38,7 +38,7 @@ public class Crow : CardModel
         
     }
 
-    private async Task SummonMurder(CardModel card)
+    private async UniTask SummonMurder(CardModel card)
     {
         CardModel murderOfCrows = CardFactory.Instance.CreateCard("MurderOfCrows", true, transform, Owner, Board, Title);
         await murderOfCrows.Summon();

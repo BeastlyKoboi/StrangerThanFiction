@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -157,22 +157,22 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
 
     // Card Events - common to both units and spells.
-    public event Func<CardPlayState, Task> OnPlay;
-    public event Func<Task> OnDraw;
-    public event Func<Task> OnDiscard;
-    public event Func<CardModel, Task> OnDestroy;
-    public event Func<CardModel, Task> OnRemove;
+    public event Func<CardPlayState, UniTask> OnPlay;
+    public event Func<UniTask> OnDraw;
+    public event Func<UniTask> OnDiscard;
+    public event Func<CardModel, UniTask> OnDestroy;
+    public event Func<CardModel, UniTask> OnRemove;
 
     // Unit Events - only called when in play, otherwise never.
-    public event Func<Task> OnSummon;
-    public event Func<Task> OnRoundStart;
-    public event Func<Task> OnRoundEnd;
-    public event Func<UnitStrikeState, Task> OnStrike;
-    public event Func<int, Task> OnTakeDamage;
-    public event Func<int, Task> OnGrantCostModification;
-    public event Func<int, Task> OnGrantPower;
-    public event Func<int, Task> OnGrantPlotArmor;
-    public event Func<int, Task> OnHeal;
+    public event Func<UniTask> OnSummon;
+    public event Func<UniTask> OnRoundStart;
+    public event Func<UniTask> OnRoundEnd;
+    public event Func<UnitStrikeState, UniTask> OnStrike;
+    public event Func<int, UniTask> OnTakeDamage;
+    public event Func<int, UniTask> OnGrantCostModification;
+    public event Func<int, UniTask> OnGrantPower;
+    public event Func<int, UniTask> OnGrantPlotArmor;
+    public event Func<int, UniTask> OnHeal;
 
     private void OnEnable()
     {
@@ -227,41 +227,41 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
     // Card Animations
     // ----------------------------------------------------------------------------
-    protected virtual Task PlayAnim(CardPlayState cardPlayState)
+    protected virtual UniTask PlayAnim(CardPlayState cardPlayState)
     {
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    protected virtual async Task SummonAnim()
+    protected virtual async UniTask SummonAnim()
     {
         float dur = 0.5f;
         StartCoroutine(gameObject.AddComponent<UnitAnim>().Summoned(dur));
 
-        await Task.Delay((int)(dur * 1000));
+        await UniTask.Delay((int)(dur * 1000));
     }
-    protected virtual async Task DiscardAnim()
+    protected virtual async UniTask DiscardAnim()
     {
         float delay = 0.5f;
         float dur = 0.25f;
         StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDiscard(pulseDur: delay, discardDur: dur));
 
-        await Task.Delay((int)((delay + dur) * 1000));
+        await UniTask.Delay((int)((delay + dur) * 1000));
     }
-    protected virtual async Task DestroyAnim(CardModel card)
+    protected virtual async UniTask DestroyAnim(CardModel card)
     {
         float delay = 0.5f;
         float dur = 0.5f;
         StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDestroy(delay: delay, duration: dur));
 
-        await Task.Delay((int)((delay + dur) * 1000));
+        await UniTask.Delay((int)((delay + dur) * 1000));
     }
 
-    protected virtual async Task RemoveAnim(CardModel card)
+    protected virtual async UniTask RemoveAnim(CardModel card)
     {
         float delay = 0.5f;
         float dur = 0.5f;
         StartCoroutine(gameObject.AddComponent<Disappear>().AnimateRemove(delay: delay, duration: dur));
 
-        await Task.Delay((int)((delay + dur) * 1000));
+        await UniTask.Delay((int)((delay + dur) * 1000));
     }
 
     // ----------------------------------------------------------------------------
@@ -269,25 +269,25 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
 
     // Should be overridden by cards if they have any effects.
-    protected virtual Task PlayEffect(CardPlayState cardPlayState)
+    protected virtual UniTask PlayEffect(CardPlayState cardPlayState)
     {
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    protected virtual Task SummonEffect()
+    protected virtual UniTask SummonEffect()
     {
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    protected virtual Task DiscardEffect()
+    protected virtual UniTask DiscardEffect()
     {
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    protected virtual Task DestroyEffect(CardModel card)
+    protected virtual UniTask DestroyEffect(CardModel card)
     {
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    protected virtual Task RemoveEffect(CardModel card)
+    protected virtual UniTask RemoveEffect(CardModel card)
     {
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
 
@@ -296,14 +296,14 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public async Task Play(CardPlayState cardPlayState)
+    public async UniTask Play(CardPlayState cardPlayState)
     {
         Owner.CurrentMana -= CurrentCost;
 
         if (OnPlay != null)
         {
-            foreach (Func<CardPlayState, Task> handler in OnPlay.GetInvocationList()
-                    .Cast<Func<CardPlayState, Task>>().ToList())
+            foreach (Func<CardPlayState, UniTask> handler in OnPlay.GetInvocationList()
+                    .Cast<Func<CardPlayState, UniTask>>().ToList())
             {
                 await handler(cardPlayState);
             }
@@ -319,7 +319,7 @@ public abstract class CardModel : MonoBehaviour
     /// Method to summon this card as a unit.
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> Summon()
+    public async UniTask<bool> Summon()
     {
         cardView.gameObject.SetActive(false);
         unitView.gameObject.SetActive(true);
@@ -339,8 +339,8 @@ public abstract class CardModel : MonoBehaviour
 
         if (OnSummon != null)
         {
-            foreach (Func<Task> handler in OnSummon.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnSummon.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -353,12 +353,12 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public async Task Discard(Player player)
+    public async UniTask Discard(Player player)
     {
         if (OnDiscard != null)
         {
-            foreach (Func<Task> handler in OnDiscard.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnDiscard.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -369,12 +369,12 @@ public abstract class CardModel : MonoBehaviour
     /// Method to destroy this card. 
     /// </summary>
     /// <returns></returns>
-    public async Task Destroy()
+    public async UniTask Destroy()
     {
         if (OnDestroy != null)
         {
-            foreach (Func<CardModel, Task> handler in OnDestroy.GetInvocationList()
-                .Cast<Func<CardModel, Task>>().ToList())
+            foreach (Func<CardModel, UniTask> handler in OnDestroy.GetInvocationList()
+                .Cast<Func<CardModel, UniTask>>().ToList())
             {
                 await handler(this);
             }
@@ -383,7 +383,7 @@ public abstract class CardModel : MonoBehaviour
         await Remove();
     }
 
-    public async Task Remove()
+    public async UniTask Remove()
     {
         OnRemove += CardFactory.Instance.RecycleCard;
         
@@ -396,8 +396,8 @@ public abstract class CardModel : MonoBehaviour
 
         if (OnRemove != null)
         {
-            foreach (Func<CardModel, Task> handler in OnRemove.GetInvocationList()
-                .Cast<Func<CardModel, Task>>().ToList())
+            foreach (Func<CardModel, UniTask> handler in OnRemove.GetInvocationList()
+                .Cast<Func<CardModel, UniTask>>().ToList())
             {
                 await handler(this);
             }
@@ -407,39 +407,39 @@ public abstract class CardModel : MonoBehaviour
     /// <summary>
     /// Method to trigger OnRoundStart event.
     /// </summary>
-    public async Task RoundStart()
+    public async UniTask RoundStart()
     {
         if (OnRoundStart != null)
         {
-            foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnRoundStart.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
         }
     }
 
-    public async Task RoundEnd()
+    public async UniTask RoundEnd()
     {
         if (OnRoundEnd != null)
         {
-            foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnRoundEnd.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
         }
     }
 
-    public async Task Strike(CardModel target)
+    public async UniTask Strike(CardModel target)
     {
         await target.TakeDamage(CurrentPower);
 
         // trigger event
         if (OnStrike != null)
         {
-            foreach (Func<UnitStrikeState, Task> handler in OnStrike.GetInvocationList()
-                .Cast<Func<UnitStrikeState, Task>>().ToList())
+            foreach (Func<UnitStrikeState, UniTask> handler in OnStrike.GetInvocationList()
+                .Cast<Func<UnitStrikeState, UniTask>>().ToList())
             {
                 await handler(new UnitStrikeState(this, target));
             }
@@ -453,7 +453,7 @@ public abstract class CardModel : MonoBehaviour
     /// <param name="damage"></param>
     /// <param name="ignorePlotArmor">Whether the damage is affected by plot armor.</param>
     /// <returns></returns>
-    public async Task TakeDamage(int damage, bool ignorePlotArmor = false)
+    public async UniTask TakeDamage(int damage, bool ignorePlotArmor = false)
     {
         // Should NOT be called if in card form.
         if (Type != CardType.Unit) return;
@@ -487,8 +487,8 @@ public abstract class CardModel : MonoBehaviour
 
         if (OnTakeDamage != null)
         {
-            foreach (Func<Task> handler in OnTakeDamage.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnTakeDamage.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -505,14 +505,14 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="costMod"></param>
     /// <returns></returns>
-    public async Task GrantCostModification(int costMod)
+    public async UniTask GrantCostModification(int costMod)
     {
         CurrentCost = Math.Max(0, CurrentCost + costMod);
 
         if (OnGrantCostModification != null)
         {
-            foreach (Func<Task> handler in OnGrantCostModification.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnGrantCostModification.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -524,15 +524,15 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="powerAmount"></param>
     /// <returns></returns>
-    public async Task GrantPower(int powerAmount)
+    public async UniTask GrantPower(int powerAmount)
     {
         MaxPower += powerAmount;
         CurrentPower += powerAmount;
 
         if (OnGrantPower != null)
         {
-            foreach (Func<Task> handler in OnGrantPower.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnGrantPower.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -546,14 +546,14 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="armorAmount"></param>
     /// <returns></returns>
-    public async Task GrantPlotArmor(int armorAmount)
+    public async UniTask GrantPlotArmor(int armorAmount)
     {
         CurrentPlotArmor += armorAmount;
 
         if (OnGrantPlotArmor != null)
         {
-            foreach (Func<Task> handler in OnGrantPlotArmor.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnGrantPlotArmor.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -565,7 +565,7 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="healAmount"></param>
     /// <returns></returns>
-    public async Task Heal(int healAmount)
+    public async UniTask Heal(int healAmount)
     {
         // Should NOT be called if in card form.
         if (Type != CardType.Unit) return;
@@ -581,8 +581,8 @@ public abstract class CardModel : MonoBehaviour
 
         if (OnHeal != null)
         {
-            foreach (Func<Task> handler in OnHeal.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnHeal.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -600,7 +600,7 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     /// <param name="conditionName"></param>
     /// <param name="condition"></param>
-    public async Task ApplyCondition(Condition condition)
+    public async UniTask ApplyCondition(Condition condition)
     {
         if (!conditions.ContainsKey(condition.Name))
         {
@@ -617,7 +617,7 @@ public abstract class CardModel : MonoBehaviour
     /// Method to remove a condition if possible
     /// </summary>
     /// <param name="conditionName"></param>
-    public async Task RemoveCondition(string conditionName)
+    public async UniTask RemoveCondition(string conditionName)
     {
         if (conditions.ContainsKey(conditionName))
         {
@@ -630,7 +630,7 @@ public abstract class CardModel : MonoBehaviour
     /// Method to trigger a condition, if possible
     /// </summary>
     /// <param name="conditionName"></param>
-    public async Task TriggerCondition(string conditionName)
+    public async UniTask TriggerCondition(string conditionName)
     {
         if (conditions.ContainsKey(conditionName))
         {

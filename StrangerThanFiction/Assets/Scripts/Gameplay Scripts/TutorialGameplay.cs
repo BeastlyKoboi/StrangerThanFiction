@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -59,7 +59,7 @@ public class TutorialGameplay : MonoBehaviour
         click.action.performed -= NextPromptRequested;
     }
 
-    private async Task CyclePrompts(string[] prompts)
+    private async UniTask CyclePrompts(string[] prompts)
     {
         for (int i = 0; i < prompts.Length; i++)
         {
@@ -76,42 +76,42 @@ public class TutorialGameplay : MonoBehaviour
 
             do
             {
-                await Task.Yield();
+                await UniTask.Yield();
             } while (!_promptClosed);
 
             _promptClosed = false;
         }
     }
 
-    private async Task OnGameStart()
+    private async UniTask OnGameStart()
     {
         await CyclePrompts(OnGameStartPrompts);
 
         GameManager.OnGameStart -= OnGameStart;
     }
 
-    private async Task OnRound1Start()
+    private async UniTask OnRound1Start()
     {
         await CyclePrompts(OnRound1StartPrompts);
 
         GameManager.OnRoundStart -= OnRound1Start;
     }
 
-    private async Task OnRound1End()
+    private async UniTask OnRound1End()
     {
         await CyclePrompts(OnRound1EndPrompts);
 
         GameManager.OnRoundEnd -= OnRound1End;
     }
 
-    private async Task OnFirstCardPlayed(CardPlayState playState)
+    private async UniTask OnFirstCardPlayed(CardPlayState playState)
     {
         await CyclePrompts(OnFirstCardPlayedPrompts);
 
         gameManager.player1.OnCardPlayed -= OnFirstCardPlayed;
     }
 
-    private async Task OnFirstUnitPlayed(CardPlayState playState)
+    private async UniTask OnFirstUnitPlayed(CardPlayState playState)
     {
         if (playState.card.Type != CardType.Unit) return;
 
@@ -120,7 +120,7 @@ public class TutorialGameplay : MonoBehaviour
         gameManager.player1.OnCardPlayed -= OnFirstUnitPlayed;
     }
 
-    private async Task OnFirstSpellPlayed(CardPlayState playState)
+    private async UniTask OnFirstSpellPlayed(CardPlayState playState)
     {
         if (playState.card.Type != CardType.Spell) return;
 

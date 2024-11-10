@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,7 +29,7 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="row"></param>
-    public async Task SummonUnit(CardModel unit, UnitRow row)
+    public async UniTask SummonUnit(CardModel unit, UnitRow row)
     {
         unit.IsHidden = false;
 
@@ -41,7 +41,7 @@ public class BoardManager : MonoBehaviour
         unit.OnRemove += RemoveUnit;
     }
 
-    private async Task DestroyUnit(CardModel unit)
+    private async UniTask DestroyUnit(CardModel unit)
     {
         await unit.Owner.UnitDestroyed(unit);
         unit.OnDestroy -= DestroyUnit;
@@ -50,7 +50,7 @@ public class BoardManager : MonoBehaviour
             unit.SelectedArea.RemoveUnit(unit);
     }
 
-    private async Task RemoveUnit(CardModel unit)
+    private async UniTask RemoveUnit(CardModel unit)
     {
         if (unit.SelectedArea != null)
             unit.SelectedArea.RemoveUnit(unit);
@@ -92,7 +92,7 @@ public class BoardManager : MonoBehaviour
     /// Performs the round start events on all units on the board.
     /// This will start them, but will not wait for them to finish
     /// </summary>
-    public async Task RoundStart()
+    public async UniTask RoundStart()
     {
         await player1FrontRow.ForEach(async unit => await unit.RoundStart());
         await player1BackRow.ForEach(async unit => await unit.RoundStart());
@@ -104,7 +104,7 @@ public class BoardManager : MonoBehaviour
     /// Performs the round end events on all units on the board.
     /// This will start them, but will not wait for them to finish
     /// </summary>
-    public async Task RoundEnd()
+    public async UniTask RoundEnd()
     {
         await player1FrontRow.ForEach(async unit => await unit.RoundEnd());
         await player1BackRow.ForEach(async unit => await unit.RoundEnd());
@@ -113,26 +113,26 @@ public class BoardManager : MonoBehaviour
     }
 
 
-    public async Task SetOnClickForPlayersUnits(Player player, Action<CardModel> action)
+    public async UniTask SetOnClickForPlayersUnits(Player player, Action<CardModel> action)
     {
         UnitRow frontline = player == gameManager.player1 ? player1FrontRow : player2FrontRow;
         UnitRow backline = player == gameManager.player1 ? player1BackRow : player2BackRow;
 
         await frontline.ForEach(unit => { 
             unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
-            return Task.CompletedTask;
+            return UniTask.CompletedTask;
         });
         await backline.ForEach(unit => {
             unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
-            return Task.CompletedTask;
+            return UniTask.CompletedTask;
         });
     }
 
-    public async Task SetOnClickForUnitRowsUnits(UnitRow specificRow, Action<CardModel> action)
+    public async UniTask SetOnClickForUnitRowsUnits(UnitRow specificRow, Action<CardModel> action)
     {
         await specificRow.ForEach(unit => {
             unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
-            return Task.CompletedTask;
+            return UniTask.CompletedTask;
         });
     }
 

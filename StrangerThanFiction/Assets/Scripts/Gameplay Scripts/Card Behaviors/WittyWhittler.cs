@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class WittyWhittler : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         Owner.OnUnitSummoned += OnAllySummonedGrantPoison;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         Owner.OnUnitSummoned -= OnAllySummonedGrantPoison;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    public async Task OnAllySummonedGrantPoison(CardModel ally)
+    public async UniTask OnAllySummonedGrantPoison(CardModel ally)
     {
         CardModel enemy = Board.GetRandomUnit(Owner.enemyPlayer);
         if (enemy)

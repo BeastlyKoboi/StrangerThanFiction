@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class AndIWillBlowYouAway : CardModel
 {
-    protected override async Task PlayEffect(CardPlayState cardPlayState)
+    protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
         await cardPlayState.enemyUnitTargets[0].TakeDamage(3);
         await cardPlayState.enemyUnitTargets[1].TakeDamage(3);

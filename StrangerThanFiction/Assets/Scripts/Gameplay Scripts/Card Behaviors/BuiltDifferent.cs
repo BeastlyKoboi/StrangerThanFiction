@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class BuiltDifferent : CardModel
 {
-    protected override async Task PlayEffect(CardPlayState cardPlayState)
+    protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
         CardModel target = cardPlayState.allyUnitTargets[0];
 

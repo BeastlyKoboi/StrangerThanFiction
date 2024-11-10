@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class DoubleLife : CardModel
@@ -11,7 +11,7 @@ public class DoubleLife : CardModel
     /// </summary>
     private int _damage = 8;
 
-    protected override async Task PlayEffect(CardPlayState cardPlayState)
+    protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
         await cardPlayState.enemyCardTargets[0].TakeDamage(_damage);
 

@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class TheBlueFairy : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         Owner.OnCardPlayed += IfCardPlayedIsCostReducedDrawCard;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         Owner.OnCardPlayed -= IfCardPlayedIsCostReducedDrawCard;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    private async Task IfCardPlayedIsCostReducedDrawCard(CardPlayState cardPlayState)
+    private async UniTask IfCardPlayedIsCostReducedDrawCard(CardPlayState cardPlayState)
     {
         if (cardPlayState.card.BaseCost > cardPlayState.card.CurrentCost)
         {

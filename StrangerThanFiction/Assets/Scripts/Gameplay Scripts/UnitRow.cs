@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class UnitRow : MonoBehaviour
@@ -59,7 +59,7 @@ public class UnitRow : MonoBehaviour
 
     }
     
-    public async Task ForEach(Func<CardModel, Task> func)
+    public async UniTask ForEach(Func<CardModel, UniTask> func)
     {
         // Units are removing themselves during the loop, so we need to copy the list
         CardModel[] unitsSnapshot = units.ToArray();

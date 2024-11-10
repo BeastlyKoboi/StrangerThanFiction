@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class CardPile
@@ -35,7 +33,7 @@ public class CardPile
     {
         cards.ForEach(action);
     }
-    public async Task ForEach(Func<CardModel, Task> action)
+    public async UniTask ForEach(Func<CardModel, UniTask> action)
     {
         for (int i = 0; i < cards.Count; i++)
         {

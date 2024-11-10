@@ -1,25 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class AnimatedArtisan : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         Owner.OnRoundStart += RoundStartEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         Owner.OnRoundStart -= RoundStartEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    private Task RoundStartEffect()
+    private UniTask RoundStartEffect()
     {
         Owner.CreateCardInDeck(typeof(MagicalWoodcarving).ToString());
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 }

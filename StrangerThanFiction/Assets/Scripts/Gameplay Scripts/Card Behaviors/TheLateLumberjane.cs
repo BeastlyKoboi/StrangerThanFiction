@@ -1,25 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class TheLateLumberjane : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         Owner.OnUnitDestroyed += OnDestroyEffect;
         Owner.enemyPlayer.OnUnitDestroyed += OnDestroyEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         Owner.OnUnitDestroyed -= OnDestroyEffect;
         Owner.enemyPlayer.OnUnitDestroyed -= OnDestroyEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    private async Task OnDestroyEffect(CardModel unit)
+    private async UniTask OnDestroyEffect(CardModel unit)
     {
         await GrantPower(1);
     }

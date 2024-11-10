@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 public class Poisoned : Condition
 {
@@ -6,12 +6,12 @@ public class Poisoned : Condition
 
     public Poisoned(CardModel card, int amount) : base(card, amount) { }
 
-    public override Task OnAdd()
+    public override UniTask OnAdd()
     {
         card.Owner.OnRoundEnd += OnTrigger;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    public override async Task OnTrigger()
+    public override async UniTask OnTrigger()
     {
         await card.TakeDamage(amount, true);
         amount -= 1;
@@ -20,17 +20,17 @@ public class Poisoned : Condition
             await card.RemoveCondition(Name);
         }
     }
-    public override Task OnSurplus(Condition surplus)
+    public override UniTask OnSurplus(Condition surplus)
     {
         if (surplus is Poisoned poisonSurplus)
         {
             amount += poisonSurplus.amount;
         }
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    public override Task OnRemove()
+    public override UniTask OnRemove()
     {
         card.Owner.OnRoundEnd -= OnTrigger;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 }

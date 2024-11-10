@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Candlewick : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         Owner.OnUnitSummoned += CandlewickEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         Owner.OnUnitSummoned -= CandlewickEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    private async Task CandlewickEffect(CardModel unit)
+    private async UniTask CandlewickEffect(CardModel unit)
     {
         if (unit.CurrentCost <= 1)
         {

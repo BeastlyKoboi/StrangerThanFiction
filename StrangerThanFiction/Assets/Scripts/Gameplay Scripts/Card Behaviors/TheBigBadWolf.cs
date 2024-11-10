@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class TheBigBadWolf : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         Owner.OnUnitDestroyed += SummonCrow;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         Owner.OnUnitDestroyed -= SummonCrow;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    private async Task SummonCrow(CardModel card)
+    private async UniTask SummonCrow(CardModel card)
     {
         CardModel crow = CardFactory.Instance.CreateCard("Crow", true, transform, Owner, Board, Title);
         await crow.Summon();

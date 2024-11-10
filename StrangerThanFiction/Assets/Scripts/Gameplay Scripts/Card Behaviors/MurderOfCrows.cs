@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class MurderOfCrows : CardModel
 {
-    protected override async Task SummonEffect()
+    protected override async UniTask SummonEffect()
     {
         CardModel[] enemies = Board.GetUnits(Owner.enemyPlayer);
 

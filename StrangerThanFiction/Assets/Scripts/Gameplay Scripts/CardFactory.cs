@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -125,7 +125,7 @@ public class CardFactory
         return null;
     }
 
-    public Task RecycleCard(CardModel card)
+    public UniTask RecycleCard(CardModel card)
     {
         GameObject cardObj = card.gameObject;
         CardType cardType = card.Type;
@@ -138,16 +138,16 @@ public class CardFactory
         else
             lockedSpellCardPool.Enqueue(cardObj);
 
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
      
-    public Task QueueLockedCards()
+    public UniTask QueueLockedCards()
     {
         while (lockedUnitCardPool.Count > 0)
             unitCardPool.Enqueue(lockedUnitCardPool.Dequeue());
         while (lockedSpellCardPool.Count > 0)
             spellCardPool.Enqueue(lockedSpellCardPool.Dequeue());
 
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 }

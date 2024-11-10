@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// Manages the flow of game in a single match. 
@@ -18,10 +18,10 @@ using UnityEngine.UIElements;
 public class GameManager : MonoBehaviour, IDataPersistence
 {
     // Basic gameplay events that objects can add to
-    public static event Func<Task> OnGameStart;
-    public static event Func<Task> OnRoundStart;
-    public static event Func<Task> OnRoundEnd;
-    public static event Func<Task> OnGameOver;
+    public static event Func<UniTask> OnGameStart;
+    public static event Func<UniTask> OnRoundStart;
+    public static event Func<UniTask> OnRoundEnd;
+    public static event Func<UniTask> OnGameOver;
 
     [HeaderAttribute("The Players")]
     public Player player1; // The human player
@@ -116,17 +116,18 @@ public class GameManager : MonoBehaviour, IDataPersistence
         GameLoop();
     }
 
+
     /// <summary>
     /// Method to proceed through the rounds, and confirm a winner. 
     /// </summary>
     private async void GameLoop()
     {
-        await Task.Delay(1000);
+        await UniTask.Delay(1000);
 
         if (OnGameStart != null)
         {
-            foreach (Func<Task> handler in OnGameStart.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnGameStart.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -148,7 +149,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// Method to go over the activity of a single round. 
     /// </summary>
     /// <returns></returns>
-    private async Task RoundActivity()
+    private async UniTask RoundActivity()
     {
         uiManager.RoundStart(roundNumber);
 
@@ -160,8 +161,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
         if (OnRoundStart != null)
         {
-            foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnRoundStart.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -170,17 +171,17 @@ public class GameManager : MonoBehaviour, IDataPersistence
         // Draw Cards
         do
         {
-            await Task.Delay(100);
+            await UniTask.Delay(100);
 
             if (player1.CanDoSomething())
                 await player1.PlayerTurn();
 
-            await Task.Delay(100);
+            await UniTask.Delay(100);
 
             if (player2.CanDoSomething())
                 await player2.PlayerTurn();
 
-            await Task.Yield();
+            await UniTask.Yield();
 
         } while ((player1.CanDoSomething() && !player1.hasEndedTurn) ||
             (player2.CanDoSomething() && !player2.hasEndedTurn));
@@ -188,8 +189,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
         if (OnRoundEnd != null)
         {
-            foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnRoundEnd.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -205,13 +206,13 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// </summary>
     /// <param name="numCards"></param>
     /// <returns></returns>
-    private async Task DrawHands(int numCards = 5)
+    private async UniTask DrawHands(int numCards = 5)
     {
         for (int i = 0; i < numCards; i++)
         {
             await player1.DrawCard();
             await player2.DrawCard();
-            await Task.Delay(500);
+            await UniTask.Delay(500);
         }
     }
 
@@ -219,18 +220,18 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// Method to discard the hands of both players. Used at round end.
     /// </summary>
     /// <returns></returns>
-    private async Task DiscardHands()
+    private async UniTask DiscardHands()
     {
         await DiscardPlayerHand(player1);
         await DiscardPlayerHand(player2);
-        await Task.Delay(2000);
+        await UniTask.Delay(2000);
     }
 
     /// <summary>
     /// Method to discard a player's hand.
     /// </summary>
     /// <param name="player"></param>
-    private async Task DiscardPlayerHand(Player player)
+    private async UniTask DiscardPlayerHand(Player player)
     {
         foreach (CardModel card in player.handManager.Hand.ToArray())
         {
@@ -241,13 +242,13 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// <summary>
     /// Method to end the game.
     /// </summary>
-    private async Task EndGame()
+    private async UniTask EndGame()
     {
         uiManager.GameOver(); // Maybe add this to event
         if (OnGameOver != null)
         {
-            foreach (Func<Task> handler in OnGameOver.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnGameOver.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }

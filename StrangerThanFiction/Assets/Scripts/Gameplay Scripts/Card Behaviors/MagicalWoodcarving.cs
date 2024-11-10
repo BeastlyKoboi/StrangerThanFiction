@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class MagicalWoodcarving : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         OnRoundEnd += RoundEndEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         OnRoundEnd -= RoundEndEffect;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected async Task RoundEndEffect()
+    protected async UniTask RoundEndEffect()
     {
         CardModel randomEnemy = Board.GetRandomUnit(Owner.enemyPlayer);
         if (randomEnemy)

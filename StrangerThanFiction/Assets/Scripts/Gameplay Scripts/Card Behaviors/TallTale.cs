@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public sealed class TallTale : CardModel
@@ -13,7 +13,7 @@ public sealed class TallTale : CardModel
         await ApplyCondition(new Combust(this, 0));
     }
 
-    protected override async Task PlayEffect(CardPlayState cardPlayState)
+    protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
         if (Owner.Deck.Count > 0)
         {

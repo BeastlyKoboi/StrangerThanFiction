@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Resilient : Condition
@@ -8,20 +8,20 @@ public class Resilient : Condition
     public override uint Id => 4;
     public Resilient(CardModel card, int amount) : base(card, amount) { }
 
-    public override Task OnAdd()
+    public override UniTask OnAdd()
     {
         card.DamageResistence += amount;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    public override Task OnSurplus(Condition surplus)
+    public override UniTask OnSurplus(Condition surplus)
     {
         if (amount < surplus.amount)
             amount = surplus.amount;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
-    public override Task OnRemove()
+    public override UniTask OnRemove()
     {
         card.DamageResistence -= amount;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 }

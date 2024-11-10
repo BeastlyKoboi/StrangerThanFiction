@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,15 +18,15 @@ using static UnityEngine.UI.CanvasScaler;
 
 public class Player : MonoBehaviour
 {
-    public event Func<Task> OnGameStart;
-    public event Func<Task> OnRoundStart;
-    public event Func<Task> OnRoundEnd;
-    public event Func<Task> OnGameOver;
+    public event Func<UniTask> OnGameStart;
+    public event Func<UniTask> OnRoundStart;
+    public event Func<UniTask> OnRoundEnd;
+    public event Func<UniTask> OnGameOver;
 
-    public event Func<CardModel, Task> OnCardDrawn;
-    public event Func<CardModel, Task> OnUnitSummoned;
-    public event Func<CardModel, Task> OnUnitDestroyed;
-    public event Func<CardPlayState, Task> OnCardPlayed;
+    public event Func<CardModel, UniTask> OnCardDrawn;
+    public event Func<CardModel, UniTask> OnUnitSummoned;
+    public event Func<CardModel, UniTask> OnUnitDestroyed;
+    public event Func<CardPlayState, UniTask> OnCardPlayed;
     public event Action OnMyTurnStart;
 
     [HeaderAttribute("Game and Enemy Info")]
@@ -175,7 +175,7 @@ public class Player : MonoBehaviour
     /// Method to handle the player's turn. 
     /// </summary>
     /// <returns></returns>
-    public async Task PlayerTurn()
+    public async UniTask PlayerTurn()
     {
         hasEndedTurn = false;
         bool playedSuccessfully = false;
@@ -191,7 +191,7 @@ public class Player : MonoBehaviour
         {
             while (handManager.PlayState == null && !hasEndedTurn)
             {
-                await Task.Yield();
+                await UniTask.Yield();
             }
 
             if (handManager.PlayState != null)
@@ -215,7 +215,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Method to draw a card from the player's deck.
     /// </summary>
-    public async Task DrawCard()
+    public async UniTask DrawCard()
     {
         if (Deck.Count == 0) ShuffleDiscardIntoDeck();
         if (Deck.Count == 0) return;
@@ -225,8 +225,8 @@ public class Player : MonoBehaviour
 
         if (OnCardDrawn != null)
         {
-            foreach (Func<CardModel, Task> handler in OnCardDrawn.GetInvocationList()
-                .Cast<Func<CardModel, Task>>().ToList())
+            foreach (Func<CardModel, UniTask> handler in OnCardDrawn.GetInvocationList()
+                .Cast<Func<CardModel, UniTask>>().ToList())
             {
                 await handler(drawnCard);
             }
@@ -240,7 +240,7 @@ public class Player : MonoBehaviour
     /// Method to discard a card from the player's hand.
     /// </summary>
     /// <param name="card"></param>
-    public async Task DiscardCard(CardModel card)
+    public async UniTask DiscardCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
         RefreshPlayableCards();
@@ -255,7 +255,7 @@ public class Player : MonoBehaviour
     /// Method to destroy a card.
     /// </summary>
     /// <param name="card"></param>
-    public async Task DestroyCard(CardModel card)
+    public async UniTask DestroyCard(CardModel card)
     {
         handManager.RemoveCardFromHand(card);
         RefreshPlayableCards();
@@ -287,7 +287,7 @@ public class Player : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     /// <returns></returns>
-    private async Task<bool> PlayCard(CardPlayState playState)
+    private async UniTask<bool> PlayCard(CardPlayState playState)
     {
         // Check if the player has the requirements to play the card.
         PlayRequirements playReqs = playState.card.PlayRequirements;
@@ -302,7 +302,7 @@ public class Player : MonoBehaviour
                 clickedCard = cardModel;
             }
 
-            async Task getTargetsFromBoard(Player player, List<CardModel> targetList, int playReq)
+            async UniTask getTargetsFromBoard(Player player, List<CardModel> targetList, int playReq)
             {
                 uiManager.SetPrompt(true, $"Select {playReq} " +
                     $"{(gameManager.player1 == player? "allied" : "enemy")} " +
@@ -312,7 +312,7 @@ public class Player : MonoBehaviour
                 do
                 {
                     if (clickedCard == null)
-                        await Task.Yield();
+                        await UniTask.Yield();
                     else
                     {
                         if (!targetList.Contains(clickedCard) && clickedCard != playState.replacedCard)
@@ -333,7 +333,7 @@ public class Player : MonoBehaviour
 
                 do
                 {
-                    await Task.Yield();
+                    await UniTask.Yield();
                 } while (!hasCanceledPlayCard && clickedCard == null);
 
                 playState.replacedCard = clickedCard;
@@ -388,8 +388,8 @@ public class Player : MonoBehaviour
 
         if (OnCardPlayed != null)
         {
-            foreach (Func<CardPlayState, Task> handler in OnCardPlayed.GetInvocationList()
-                .Cast<Func<CardPlayState, Task>>().ToList())
+            foreach (Func<CardPlayState, UniTask> handler in OnCardPlayed.GetInvocationList()
+                .Cast<Func<CardPlayState, UniTask>>().ToList())
             {
                 await handler(playState);
             }
@@ -439,24 +439,24 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Method to invoke OnRoundStart event attached to player.
     /// </summary>
-    public async Task RoundStart()
+    public async UniTask RoundStart()
     {
         if (OnRoundStart != null)
         {
-            foreach (Func<Task> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnRoundStart.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
         }
     }
 
-    public async Task RoundEnd()
+    public async UniTask RoundEnd()
     {
         if (OnRoundEnd != null)
         {
-            foreach (Func<Task> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<Task>>().ToList())
+            foreach (Func<UniTask> handler in OnRoundEnd.GetInvocationList()
+                .Cast<Func<UniTask>>().ToList())
             {
                 await handler();
             }
@@ -467,24 +467,24 @@ public class Player : MonoBehaviour
     /// Method to invoke OnUnitSummoned event attached to player.
     /// </summary>
     /// <param name="unit"></param>
-    public async Task UnitSummoned(CardModel unit)
+    public async UniTask UnitSummoned(CardModel unit)
     {
         if (OnUnitSummoned != null)
         {
-            foreach (Func<CardModel, Task> handler in OnUnitSummoned.GetInvocationList()
-                .Cast<Func<CardModel, Task>>().ToList())
+            foreach (Func<CardModel, UniTask> handler in OnUnitSummoned.GetInvocationList()
+                .Cast<Func<CardModel, UniTask>>().ToList())
             {
                 await handler(unit);
             }
         }
     }
 
-    public async Task UnitDestroyed(CardModel unit)
+    public async UniTask UnitDestroyed(CardModel unit)
     {
         if (OnUnitDestroyed != null)
         {
-            foreach (Func<CardModel, Task> handler in OnUnitDestroyed.GetInvocationList()
-                .Cast<Func<CardModel, Task>>().ToList())
+            foreach (Func<CardModel, UniTask> handler in OnUnitDestroyed.GetInvocationList()
+                .Cast<Func<CardModel, UniTask>>().ToList())
             {
                 await handler(unit);
             }

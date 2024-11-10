@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class TheTalkingCricket : CardModel
 {
-    protected override async Task SummonEffect()
+    protected override async UniTask SummonEffect()
     {
         CardModel highestCostCard = Owner.handManager.GetHighestCostCard();
         if (highestCostCard)
@@ -14,10 +14,10 @@ public class TheTalkingCricket : CardModel
         }
     }
 
-    protected override Task DestroyEffect(CardModel card)
+    protected override UniTask DestroyEffect(CardModel card)
     {
         Owner.CreateCardInDeck(typeof(TheTalkingCricket).ToString());
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
 }

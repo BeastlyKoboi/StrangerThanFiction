@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public abstract class Condition 
@@ -19,10 +19,10 @@ public abstract class Condition
         this.amount = amount;
     }
 
-    public virtual Task OnAdd() => Task.CompletedTask;
-    public virtual Task OnTrigger() => Task.CompletedTask;
-    public virtual Task OnSurplus(Condition surplus) => Task.CompletedTask;
-    public virtual Task OnRemove() => Task.CompletedTask;
+    public virtual UniTask OnAdd() => UniTask.CompletedTask;
+    public virtual UniTask OnTrigger() => UniTask.CompletedTask;
+    public virtual UniTask OnSurplus(Condition surplus) => UniTask.CompletedTask;
+    public virtual UniTask OnRemove() => UniTask.CompletedTask;
 
     public override string ToString() => $"{Name} {amount}: {Description}";
 }

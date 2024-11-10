@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -9,21 +9,21 @@ using UnityEngine;
 /// </summary>
 public sealed class Pinocchio : CardModel
 {
-    protected override Task SummonEffect()
+    protected override UniTask SummonEffect()
     {
         OnRoundStart += CreateTallTaleInHand;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    protected override Task RemoveEffect(CardModel card)
+    protected override UniTask RemoveEffect(CardModel card)
     {
         OnRoundStart -= CreateTallTaleInHand;
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 
-    private Task CreateTallTaleInHand()
+    private UniTask CreateTallTaleInHand()
     {
         Owner.CreateCardInHand("TallTale");
-        return Task.CompletedTask;
+        return UniTask.CompletedTask;
     }
 }

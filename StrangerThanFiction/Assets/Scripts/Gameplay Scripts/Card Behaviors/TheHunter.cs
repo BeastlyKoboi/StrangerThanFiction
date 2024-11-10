@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class TheHunter : CardModel
 {
-    protected override async Task PlayEffect(CardPlayState cardPlayState)
+    protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
         await cardPlayState.allyUnitTargets[0].Strike(cardPlayState.enemyUnitTargets[0]);
 
