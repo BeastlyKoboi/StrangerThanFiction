@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: PortraitPainter
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: eea62c5e6cd912645b5ba4b065648565, type: 3}
   Title: Portrait Painter
   Description: When you draw a unit, grant it +2 Power.
   FlavorText: "\u201CWhere has my muse gone?\u201D"
   Type: 0
   Faction: 0
-  PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 1
   BasePlotArmor: 4

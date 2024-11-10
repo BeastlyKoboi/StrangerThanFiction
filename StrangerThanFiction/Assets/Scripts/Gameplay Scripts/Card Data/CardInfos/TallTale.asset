@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: TallTale
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 658f0f3155a97404a801712a5c5a5e4a, type: 3}
   Title: Tall Tale
   Description: The top card on deck get -1 cost. <link="Combust"><color=#bf9b30>Combust</color></link>
   FlavorText: A great fiction is a great boon to a growing mind.
   Type: 1
   Faction: 0
-  PortraitPath: CardPortraits/Tall_Tale.png
   BaseCost: 0
   BasePower: 0
   BasePlotArmor: 0

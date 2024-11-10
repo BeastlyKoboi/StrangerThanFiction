@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: WittyWhittler
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: eea62c5e6cd912645b5ba4b065648565, type: 3}
   Title: Witty Whittler
   Description: When you summon an ally, grant a random enemy <link="Poisoned"><color=#bf9b30>Poisoned</color></link>
     1.
@@ -19,7 +20,6 @@ MonoBehaviour:
     impression of your father!\" \nHis words are poison, as is his knife."
   Type: 0
   Faction: 0
-  PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 2
   BasePlotArmor: 4

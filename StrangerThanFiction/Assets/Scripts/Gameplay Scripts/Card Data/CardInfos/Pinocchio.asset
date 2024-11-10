@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: Pinocchio
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 9998e087f3ba00c44a586128653da607, type: 3}
   Title: Pinocchio
   Description: On round start, create a Tall Tale in your hand.
   FlavorText: "\u201CI told my friends that everything would be okay. I will not
     let you make a liar of me.\u201D"
   Type: 0
-  PortraitPath: CardPortraits/Pinocchio.png
+  Faction: 0
   BaseCost: 2
   BasePower: 3
   BasePlotArmor: 3
@@ -28,3 +29,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

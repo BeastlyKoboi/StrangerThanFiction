@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: AndIWillPuff
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: d0708b9ea32b3d641be64cdb6b7964cb, type: 3}
   Title: "And I Will Puff\u2026"
   Description: Deal 2 damage to 2 enemy units. Create 2 copies of And I Will Blow
     You Away in deck. <link="Combust"><color=#bf9b30>Combust</color></link>
   FlavorText: 
   Type: 1
   Faction: 3
-  Portrait: {fileID: 21300000, guid: 4cfde8ecf4a3a534d9d9b1249fb0b62c, type: 3}
-  PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 0
   BasePlotArmor: 0

@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: Donkey
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 0b900aaff762c5f42b9807b171371e80, type: 3}
   Title: Donkey
   Description: Whenever you summon another copy of me, grant me +1 power.
   FlavorText: "Once a friend, once a child, cursed forevermore\u2026"
   Type: 0
-  PortraitPath: CardPortraits/Donkey.png
+  Faction: 0
   BaseCost: 1
   BasePower: 1
   BasePlotArmor: 1
@@ -27,3 +28,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

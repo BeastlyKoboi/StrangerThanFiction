@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: MagicalWoodcarving
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: b9815b2e3bc510843bc77a8f60551555, type: 3}
   Title: Magical Woodcarving
   Description: At round end, I strike a random enemy, then I am destroyed.
   FlavorText: '"STAB STAB STAB..."'
   Type: 0
   Faction: 0
-  PortraitPath: CardPortraits/Magical_Woodcarving.png
   BaseCost: 1
   BasePower: 3
   BasePlotArmor: 0

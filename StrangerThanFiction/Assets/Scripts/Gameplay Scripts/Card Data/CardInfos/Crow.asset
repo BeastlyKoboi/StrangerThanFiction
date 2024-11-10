@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: Crow
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 8d746fa66328fbd42aebc62f5d11daf5, type: 3}
   Title: Crow
   Description: When I am summoned, deal 1 damage to a random enemy. If there are
     3 of me in play, combine us to summon A Murder of Crows.
   FlavorText: 'A bad omen that proves even tragedies have their upsides for someone. '
   Type: 0
   Faction: 3
-  PortraitPath: CardPortraits/Crow.png
   BaseCost: 1
   BasePower: 1
   BasePlotArmor: 1

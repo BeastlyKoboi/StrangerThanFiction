@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: SacrificialLamb
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 74055f567bdbc984ba7b7fab10ce2a53, type: 3}
   Title: Sacrificial Lamb
   Description: When an ally is summoned, it strikes me. Then grant that ally my power.
   FlavorText: Always ask yourself what you are willing to lose, in the face of your
     vision.
   Type: 0
   Faction: 3
-  PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 1
   BasePlotArmor: 6

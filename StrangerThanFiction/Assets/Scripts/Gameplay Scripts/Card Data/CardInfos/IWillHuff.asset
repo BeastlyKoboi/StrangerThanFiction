@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: IWillHuff
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: c879a11082484ed47b15d0774139ebd3, type: 3}
   Title: "I Will Huff\u2026"
   Description: "Deal 1 damage to 1 enemy unit. Create 2 copies of And I Will Puff\u2026
     in deck. <link=\"Combust\"><color=#bf9b30>Combust</color></link>"
   FlavorText: 
   Type: 1
   Faction: 3
-  PortraitPath: CardPortraits/Default.png
   BaseCost: 1
   BasePower: 0
   BasePlotArmor: 0

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: GrowthSpurt
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 1cbf653b14968dd44b1871057b845525, type: 3}
   Title: Growth Spurt
   Description: Grant an ally +4 power.
   FlavorText: '"Why don''t my clothes fit anymore!?"'
   Type: 1
   Faction: 0
-  PortraitPath: CardPortraits/Affable_Nipper.png
   BaseCost: 2
   BasePower: 0
   BasePlotArmor: 0

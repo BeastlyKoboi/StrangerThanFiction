@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: TheBlueFairy
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 9441d30efbda3df43927da3c1942366b, type: 3}
   Title: The Blue Fairy
   Description: 'When you play a card with a cost reduction, draw a card. '
   FlavorText: 'An unseeen guardian among the terrors of the world. '
   Type: 0
   Faction: 0
-  PortraitPath: CardPortraits/The_Blue_Fairy.png
   BaseCost: 2
   BasePower: 2
   BasePlotArmor: 1

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: Candlewick
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: be4b54ef148de7e40a2d1e54d776c06d, type: 3}
   Title: Candlewick
   Description: When you summon a unit with a cost of 1 or less, grant it +1 power
     and +1 plot armor.
@@ -19,7 +20,6 @@ MonoBehaviour:
     for mistakes! Let's try to make the right ones!\""
   Type: 0
   Faction: 0
-  PortraitPath: CardPortraits/CandleWick.png
   BaseCost: 2
   BasePower: 2
   BasePlotArmor: 1

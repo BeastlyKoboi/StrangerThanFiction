@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: AndIWillBlowYouAway
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: b882a17f1f528c149b443a232f8ae2d4, type: 3}
   Title: And I Will Blow You Away
   Description: Deal 3 damage to 3 enemy units.
   FlavorText: 
   Type: 1
   Faction: 3
-  Portrait: {fileID: 21300000, guid: 32d854fa5a083304289986a7f1c6d605, type: 3}
-  PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 0
   BasePlotArmor: 0

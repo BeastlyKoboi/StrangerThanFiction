@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: TheHunter
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 446cdd54a651ca84a9644b7b2eeea45f, type: 3}
   Title: The Hunter
   Description: When I am played, select an ally and an enemy. That ally strikes that
     enemy, then I kill the ally.
   FlavorText: Always on target.
   Type: 0
   Faction: 3
-  PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 2
   BasePlotArmor: 0

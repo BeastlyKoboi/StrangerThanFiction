@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c834e826dfb7a498c7686a29151eec, type: 3}
   m_Name: TheBigBadWolf
   m_EditorClassIdentifier: 
+  Portrait: {fileID: 21300000, guid: 51b1e268a2953a84082ca2ea8d41ff85, type: 3}
   Title: The Big Bad Wolf
   Description: Whenever an ally dies, summon a crow.
   FlavorText: '"Wherever I go death, destruction, and devastation follow. That is
@@ -19,7 +20,6 @@ MonoBehaviour:
     only of what is. What is, is what I must preserve. Nothing more."'
   Type: 0
   Faction: 3
-  PortraitPath: CardPortraits/The_Big_Bad_Wolf.png
   BaseCost: 3
   BasePower: 5
   BasePlotArmor: 1
