@@ -7,13 +7,13 @@ public class SacrificialLamb : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnUnitSummoned += Sacrifice;
+        Owner.OnUnitSummoned.AddListener(Sacrifice);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitSummoned -= Sacrifice;
+        Owner.OnUnitSummoned.RemoveListener(Sacrifice);
         return base.RemoveEffect(card);
     }
 

@@ -18,10 +18,10 @@ using Cysharp.Threading.Tasks;
 public class GameManager : MonoBehaviour, IDataPersistence
 {
     // Basic gameplay events that objects can add to
-    public static event Func<UniTask> OnGameStart;
-    public static event Func<UniTask> OnRoundStart;
-    public static event Func<UniTask> OnRoundEnd;
-    public static event Func<UniTask> OnGameOver;
+    public UniTaskEvent OnGameStart = new UniTaskEvent();
+    public UniTaskEvent OnRoundStart = new UniTaskEvent();
+    public UniTaskEvent OnRoundEnd = new UniTaskEvent();
+    public UniTaskEvent OnGameOver = new UniTaskEvent();
 
     [HeaderAttribute("The Players")]
     public Player player1; // The human player
@@ -68,19 +68,19 @@ public class GameManager : MonoBehaviour, IDataPersistence
     {
         CardFactory.Instance.Initialize(cardPrefab, unitPrefab);
 
-        OnGameStart = null;
+        OnGameStart.Clear();
 
-        OnRoundStart = null;
-        OnRoundStart += player1.RoundStart;
-        OnRoundStart += player2.RoundStart;
-        OnRoundStart += boardManager.RoundStart;
+        OnRoundStart.Clear();
+        OnRoundStart.AddListener(player1.RoundStart);
+        OnRoundStart.AddListener(player2.RoundStart);
+        OnRoundStart.AddListener(boardManager.RoundStart);
 
-        OnRoundEnd = null;
-        OnRoundEnd += player1.RoundEnd;
-        OnRoundEnd += player2.RoundEnd;
-        OnRoundEnd += boardManager.RoundEnd;
+        OnRoundEnd.Clear();
+        OnRoundEnd.AddListener(player1.RoundEnd);
+        OnRoundEnd.AddListener(player2.RoundEnd);
+        OnRoundEnd.AddListener(boardManager.RoundEnd);
 
-        OnGameOver = null;
+        OnGameOver.Clear();
     }
 
     /// <summary>
@@ -123,14 +123,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     {
         await UniTask.Delay(1000);
 
-        if (OnGameStart != null)
-        {
-            foreach (Func<UniTask> handler in OnGameStart.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnGameStart.InvokeAsync();
 
         do
         {
@@ -158,14 +151,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
         await DrawHands(); // ITF maybe put this in event with numCards to draw as a variable
 
-        if (OnRoundStart != null)
-        {
-            foreach (Func<UniTask> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnRoundStart.InvokeAsync();
 
         // Draw Cards
         do
@@ -186,14 +172,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
             (player2.CanDoSomething() && !player2.hasEndedTurn));
         // 
 
-        if (OnRoundEnd != null)
-        {
-            foreach (Func<UniTask> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnRoundEnd.InvokeAsync();
 
         await DiscardHands();
 
@@ -244,14 +223,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     private async UniTask EndGame()
     {
         uiManager.GameOver(); // Maybe add this to event
-        if (OnGameOver != null)
-        {
-            foreach (Func<UniTask> handler in OnGameOver.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnGameOver.InvokeAsync();
     }
 
     private void TogglePause()

@@ -32,12 +32,12 @@ public class TutorialGameplay : MonoBehaviour
     {
         gameManager = GetComponent<GameManager>();
 
-        GameManager.OnGameStart += OnGameStart;
-        GameManager.OnRoundStart += OnRound1Start;
-        gameManager.player1.OnCardPlayed += OnFirstCardPlayed;
-        gameManager.player1.OnCardPlayed += OnFirstUnitPlayed;
-        gameManager.player1.OnCardPlayed += OnFirstSpellPlayed;
-
+        gameManager.OnGameStart.AddListener(OnGameStart);
+        gameManager.OnRoundStart.AddListener(OnRound1Start);
+        gameManager.player1.OnCardPlayed.AddListener(OnFirstCardPlayed);
+        gameManager.player1.OnCardPlayed.AddListener(OnFirstUnitPlayed);
+        gameManager.player1.OnCardPlayed.AddListener(OnFirstSpellPlayed);
+        gameManager.OnRoundEnd.AddListener(OnRound1End);
     }
 
     // Update is called once per frame
@@ -87,28 +87,28 @@ public class TutorialGameplay : MonoBehaviour
     {
         await CyclePrompts(OnGameStartPrompts);
 
-        GameManager.OnGameStart -= OnGameStart;
+        gameManager.OnGameStart.RemoveListener(OnGameStart);
     }
 
     private async UniTask OnRound1Start()
     {
         await CyclePrompts(OnRound1StartPrompts);
 
-        GameManager.OnRoundStart -= OnRound1Start;
+        gameManager.OnRoundStart.RemoveListener(OnRound1Start);
     }
 
     private async UniTask OnRound1End()
     {
         await CyclePrompts(OnRound1EndPrompts);
 
-        GameManager.OnRoundEnd -= OnRound1End;
+        gameManager.OnRoundEnd.RemoveListener(OnRound1End);
     }
 
     private async UniTask OnFirstCardPlayed(CardPlayState playState)
     {
         await CyclePrompts(OnFirstCardPlayedPrompts);
 
-        gameManager.player1.OnCardPlayed -= OnFirstCardPlayed;
+        gameManager.player1.OnCardPlayed.RemoveListener(OnFirstCardPlayed);
     }
 
     private async UniTask OnFirstUnitPlayed(CardPlayState playState)
@@ -117,7 +117,7 @@ public class TutorialGameplay : MonoBehaviour
 
         await CyclePrompts(OnFirstUnitPlayedPrompts);
 
-        gameManager.player1.OnCardPlayed -= OnFirstUnitPlayed;
+        gameManager.player1.OnCardPlayed.RemoveListener(OnFirstUnitPlayed);
     }
 
     private async UniTask OnFirstSpellPlayed(CardPlayState playState)
@@ -126,7 +126,7 @@ public class TutorialGameplay : MonoBehaviour
 
         await CyclePrompts(OnFirstSpellPlayedPrompts);
 
-        gameManager.player1.OnCardPlayed -= OnFirstSpellPlayed;
+        gameManager.player1.OnCardPlayed.RemoveListener(OnFirstSpellPlayed);
     }
 
 

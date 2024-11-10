@@ -7,13 +7,13 @@ public class TheBigBadWolf : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnUnitDestroyed += SummonCrow;
+        Owner.OnUnitDestroyed.AddListener(SummonCrow);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitDestroyed -= SummonCrow;
+        Owner.OnUnitDestroyed.RemoveListener(SummonCrow);
         return UniTask.CompletedTask;
     }
 

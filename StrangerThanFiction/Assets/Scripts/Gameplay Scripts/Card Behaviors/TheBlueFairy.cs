@@ -7,13 +7,13 @@ public class TheBlueFairy : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnCardPlayed += IfCardPlayedIsCostReducedDrawCard;
+        Owner.OnCardPlayed.AddListener(IfCardPlayedIsCostReducedDrawCard);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnCardPlayed -= IfCardPlayedIsCostReducedDrawCard;
+        Owner.OnCardPlayed.RemoveListener(IfCardPlayedIsCostReducedDrawCard);
         return UniTask.CompletedTask;
     }
 

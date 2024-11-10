@@ -7,13 +7,13 @@ public class AnimatedArtisan : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnRoundStart += RoundStartEffect;
+        Owner.OnRoundStart.AddListener(RoundStartEffect);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnRoundStart -= RoundStartEffect;
+        Owner.OnRoundStart.RemoveListener(RoundStartEffect);
         return UniTask.CompletedTask;
     }
 

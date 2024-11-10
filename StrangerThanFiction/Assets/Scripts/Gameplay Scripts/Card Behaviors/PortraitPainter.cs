@@ -7,13 +7,13 @@ public class PortraitPainter : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnCardDrawn += OnDrawEffect;
+        Owner.OnCardDrawn.AddListener(OnDrawEffect);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnCardDrawn -= OnDrawEffect;
+        Owner.OnCardDrawn.RemoveListener(OnDrawEffect);
         return UniTask.CompletedTask;
     }
 

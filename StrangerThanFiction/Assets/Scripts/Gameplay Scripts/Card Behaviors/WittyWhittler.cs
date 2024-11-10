@@ -7,13 +7,13 @@ public class WittyWhittler : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnUnitSummoned += OnAllySummonedGrantPoison;
+        Owner.OnUnitSummoned.AddListener(OnAllySummonedGrantPoison);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitSummoned -= OnAllySummonedGrantPoison;
+        Owner.OnUnitSummoned.RemoveListener(OnAllySummonedGrantPoison);
         return UniTask.CompletedTask;
     }
 

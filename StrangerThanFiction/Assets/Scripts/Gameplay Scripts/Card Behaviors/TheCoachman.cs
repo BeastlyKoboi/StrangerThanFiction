@@ -8,12 +8,12 @@ public class TheCoachman : CardModel
     protected override async UniTask SummonEffect()
     {
         await SummonDonkey();
-        Owner.OnRoundStart += SummonDonkey;
+        Owner.OnRoundStart.AddListener(SummonDonkey);
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnRoundStart -= SummonDonkey;
+        Owner.OnRoundStart.RemoveListener(SummonDonkey);
         return UniTask.CompletedTask;
     }
 

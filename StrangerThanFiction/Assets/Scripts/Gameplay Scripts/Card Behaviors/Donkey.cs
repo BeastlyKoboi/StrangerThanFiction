@@ -8,13 +8,13 @@ public sealed class Donkey : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnUnitSummoned += OnCopySummonGrantMePower;
+        Owner.OnUnitSummoned.AddListener(OnCopySummonGrantMePower);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitSummoned -= OnCopySummonGrantMePower;
+        Owner.OnUnitSummoned.RemoveListener(OnCopySummonGrantMePower);
         return UniTask.CompletedTask;
     }
 

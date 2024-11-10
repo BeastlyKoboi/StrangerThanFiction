@@ -8,7 +8,7 @@ public class Poisoned : Condition
 
     public override UniTask OnAdd()
     {
-        card.Owner.OnRoundEnd += OnTrigger;
+        card.Owner.OnRoundEnd.AddListener(OnTrigger);
         return UniTask.CompletedTask;
     }
     public override async UniTask OnTrigger()
@@ -30,7 +30,7 @@ public class Poisoned : Condition
     }
     public override UniTask OnRemove()
     {
-        card.Owner.OnRoundEnd -= OnTrigger;
+        card.Owner.OnRoundEnd.RemoveListener(OnTrigger);
         return UniTask.CompletedTask;
     }
 }

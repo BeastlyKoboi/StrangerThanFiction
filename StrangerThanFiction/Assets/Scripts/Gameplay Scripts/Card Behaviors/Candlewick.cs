@@ -7,13 +7,13 @@ public class Candlewick : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnUnitSummoned += CandlewickEffect;
+        Owner.OnUnitSummoned.AddListener(CandlewickEffect);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitSummoned -= CandlewickEffect;
+        Owner.OnUnitSummoned.RemoveListener(CandlewickEffect);
         return UniTask.CompletedTask;
     }
 

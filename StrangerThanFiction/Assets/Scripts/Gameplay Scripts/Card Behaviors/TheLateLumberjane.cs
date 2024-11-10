@@ -7,15 +7,15 @@ public class TheLateLumberjane : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        Owner.OnUnitDestroyed += OnDestroyEffect;
-        Owner.enemyPlayer.OnUnitDestroyed += OnDestroyEffect;
+        Owner.OnUnitDestroyed.AddListener(OnDestroyEffect);
+        Owner.enemyPlayer.OnUnitDestroyed.AddListener(OnDestroyEffect);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitDestroyed -= OnDestroyEffect;
-        Owner.enemyPlayer.OnUnitDestroyed -= OnDestroyEffect;
+        Owner.OnUnitDestroyed.RemoveListener(OnDestroyEffect);
+        Owner.enemyPlayer.OnUnitDestroyed.RemoveListener(OnDestroyEffect);
         return UniTask.CompletedTask;
     }
 

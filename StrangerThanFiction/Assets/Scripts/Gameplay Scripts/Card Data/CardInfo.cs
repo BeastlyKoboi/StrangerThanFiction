@@ -19,5 +19,4 @@ public class CardInfo : ScriptableObject
     public PlayRequirements PlayRequirements;
 
     [TextArea] public string EncounterText;
-   
 }
