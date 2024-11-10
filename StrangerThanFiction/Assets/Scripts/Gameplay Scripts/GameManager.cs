@@ -48,7 +48,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     [SerializeField] private DeckInventory player2Deck;
 
     // Something for battlefield conditions
-    //  - 
 
 
     public void LoadData(GameData data)
