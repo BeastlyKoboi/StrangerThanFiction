@@ -18,6 +18,7 @@ MonoBehaviour:
   FlavorText: 
   Type: 1
   Faction: 3
+  Portrait: {fileID: 21300000, guid: 4cfde8ecf4a3a534d9d9b1249fb0b62c, type: 3}
   PortraitPath: CardPortraits/Default.png
   BaseCost: 2
   BasePower: 0
@@ -29,3 +30,4 @@ MonoBehaviour:
     EnemyCardTargets: 0
     AllyHandSize: 0
     EnemyHandSize: 0
+  EncounterText: 

@@ -26,7 +26,7 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
     // Physical Descriptors of the card, that will effect how it is viewed.
     // ----------------------------------------------------------------------------
-    public static CardDataMono cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
+    public static CardDataMono cardData;
     public virtual string Title { get; private set; } 
     public virtual string Description { get; private set; }
     public virtual string FlavorText { get; private set; }
@@ -36,7 +36,7 @@ public abstract class CardModel : MonoBehaviour
     public virtual string CardbackPath { get; } = "Cardback_Placeholder.png";
     public virtual string UnitFramePath { get; } = "UnitCardFrontFrame.png"; //
     public virtual string SpellFramePath { get; } = "SpellCardFrontFrame.png"; //
-    public virtual string PortraitPath { get; private set; }
+    public virtual Sprite Portrait { get; private set; }
     public virtual bool IsHidden { get; set; } = false;
 
     // ----------------------------------------------------------------------------
@@ -181,13 +181,16 @@ public abstract class CardModel : MonoBehaviour
 
     private void Awake()
     {
+        if (cardData == null)
+            cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
+
         CardInfo cardInfo = cardData.cardDictionary.GetCardDataByName(name);
 
         Title = cardInfo.Title;
         Description = cardInfo.Description;
         FlavorText = cardInfo.FlavorText;
         Type = cardInfo.Type;
-        PortraitPath = cardInfo.PortraitPath;
+        Portrait = cardInfo.Portrait;
         BaseCost = cardInfo.BaseCost;
         BasePower = cardInfo.BasePower;
         BasePlotArmor = cardInfo.BasePlotArmor;
@@ -693,33 +696,33 @@ public abstract class CardModel : MonoBehaviour
             return;
 
         // Load portrait picture
-        Sprite sprite = LoadSprite(PortraitPath);
         Transform portrait = cardView.Find("Portrait");
-
-        if (sprite != null)
-            portrait.GetComponent<Image>().sprite = sprite;
+        portrait.GetComponent<Image>().sprite = Portrait;
 
         cardTextCost = cardView.Find("Cost").GetComponent<TextMeshProUGUI>();
         cardTextCost.text = CurrentCost.ToString();
 
-        // Placeholder has Unit Card frame automatically, so replace it if needed
+
+        Transform spellBackground = cardView.Find("SpellBackground");
+        Transform unitBackground = cardView.Find("UnitBackground");
+
         if (Type == CardType.Spell)
         {
-            Sprite spellCardFrame = LoadSprite("SpellCardFramePlaceholder.png");
-            Transform background = cardView.Find("Background");
-            background.GetComponent<Image>().sprite = spellCardFrame;
+            spellBackground.gameObject.SetActive(true);
+            unitBackground.gameObject.SetActive(false);
 
             cardView.Find("Power").gameObject.SetActive(false);
             cardView.Find("PlotArmor").gameObject.SetActive(false);
-
         }
         else
         {
+            unitBackground.gameObject.SetActive(true);
+            spellBackground.gameObject.SetActive(false);
+
             cardTextPower = cardView.Find("Power").GetComponent<TextMeshProUGUI>();
             cardTextPower.text = CurrentPower.ToString();
             cardTextPlotArmor = cardView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
             cardTextPlotArmor.text = CurrentPlotArmor.ToString();
-
         }
 
         cardView.Find("Name").GetComponent<TextMeshProUGUI>().text = Title;
@@ -739,7 +742,7 @@ public abstract class CardModel : MonoBehaviour
             return;
 
         // Load portrait picture
-        Sprite sprite = LoadSprite(PortraitPath);
+        Sprite sprite = Portrait;
         Transform portrait = unitView.Find("Portrait");
 
         if (sprite != null)

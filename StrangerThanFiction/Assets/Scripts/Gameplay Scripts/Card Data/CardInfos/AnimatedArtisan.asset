@@ -17,6 +17,7 @@ MonoBehaviour:
   FlavorText: '"I am. I dream. I ponder. I make. I am."'
   Type: 0
   Faction: 0
+  Portrait: {fileID: 21300000, guid: 9e0d52d15d437694ab019601f6fbd21c, type: 3}
   PortraitPath: CardPortraits/Default.png
   BaseCost: 3
   BasePower: 2

@@ -15,7 +15,6 @@ public class CardPreview : MonoBehaviour
     public TextMeshProUGUI cardTextPower;
     public TextMeshProUGUI cardTextPlotArmor;
     public TextMeshProUGUI flavorText;
-    public Image cardBackground;
     private Sprite spellCardFrame;
     private Sprite unitCardFrame;
 
@@ -29,15 +28,9 @@ public class CardPreview : MonoBehaviour
         cardTextCost = cardView.Find("Cost").GetComponent<TextMeshProUGUI>();
         cardTextPower = cardView.Find("Power").GetComponent<TextMeshProUGUI>();
         cardTextPlotArmor = cardView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
-        cardBackground = cardView.Find("Background").GetComponent<Image>();
 
         flavorBox = transform.Find("Flavor");
         flavorText = flavorBox.Find("FlavorText").GetComponent<TextMeshProUGUI>();
-
-        spellCardFrame = CardModel.LoadSprite("SpellCardFramePlaceholder.png");
-        unitCardFrame = CardModel.LoadSprite("UnitCardFramePlaceholder.png");
-
-
     }
 
     public void Unfocus()
@@ -76,7 +69,7 @@ public class CardPreview : MonoBehaviour
             return;
 
         // Load portrait picture
-        Sprite sprite = CardModel.LoadSprite(card.PortraitPath);
+        Sprite sprite = card.Portrait;
         Transform portrait = cardView.Find("Portrait");
 
         if (sprite != null)
@@ -84,17 +77,21 @@ public class CardPreview : MonoBehaviour
 
         cardTextCost.text = card.CurrentCost.ToString();
 
-        // Placeholder has Unit Card frame automatically, so replace it if needed
+        Transform spellBackground = cardView.Find("SpellBackground");
+        Transform unitBackground = cardView.Find("UnitBackground");
+
         if (card.Type == CardType.Spell)
         {
-            cardBackground.sprite = spellCardFrame;
+            spellBackground.gameObject.SetActive(true);
+            unitBackground.gameObject.SetActive(false);
 
             cardView.Find("Power").gameObject.SetActive(false);
             cardView.Find("PlotArmor").gameObject.SetActive(false);
         }
         else
         {
-            cardBackground.sprite = unitCardFrame;
+            unitBackground.gameObject.SetActive(true);
+            spellBackground.gameObject.SetActive(false);
 
             cardTextPower.text = card.CurrentPower.ToString();
             cardTextPlotArmor.text = card.CurrentPlotArmor.ToString();

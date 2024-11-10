@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CardInfo", menuName = "DataContainer/CardInfo")]
 public class CardInfo : ScriptableObject
 {
+    public Sprite Portrait;
     public string Title;
     [TextArea]
     public string Description;
@@ -12,7 +13,6 @@ public class CardInfo : ScriptableObject
     public string FlavorText;
     public CardType Type;
     public Faction Faction;
-    public string PortraitPath;
     public int BaseCost;
     public int BasePower;
     public int BasePlotArmor;
