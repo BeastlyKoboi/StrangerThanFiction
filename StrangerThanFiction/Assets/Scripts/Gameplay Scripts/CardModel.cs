@@ -157,22 +157,23 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
 
     // Card Events - common to both units and spells.
-    public event Func<CardPlayState, UniTask> OnPlay;
-    public event Func<UniTask> OnDraw;
-    public event Func<UniTask> OnDiscard;
-    public event Func<CardModel, UniTask> OnDestroy;
-    public event Func<CardModel, UniTask> OnRemove;
+    public UniTaskEvent<CardPlayState> OnPlay = new UniTaskEvent<CardPlayState>();
+    public UniTaskEvent OnDraw = new UniTaskEvent();
+    public UniTaskEvent OnDiscard = new UniTaskEvent();
+    public UniTaskEvent<CardModel> OnDestroy = new UniTaskEvent<CardModel>();
+    public UniTaskEvent<CardModel> OnRemove = new UniTaskEvent<CardModel>();
 
     // Unit Events - only called when in play, otherwise never.
-    public event Func<UniTask> OnSummon;
-    public event Func<UniTask> OnRoundStart;
-    public event Func<UniTask> OnRoundEnd;
-    public event Func<UnitStrikeState, UniTask> OnStrike;
-    public event Func<int, UniTask> OnTakeDamage;
-    public event Func<int, UniTask> OnGrantCostModification;
-    public event Func<int, UniTask> OnGrantPower;
-    public event Func<int, UniTask> OnGrantPlotArmor;
-    public event Func<int, UniTask> OnHeal;
+    public UniTaskEvent OnSummon = new UniTaskEvent();
+    public UniTaskEvent OnRoundStart = new UniTaskEvent();
+    public UniTaskEvent OnRoundEnd = new UniTaskEvent();
+    public UniTaskEvent<UnitStrikeState> OnStrike = new UniTaskEvent<UnitStrikeState>();
+    public UniTaskEvent<int> OnTakeDamage = new UniTaskEvent<int>();
+    public UniTaskEvent<int> OnGrantCostModification = new UniTaskEvent<int>();
+    public UniTaskEvent<int> OnGrantPower = new UniTaskEvent<int>();
+    public UniTaskEvent<int> OnGrantPlotArmor = new UniTaskEvent<int>();
+    public UniTaskEvent OnHeal = new UniTaskEvent();
+  
 
     private void OnEnable()
     {
@@ -202,28 +203,22 @@ public abstract class CardModel : MonoBehaviour
 
         MaxPower = CurrentPower;
 
-        OnPlay += PlayAnim;
-        OnSummon += SummonAnim;
-        OnDiscard += DiscardAnim;
-        OnDestroy += DestroyAnim;
+        OnPlay.AddListener(PlayAnim);
+        OnSummon.AddListener(SummonAnim);
+        OnDiscard.AddListener(DiscardAnim);
+        OnDestroy.AddListener(DestroyAnim);
 
-        OnPlay += PlayEffect;
-        OnSummon += SummonEffect;
-        OnDiscard += DiscardEffect;
-        OnDestroy += DestroyEffect;
-        OnRemove += RemoveEffect;
+        OnPlay.AddListener(PlayEffect);
+        OnSummon.AddListener(SummonEffect);
+        OnDiscard.AddListener(DiscardEffect);
+        OnDestroy.AddListener(DestroyEffect);
+        OnRemove.AddListener(RemoveEffect);
     }
 
     // Start is called before the first frame update
     public virtual void Start()
     {
-        //OverwriteCardPrefab();
 
-        //if (Type == CardType.Unit)
-        //{
-        //    OverwriteUnitPrefab();
-        //}
-        
     }
 
 
@@ -303,14 +298,7 @@ public abstract class CardModel : MonoBehaviour
     {
         Owner.CurrentMana -= CurrentCost;
 
-        if (OnPlay != null)
-        {
-            foreach (Func<CardPlayState, UniTask> handler in OnPlay.GetInvocationList()
-                    .Cast<Func<CardPlayState, UniTask>>().ToList())
-            {
-                await handler(cardPlayState);
-            }
-        }
+        await OnPlay.InvokeAsync(cardPlayState);
 
         if (Type == CardType.Unit)
         {
@@ -340,14 +328,8 @@ public abstract class CardModel : MonoBehaviour
 
         await Board.SummonUnit(this, SelectedArea);
 
-        if (OnSummon != null)
-        {
-            foreach (Func<UniTask> handler in OnSummon.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnSummon.InvokeAsync();
+
         return true;
     }
 
@@ -358,14 +340,7 @@ public abstract class CardModel : MonoBehaviour
     /// <returns></returns>
     public async UniTask Discard(Player player)
     {
-        if (OnDiscard != null)
-        {
-            foreach (Func<UniTask> handler in OnDiscard.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnDiscard.InvokeAsync();
     }
 
     /// <summary>
@@ -374,21 +349,14 @@ public abstract class CardModel : MonoBehaviour
     /// <returns></returns>
     public async UniTask Destroy()
     {
-        if (OnDestroy != null)
-        {
-            foreach (Func<CardModel, UniTask> handler in OnDestroy.GetInvocationList()
-                .Cast<Func<CardModel, UniTask>>().ToList())
-            {
-                await handler(this);
-            }
-        }
+        await OnDestroy.InvokeAsync(this);
 
         await Remove();
     }
 
     public async UniTask Remove()
     {
-        OnRemove += CardFactory.Instance.RecycleCard;
+        OnRemove.AddListener(CardFactory.Instance.RecycleCard);
         
         // Remove all conditions 
         string[] conKeys = conditions.Keys.ToArray();
@@ -397,14 +365,7 @@ public abstract class CardModel : MonoBehaviour
             await RemoveCondition(conditionName);
         }
 
-        if (OnRemove != null)
-        {
-            foreach (Func<CardModel, UniTask> handler in OnRemove.GetInvocationList()
-                .Cast<Func<CardModel, UniTask>>().ToList())
-            {
-                await handler(this);
-            }
-        }
+        await OnRemove.InvokeAsync(this);
     }
 
     /// <summary>
@@ -412,41 +373,19 @@ public abstract class CardModel : MonoBehaviour
     /// </summary>
     public async UniTask RoundStart()
     {
-        if (OnRoundStart != null)
-        {
-            foreach (Func<UniTask> handler in OnRoundStart.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnRoundStart.InvokeAsync();
     }
 
     public async UniTask RoundEnd()
     {
-        if (OnRoundEnd != null)
-        {
-            foreach (Func<UniTask> handler in OnRoundEnd.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnRoundEnd.InvokeAsync();
     }
 
     public async UniTask Strike(CardModel target)
     {
         await target.TakeDamage(CurrentPower);
 
-        // trigger event
-        if (OnStrike != null)
-        {
-            foreach (Func<UnitStrikeState, UniTask> handler in OnStrike.GetInvocationList()
-                .Cast<Func<UnitStrikeState, UniTask>>().ToList())
-            {
-                await handler(new UnitStrikeState(this, target));
-            }
-        }
+        await OnStrike.InvokeAsync(new UnitStrikeState(this, target));
     }
 
     /// <summary>
@@ -488,14 +427,7 @@ public abstract class CardModel : MonoBehaviour
         // and the amount is finally returned
         CurrentPower = Math.Max(CurrentPower - damage, 0);
 
-        if (OnTakeDamage != null)
-        {
-            foreach (Func<UniTask> handler in OnTakeDamage.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnTakeDamage.InvokeAsync(damage);
 
         Owner.uiManager.UpdateTotalPower();
 
@@ -512,14 +444,7 @@ public abstract class CardModel : MonoBehaviour
     {
         CurrentCost = Math.Max(0, CurrentCost + costMod);
 
-        if (OnGrantCostModification != null)
-        {
-            foreach (Func<UniTask> handler in OnGrantCostModification.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnGrantCostModification.InvokeAsync(costMod);
     }
 
     /// <summary>
@@ -532,14 +457,7 @@ public abstract class CardModel : MonoBehaviour
         MaxPower += powerAmount;
         CurrentPower += powerAmount;
 
-        if (OnGrantPower != null)
-        {
-            foreach (Func<UniTask> handler in OnGrantPower.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnGrantPower.InvokeAsync(powerAmount);
 
         Owner.uiManager.UpdateTotalPower();
     }
@@ -553,14 +471,7 @@ public abstract class CardModel : MonoBehaviour
     {
         CurrentPlotArmor += armorAmount;
 
-        if (OnGrantPlotArmor != null)
-        {
-            foreach (Func<UniTask> handler in OnGrantPlotArmor.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnGrantPlotArmor.InvokeAsync(armorAmount);
     }
 
     /// <summary>
@@ -582,14 +493,8 @@ public abstract class CardModel : MonoBehaviour
 
         CurrentPower += healAmount;
 
-        if (OnHeal != null)
-        {
-            foreach (Func<UniTask> handler in OnHeal.GetInvocationList()
-                .Cast<Func<UniTask>>().ToList())
-            {
-                await handler();
-            }
-        }
+        await OnHeal.InvokeAsync();
+
         Owner.uiManager.UpdateTotalPower();
     }
 
@@ -659,29 +564,6 @@ public abstract class CardModel : MonoBehaviour
     // ----------------------------------------------------------------------------
     // Loading Assets & Overwriting Card Prefabs
     // ----------------------------------------------------------------------------
-
-    /// <summary>
-    /// Loads a sprite and returns it from a path string. 
-    /// </summary>
-    /// <param name="filename"></param>
-    /// <returns></returns>
-    public static Sprite LoadSprite(string filename)
-    {
-        if (string.IsNullOrEmpty(filename)) return null;
-
-        string path = Path.Combine(Application.streamingAssetsPath, filename);
-
-        if (File.Exists(path))
-        {
-            byte[] bytes = File.ReadAllBytes(path);
-            Texture2D texture = new Texture2D(100, 100, TextureFormat.RGB24, false);
-            texture.LoadImage(bytes);
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            return sprite;
-        }
-
-        return null;
-    }
 
     /// <summary>
     /// At instantiation will be used to overwrite placeholder card gameobject

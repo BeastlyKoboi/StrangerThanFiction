@@ -7,13 +7,13 @@ public class MagicalWoodcarving : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        OnRoundEnd += RoundEndEffect;
+        OnRoundEnd.AddListener(RoundEndEffect);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        OnRoundEnd -= RoundEndEffect;
+        OnRoundEnd.RemoveListener(RoundEndEffect);
         return UniTask.CompletedTask;
     }
 

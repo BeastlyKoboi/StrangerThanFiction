@@ -37,14 +37,14 @@ public class BoardManager : MonoBehaviour
 
         await unit.Owner.UnitSummoned(unit);
 
-        unit.OnDestroy += DestroyUnit;
-        unit.OnRemove += RemoveUnit;
+        unit.OnDestroy.AddListener(DestroyUnit);
+        unit.OnRemove.AddListener(RemoveUnit);
     }
 
     private async UniTask DestroyUnit(CardModel unit)
     {
         await unit.Owner.UnitDestroyed(unit);
-        unit.OnDestroy -= DestroyUnit;
+        unit.OnDestroy.RemoveListener(DestroyUnit);
         
         if (unit.SelectedArea != null)
             unit.SelectedArea.RemoveUnit(unit);
@@ -55,9 +55,8 @@ public class BoardManager : MonoBehaviour
         if (unit.SelectedArea != null)
             unit.SelectedArea.RemoveUnit(unit);
 
-        unit.OnRemove -= RemoveUnit;
+        unit.OnRemove.RemoveListener(RemoveUnit);
     }
-
 
 
     /// <summary>

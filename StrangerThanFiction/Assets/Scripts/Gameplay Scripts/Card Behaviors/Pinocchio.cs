@@ -11,13 +11,13 @@ public sealed class Pinocchio : CardModel
 {
     protected override UniTask SummonEffect()
     {
-        OnRoundStart += CreateTallTaleInHand;
+        OnRoundStart.AddListener(CreateTallTaleInHand);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        OnRoundStart -= CreateTallTaleInHand;
+        OnRoundStart.RemoveListener(CreateTallTaleInHand);
         return UniTask.CompletedTask;
     }
 

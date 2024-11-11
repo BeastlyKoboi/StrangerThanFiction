@@ -32,7 +32,7 @@ public class Crow : CardModel
             await alliedCrows[0].Remove();
             await alliedCrows[1].Remove();
 
-            OnRemove += SummonMurder;
+            OnRemove.AddListener(SummonMurder);
             await Remove();
         }
         
