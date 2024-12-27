@@ -31,18 +31,11 @@ public abstract class CardModel : MonoBehaviour
     public virtual string Description { get; private set; }
     public virtual string FlavorText { get; private set; }
     public virtual CardType Type { get; private set; }
-
-    // These 3 paths are unused now, but intended for the ability to have card skins.
-    public virtual string CardbackPath { get; } = "Cardback_Placeholder.png";
-    public virtual string UnitFramePath { get; } = "UnitCardFrontFrame.png"; //
-    public virtual string SpellFramePath { get; } = "SpellCardFrontFrame.png"; //
     public virtual Sprite Portrait { get; private set; }
     public virtual bool IsHidden { get; set; } = false;
 
-    // ----------------------------------------------------------------------------
-    // Future place to add reqs for targeting ally/enemy units, and ally cards.
-    // ----------------------------------------------------------------------------
-
+    // unused for now
+    public virtual string Cardback { get; private set; }
 
     // ----------------------------------------------------------------------------
     // Stats that will not be changed - Consider making children implement this as static somehow?
@@ -651,9 +644,21 @@ public abstract class CardModel : MonoBehaviour
 
         // Spells need to be updated, but will not have these saved. 
         if (cardTextPower)
+        {
             cardTextPower.text = CurrentPower.ToString();
+            if (CurrentPower > BasePower)
+                cardTextPower.color = Color.green;
+            else
+                cardTextPower.color = Color.white;
+        }
         if (cardTextPlotArmor)
+        {
             cardTextPlotArmor.text = CurrentPlotArmor.ToString();
+            if (CurrentPlotArmor > BasePlotArmor)
+                cardTextPlotArmor.color = Color.green;
+            else
+                cardTextPlotArmor.color = Color.white;
+        }
     }
 
     /// <summary>
@@ -664,5 +669,19 @@ public abstract class CardModel : MonoBehaviour
         if (!unitView) return;
         unitTextPower.text = CurrentPower.ToString();
         unitTextPlotArmor.text = CurrentPlotArmor.ToString();
+
+        if (CurrentPower < MaxPower)
+            unitTextPower.color = Color.red;
+        else if (CurrentPower > BasePower)
+            unitTextPower.color = Color.green;
+        else
+            unitTextPower.color = Color.white;
+
+        if (CurrentPlotArmor > BasePlotArmor)
+            unitTextPlotArmor.color = Color.green;
+        else if (CurrentPlotArmor < BasePlotArmor)
+            unitTextPlotArmor.color = Color.yellow;
+        else
+            unitTextPlotArmor.color = Color.white;
     }
 }

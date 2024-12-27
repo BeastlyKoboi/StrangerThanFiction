@@ -643,6 +643,18 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 955561473}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: SetTemplate
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1686745038814498499, guid: 1f47882fd5e957241bea5b3147848c36, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 955561473}
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 5
         m_Arguments:
@@ -839,13 +851,14 @@ GameObject:
   - component: {fileID: 459332515}
   - component: {fileID: 459332514}
   - component: {fileID: 459332513}
+  - component: {fileID: 459332516}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &459332513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -904,6 +917,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &459332516
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459332512}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &530493778
 GameObject:
   m_ObjectHideFlags: 0
@@ -2235,11 +2260,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingScreen: {fileID: 459332512}
-  canvasGroup: {fileID: 1229675602}
+  canvas: {fileID: 1229675597}
+  canvasGroup: {fileID: 459332516}
   sceneToLoad: Gameplay
   fadeFinished:
     m_PersistentCalls:
       m_Calls: []
+  transitionTemplate: {fileID: 0}
+  _fadeDuration: 0.3
 --- !u!4 &955561474
 Transform:
   m_ObjectHideFlags: 0
@@ -2563,7 +2591,6 @@ GameObject:
   - component: {fileID: 1229675601}
   - component: {fileID: 1229675600}
   - component: {fileID: 1229675599}
-  - component: {fileID: 1229675602}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -2621,10 +2648,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -2650,23 +2677,11 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
---- !u!225 &1229675602
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229675597}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &1375214963
 GameObject:
   m_ObjectHideFlags: 0

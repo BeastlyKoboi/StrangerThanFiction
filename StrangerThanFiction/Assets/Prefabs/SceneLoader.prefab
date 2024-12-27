@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 1296748323457592315}
   - component: {fileID: 6892828071242117204}
   - component: {fileID: 9060098793728838696}
+  - component: {fileID: 2691093025976885843}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1296748323457592315
 RectTransform:
   m_ObjectHideFlags: 0
@@ -76,6 +77,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &2691093025976885843
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136400805809291675}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &7557117150900443197
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,7 +101,6 @@ GameObject:
   - component: {fileID: 8475209873398785819}
   - component: {fileID: 8002588686873042753}
   - component: {fileID: 8230278185573899131}
-  - component: {fileID: 2099170332256431077}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -180,18 +192,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!225 &2099170332256431077
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7557117150900443197}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &8524358151918841792
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +223,7 @@ Transform:
   m_Children:
   - {fileID: 8668185805517792029}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3944935582770755690
 MonoBehaviour:
@@ -238,8 +238,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingScreen: {fileID: 1136400805809291675}
-  canvasGroup: {fileID: 2099170332256431077}
+  canvas: {fileID: 0}
+  canvasGroup: {fileID: 0}
   sceneToLoad: 
   fadeFinished:
     m_PersistentCalls:
       m_Calls: []
+  transitionTemplate: {fileID: 0}
+  _fadeDuration: 0.3
