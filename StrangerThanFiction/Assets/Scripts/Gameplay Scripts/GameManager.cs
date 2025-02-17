@@ -35,8 +35,11 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public BoardManager boardManager;
 
     [HeaderAttribute("Game State Information")]
+    public int bindingPower = 20;
+    public int bindingDamage = 0;
     public int roundNumber = 0;
-    public const int totalRounds = 6;
+    public const int maxRounds = 6;
+    public int unusedInk = 0;
 
     [HeaderAttribute("Card Prefabs")]
     public GameObject cardPrefab;
@@ -53,6 +56,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public void LoadData(GameData data)
     {
         if (usingInspector) return;
+
+        // load the binding from the data
 
         player1Deck = data.player1Deck;
         player2Deck = data.player2Deck;
@@ -130,9 +135,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
             roundNumber++;
             await RoundActivity();
 
-        } while (roundNumber < totalRounds);
-
-        // Decide who has most power then grant win to player
+        } while (roundNumber < maxRounds && bindingDamage < bindingPower);
 
         await EndGame();
     }
@@ -152,6 +155,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
         await DrawHands(); // ITF maybe put this in event with numCards to draw as a variable
 
         await OnRoundStart.InvokeAsync();
+
+        uiManager.UpdateTotalPower();
 
         // Draw Cards
         do
@@ -173,6 +178,18 @@ public class GameManager : MonoBehaviour, IDataPersistence
         // 
 
         await OnRoundEnd.InvokeAsync();
+
+        uiManager.UpdateTotalPower();
+
+        // Apply damage to binding
+        int currentRoundDamage = boardManager.CalculateCurrentBindingDamage();
+        int prevBindingDamage = bindingDamage;
+        bindingDamage += currentRoundDamage;
+
+        uiManager.UpdateBinding(new BindingState(bindingPower, prevBindingDamage, bindingDamage));
+        await UniTask.Delay(1000);
+
+        //await boardManager.ResolveCombat();
 
         await DiscardHands();
 
@@ -222,7 +239,11 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// </summary>
     private async UniTask EndGame()
     {
-        uiManager.GameOver(); // Maybe add this to event
+        uiManager.GameOver(new GameOverState(
+            bindingDamage >= bindingPower, 
+            unusedInk, 
+            bindingPower, 
+            bindingDamage)); // Maybe add this to event
         await OnGameOver.InvokeAsync();
     }
 

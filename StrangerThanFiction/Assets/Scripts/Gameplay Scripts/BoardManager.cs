@@ -18,11 +18,9 @@ public class BoardManager : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
 
-    public UnitRow player1FrontRow;
-    public UnitRow player1BackRow;
+    public UnitRow playerRow;
 
-    public UnitRow player2FrontRow;
-    public UnitRow player2BackRow;
+    public UnitRow enemyRow;
 
     /// <summary>
     /// Adds a unit to the board.
@@ -70,16 +68,11 @@ public class BoardManager : MonoBehaviour
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, raycastResults);
 
-        UnitRow frontline = card.Owner == gameManager.player1 ? player1FrontRow : player2FrontRow;
-        UnitRow backline = card.Owner == gameManager.player1 ? player1BackRow : player2BackRow;
-
         for (int i = 0; i < raycastResults.Count; i++)
         {
-            if (frontline.gameObject == raycastResults[i].gameObject || backline.gameObject == raycastResults[i].gameObject)
+            if (playerRow.gameObject == raycastResults[i].gameObject)
             {
-                UnitRow unitRow = raycastResults[i].gameObject == frontline.gameObject ? frontline : backline;
-
-                card.SelectedArea = unitRow;
+                card.SelectedArea = playerRow;
                 return true;
             }
         }
@@ -93,10 +86,8 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public async UniTask RoundStart()
     {
-        await player1FrontRow.ForEach(async unit => await unit.RoundStart());
-        await player1BackRow.ForEach(async unit => await unit.RoundStart());
-        await player2FrontRow.ForEach(async unit => await unit.RoundStart());
-        await player2BackRow.ForEach(async unit => await unit.RoundStart());
+        await playerRow.ForEach(async unit => await unit.RoundStart());
+        await enemyRow.ForEach(async unit => await unit.RoundStart());
     }
 
     /// <summary>
@@ -105,23 +96,16 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public async UniTask RoundEnd()
     {
-        await player1FrontRow.ForEach(async unit => await unit.RoundEnd());
-        await player1BackRow.ForEach(async unit => await unit.RoundEnd());
-        await player2FrontRow.ForEach(async unit => await unit.RoundEnd());
-        await player2BackRow.ForEach(async unit => await unit.RoundEnd());
+        await playerRow.ForEach(async unit => await unit.RoundEnd());
+        await enemyRow.ForEach(async unit => await unit.RoundEnd());
     }
 
 
     public async UniTask SetOnClickForPlayersUnits(Player player, Action<CardModel> action)
     {
-        UnitRow frontline = player == gameManager.player1 ? player1FrontRow : player2FrontRow;
-        UnitRow backline = player == gameManager.player1 ? player1BackRow : player2BackRow;
+        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
 
-        await frontline.ForEach(unit => { 
-            unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
-            return UniTask.CompletedTask;
-        });
-        await backline.ForEach(unit => {
+        await unitRow.ForEach(unit => { 
             unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
             return UniTask.CompletedTask;
         });
@@ -142,22 +126,9 @@ public class BoardManager : MonoBehaviour
     /// <returns></returns>
     public CardModel GetStrongestUnit(Player player)
     {
-        UnitRow frontline = player == gameManager.player1 ? player1FrontRow : player2FrontRow;
-        UnitRow backline = player == gameManager.player1 ? player1BackRow : player2BackRow;
+        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
 
-        CardModel frontStrongest = frontline.GetStrongestUnit();
-        CardModel backStrongest = backline.GetStrongestUnit();
-
-        if (frontStrongest == null) return backStrongest;
-        if (backStrongest == null) return frontStrongest;
-
-        if (frontStrongest.CurrentPower > backStrongest.CurrentPower)
-            return frontStrongest;
-        else if (frontStrongest.CurrentPower == backStrongest.CurrentPower &&
-            frontStrongest.CurrentPlotArmor >= backStrongest.CurrentPlotArmor)
-            return frontStrongest;
-
-        return backStrongest;
+        return unitRow.GetStrongestUnit();
     }
 
     /// <summary>
@@ -167,22 +138,9 @@ public class BoardManager : MonoBehaviour
     /// <returns></returns>
     public CardModel GetWeakestUnit(Player player)
     {
-        UnitRow frontline = player == gameManager.player1 ? player1FrontRow : player2FrontRow;
-        UnitRow backline = player == gameManager.player1 ? player1BackRow : player2BackRow;
+        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
 
-        CardModel frontWeakest = frontline.GetWeakestUnit();
-        CardModel backWeakest = backline.GetWeakestUnit();
-
-        if (frontWeakest == null) return backWeakest;
-        if (backWeakest == null) return frontWeakest;
-
-        if (frontWeakest.CurrentPower < backWeakest.CurrentPower)
-            return frontWeakest;
-        else if (frontWeakest.CurrentPower == backWeakest.CurrentPower &&
-            frontWeakest.CurrentPlotArmor <= backWeakest.CurrentPlotArmor)
-            return frontWeakest;
-
-        return backWeakest;
+        return unitRow.GetWeakestUnit();
     }
 
     public CardModel GetRandomUnit(Player player)
@@ -192,88 +150,33 @@ public class BoardManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the total power of the front row of a specific player.
-    /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
-    public int GetTotalFrontPower(Player player)
-    {
-        return (player == gameManager.player1 ? player1FrontRow : player2FrontRow).GetTotalPower();
-    }
-
-    /// <summary>
-    /// Returns the total power of the back row of a specific player.
-    /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
-    public int GetTotalBackPower(Player player)
-    {
-        return (player == gameManager.player1 ? player1BackRow : player2BackRow).GetTotalPower();
-    }
-
-    /// <summary>
     /// Returns the total power of a specific player.
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public int GetTotalPower(Player player)
+    public int GetTotalPower(Player player) => (player == gameManager.player1 ? playerRow : enemyRow).GetTotalPower();
+
+    public UnitRow GetEnemyRow() => enemyRow;
+
+    public UnitRow GetValidRow(Player player)
     {
-        return GetTotalFrontPower(player) + GetTotalBackPower(player);
-    }
+        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
 
-    /// <summary>
-    /// Returns a random enemy UnitRow
-    /// </summary>
-    /// <returns></returns>
-    public UnitRow GetRandomEnemyRow()
-    {
-        return (UnityEngine.Random.value > 0.5) ? player2BackRow : player2FrontRow;
-    }
-
-    public UnitRow[] GetPlayersRows(Player player)
-    {
-        UnitRow[] player1Rows = new UnitRow[] { player1FrontRow, player1BackRow };
-        UnitRow[] player2Rows = new UnitRow[] { player2FrontRow, player2BackRow };
-
-        return player == gameManager.player1 ? player1Rows : player2Rows;
-    }
-
-    public UnitRow GetRandomValidRow(Player player)
-    {
-        UnitRow[] playerRows = GetPlayersRows(player);
-
-        if (!playerRows[0].GetIsFull() && !playerRows[1].GetIsFull())
-            return UnityEngine.Random.value > 0.5 ? playerRows[0] : playerRows[1];
-        if (playerRows[0].GetIsFull() && playerRows[1].GetIsFull())
+        if (unitRow.GetIsFull())
             return null;
-        if (playerRows[0].GetIsFull())
-            return playerRows[1];
-        if (playerRows[1].GetIsFull())
-            return playerRows[0];
 
-        return null;
+        return unitRow;
     }
 
-    public UnitRow GetRandomRow(Player player)
+    public CardModel[] GetUnits(Player player) => (gameManager.player1 ? playerRow : enemyRow).GetUnits();
+
+
+    public int CalculateCurrentBindingDamage()
     {
-        UnitRow[] playerRows = GetPlayersRows(player);
-        return UnityEngine.Random.value > 0.5 ? playerRows[0] : playerRows[1];
+        int playerPower = GetTotalPower(gameManager.player1);
+        int enemyPower = GetTotalPower(gameManager.player2);
+
+        return playerPower - enemyPower / 2;
     }
 
-    /// <summary>
-    /// Returns the units of a specific player.
-    /// </summary>
-    /// <param name="player"></param>
-    /// <returns></returns>
-    public CardModel[] GetUnits(Player player)
-    {
-        UnitRow frontline = player == gameManager.player1 ? player1FrontRow : player2FrontRow;
-        UnitRow backline = player == gameManager.player1 ? player1BackRow : player2BackRow;
-
-        List<CardModel> units = new List<CardModel>();
-        units.AddRange(frontline.GetUnits());
-        units.AddRange(backline.GetUnits());
-
-        return units.ToArray();
-    }
 }

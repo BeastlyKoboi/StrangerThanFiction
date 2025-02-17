@@ -12,7 +12,7 @@ public class UnitRow : MonoBehaviour
     private List<RectTransform> unitRects;
     delegate bool filterDelegate(CardModel unit);
 
-    private int maxUnits = 6;
+    private int maxUnits = 7;
 
     private void Awake()
     {

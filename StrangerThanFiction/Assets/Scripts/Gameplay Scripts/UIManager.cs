@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,8 +25,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI discardLabelPlayer1;
     [SerializeField] private TextMeshProUGUI manaPlayer1;
     [SerializeField] private TextMeshProUGUI powerPlayer1;
-    [SerializeField] private TextMeshProUGUI frontPowerPlayer1;
-    [SerializeField] private TextMeshProUGUI backPowerPlayer1;
 
     [HeaderAttribute("Player 2")]
     [SerializeField] private Player player2; // The AI eventually 
@@ -33,8 +32,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI discardLabelPlayer2;
     [SerializeField] private TextMeshProUGUI manaPlayer2;
     [SerializeField] private TextMeshProUGUI powerPlayer2;
-    [SerializeField] private TextMeshProUGUI frontPowerPlayer2;
-    [SerializeField] private TextMeshProUGUI backPowerPlayer2;
+    [SerializeField] private TextMeshProUGUI bindingLabel;
+    [SerializeField] private TextMeshProUGUI projectedBindingDamageLabel;
 
     [HeaderAttribute("Paused Menu")]
     [SerializeField] private GameObject PausedMenu;
@@ -52,13 +51,6 @@ public class UIManager : MonoBehaviour
     [HeaderAttribute("Prompt")]
     [SerializeField] private GameObject prompt;
     [SerializeField] private TextMeshProUGUI promptText;
-
-    /// Used to test game over screen
-    [ContextMenu("Trigger Game Over")]
-    void TriggerGameOver()
-    {
-        GameOver();
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -85,7 +77,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Activates the Game over Popup and show the results.
     /// </summary>
-    public async void GameOver()
+    public async void GameOver(GameOverState gameOverState)
     {
         int playerTotalPower = board.GetTotalPower(gameManager.player1);
         int enemyTotalPower = board.GetTotalPower(gameManager.player2);
@@ -93,7 +85,7 @@ public class UIManager : MonoBehaviour
         playerTotalPowerCount.text = playerTotalPower.ToString();
         enemyTotalPowerCount.text = enemyTotalPower.ToString();
 
-        if (playerTotalPower > enemyTotalPower)
+        if (gameOverState.hasPlayerWon)
         {
             resultText.text = "You Win";
             overkillText.text = $"Overkill: {(playerTotalPower - enemyTotalPower).ToString()}";
@@ -149,20 +141,25 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateTotalPower()
     {
-        int frontPower = board.GetTotalFrontPower(gameManager.player1);
-        int backPower = board.GetTotalBackPower(gameManager.player1);
+        int totalPower = board.GetTotalPower(player1);
+        powerPlayer1.text = totalPower.ToString();
 
-        powerPlayer1.text = (frontPower + backPower).ToString();
-        frontPowerPlayer1.text = frontPower.ToString();
-        backPowerPlayer1.text = backPower.ToString();
+        totalPower = board.GetTotalPower(player2);
+        powerPlayer2.text = totalPower.ToString();
 
-        frontPower = board.GetTotalFrontPower(gameManager.player2);
-        backPower = board.GetTotalBackPower(gameManager.player2);
-
-        powerPlayer2.text = (frontPower + backPower).ToString();
-        frontPowerPlayer2.text = frontPower.ToString();
-        backPowerPlayer2.text = backPower.ToString();
+        UpdateProjectedBindingDamage(board.CalculateCurrentBindingDamage());
     }
+
+    public void UpdateBinding(BindingState bindingState)
+    {
+        bindingLabel.text = $"{bindingState.currTotalBindingDamage}/{bindingState.bindingPower}";
+    }
+
+    public void UpdateProjectedBindingDamage(int bindingDamage)
+    {
+        projectedBindingDamageLabel.text = bindingDamage.ToString();
+    }
+
 
     public void TogglePausedMenu(bool isActive)
     {

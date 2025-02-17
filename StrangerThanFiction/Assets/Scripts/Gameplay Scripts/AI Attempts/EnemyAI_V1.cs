@@ -69,7 +69,7 @@ public class EnemyAI_V1 : MonoBehaviour
 
         if (playState.card.Type == CardType.Unit)
         {
-            playState.card.SelectedArea = playState.card.Board.GetRandomEnemyRow();
+            playState.card.SelectedArea = playState.card.Board.GetEnemyRow();
 
             if (playState.card.SelectedArea.GetIsFull())
             {

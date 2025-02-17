@@ -310,7 +310,7 @@ public abstract class CardModel : MonoBehaviour
 
         if (SelectedArea == null)
         {
-            SelectedArea = Board.GetRandomValidRow(Owner);
+            SelectedArea = Board.GetValidRow(Owner);
 
             if (SelectedArea == null)
             {
