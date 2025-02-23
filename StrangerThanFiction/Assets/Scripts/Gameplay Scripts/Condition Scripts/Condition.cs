@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public abstract class Condition 
+public abstract class Condition : IDamageSource
 {
     public static ConditionsDataMono conditionsData = GameObject.Find("ConditionsData").GetComponent<ConditionsDataMono>();
     public abstract uint Id { get; }

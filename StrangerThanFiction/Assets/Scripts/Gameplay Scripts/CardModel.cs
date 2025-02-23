@@ -21,7 +21,7 @@ public enum Faction { Pinocchio, LittleRed, HumptyDumpty, TheBigBadWolf }
 /// Defines the basic members and behaviors for all cards. Meant to be 
 /// extended into card-specific scripts rather than used as is. 
 /// </summary>
-public abstract class CardModel : MonoBehaviour
+public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 {
     // ----------------------------------------------------------------------------
     // Physical Descriptors of the card, that will effect how it is viewed.
@@ -157,11 +157,12 @@ public abstract class CardModel : MonoBehaviour
     public UniTaskEvent<CardModel> OnRemove = new UniTaskEvent<CardModel>();
 
     // Unit Events - only called when in play, otherwise never.
+    public UniTaskEvent OnDeploy = new UniTaskEvent();
     public UniTaskEvent OnSummon = new UniTaskEvent();
     public UniTaskEvent OnRoundStart = new UniTaskEvent();
     public UniTaskEvent OnRoundEnd = new UniTaskEvent();
     public UniTaskEvent<UnitStrikeState> OnStrike = new UniTaskEvent<UnitStrikeState>();
-    public UniTaskEvent<int> OnTakeDamage = new UniTaskEvent<int>();
+    public UniTaskEvent<DamageData> OnTakeDamage = new UniTaskEvent<DamageData>();
     public UniTaskEvent<int> OnGrantCostModification = new UniTaskEvent<int>();
     public UniTaskEvent<int> OnGrantPower = new UniTaskEvent<int>();
     public UniTaskEvent<int> OnGrantPlotArmor = new UniTaskEvent<int>();
@@ -198,14 +199,18 @@ public abstract class CardModel : MonoBehaviour
 
         OnPlay.AddListener(PlayAnim);
         OnSummon.AddListener(SummonAnim);
+        OnStrike.AddListener(StrikeAnim);
         OnDiscard.AddListener(DiscardAnim);
         OnDestroy.AddListener(DestroyAnim);
 
         OnPlay.AddListener(PlayEffect);
+        OnDeploy.AddListener(DeployEffect);
         OnSummon.AddListener(SummonEffect);
         OnDiscard.AddListener(DiscardEffect);
         OnDestroy.AddListener(DestroyEffect);
         OnRemove.AddListener(RemoveEffect);
+
+        gameObject.AddComponent<UnitAnim>();
     }
 
     // Start is called before the first frame update
@@ -225,9 +230,16 @@ public abstract class CardModel : MonoBehaviour
     protected virtual async UniTask SummonAnim()
     {
         float dur = 0.5f;
-        StartCoroutine(gameObject.AddComponent<UnitAnim>().Summoned(dur));
+        StartCoroutine(gameObject.GetComponent<UnitAnim>().Summoned(dur));
 
         await UniTask.Delay((int)(dur * 1000));
+    }
+    protected virtual async UniTask StrikeAnim(UnitStrikeState unitStrikeState)
+    {
+        float delay = 0.5f;
+        float dur = 0.25f;
+        StartCoroutine(gameObject.GetComponent<UnitAnim>().Strike(1.0f));
+        await UniTask.Delay((int)((delay + dur) * 1000));
     }
     protected virtual async UniTask DiscardAnim()
     {
@@ -264,6 +276,10 @@ public abstract class CardModel : MonoBehaviour
     {
         return UniTask.CompletedTask;
     }
+    protected virtual UniTask DeployEffect()
+    {
+        return UniTask.CompletedTask;
+    }
     protected virtual UniTask SummonEffect()
     {
         return UniTask.CompletedTask;
@@ -295,15 +311,12 @@ public abstract class CardModel : MonoBehaviour
 
         if (Type == CardType.Unit)
         {
+            await Deploy();
             await Summon();
         }
     }
 
-    /// <summary>
-    /// Method to summon this card as a unit.
-    /// </summary>
-    /// <returns></returns>
-    public async UniTask<bool> Summon()
+    public async UniTask<bool> Deploy()
     {
         cardView.gameObject.SetActive(false);
         unitView.gameObject.SetActive(true);
@@ -319,9 +332,26 @@ public abstract class CardModel : MonoBehaviour
             }
         }
 
+        IsHidden = false;
+
+        await Board.DeployUnit(this, SelectedArea);
+
+        await OnDeploy.InvokeAsync();
+
+        return true;
+    }
+
+    /// <summary>
+    /// Method to summon this card as a unit.
+    /// </summary>
+    /// <returns></returns>
+    public async UniTask<bool> Summon()
+    {
         await Board.SummonUnit(this, SelectedArea);
 
         await OnSummon.InvokeAsync();
+
+        await Owner.UnitSummoned(this);
 
         return true;
     }
@@ -361,6 +391,39 @@ public abstract class CardModel : MonoBehaviour
         await OnRemove.InvokeAsync(this);
     }
 
+
+    public async UniTask TransformInto(string newUnitName)
+    {
+        // Create the new unit, but don't summon yet
+        CardModel newUnit = CardFactory.Instance.CreateCard(newUnitName, false, transform.parent, Owner, Board);
+
+        newUnit.cardView.gameObject.SetActive(false);
+        newUnit.unitView.gameObject.SetActive(true);
+
+        // Replace in the same board slot
+        Board.ReplaceUnit(this, newUnit);
+
+        // Fire pre-summon event to set up any necessary adjustments
+        await newUnit.OnDeploy.InvokeAsync();
+
+        // Transfer properties
+        if (CurrentPower > BasePower)
+            await newUnit.GrantPower(CurrentPower - BasePower);
+
+        if (CurrentPlotArmor > BasePlotArmor)
+            await newUnit.GrantPlotArmor(CurrentPlotArmor - BasePlotArmor);
+
+        // Transfer conditions
+        foreach (var condition in this.GetConditions())
+        {
+            await newUnit.ApplyCondition(condition);
+        }
+
+        // Remove old unit safely
+        await this.Remove();
+    }
+
+
     /// <summary>
     /// Method to trigger OnRoundStart event.
     /// </summary>
@@ -374,12 +437,13 @@ public abstract class CardModel : MonoBehaviour
         await OnRoundEnd.InvokeAsync();
     }
 
-    public async UniTask Strike(CardModel target)
+    public async UniTask Strike(IDamagable target)
     {
-        await target.TakeDamage(CurrentPower);
+        await target.TakeDamage(new DamageData(damage: CurrentPower, source: this));
 
         await OnStrike.InvokeAsync(new UnitStrikeState(this, target));
     }
+
 
     /// <summary>
     /// Method to damage the unit and return the actual amount of damage given. 
@@ -388,7 +452,7 @@ public abstract class CardModel : MonoBehaviour
     /// <param name="damage"></param>
     /// <param name="ignorePlotArmor">Whether the damage is affected by plot armor.</param>
     /// <returns></returns>
-    public async UniTask TakeDamage(int damage, bool ignorePlotArmor = false)
+    public async UniTask TakeDamage(DamageData damageData)
     {
         // Should NOT be called if in card form.
         if (Type != CardType.Unit) return;
@@ -396,31 +460,31 @@ public abstract class CardModel : MonoBehaviour
         if (CurrentPower == 0) return;
 
         // Applies damage mitigation effects, and separate conditions.
-        damage -= DamageResistence;
+        damageData.damage -= DamageResistence;
 
         // TODO: Make ifs for helpless or invincible
 
         // Now that final damage is calculated, 
         // Plot armor and then power are affected in that order
-        if (!ignorePlotArmor)
+        if (!damageData.ignorePlotArmor)
         {
-            if (CurrentPlotArmor <= damage)
+            if (CurrentPlotArmor <= damageData.damage)
             {
-                damage -= CurrentPlotArmor;
+                damageData.damage -= CurrentPlotArmor;
                 CurrentPlotArmor = 0;
             }
             else
             {
-                CurrentPlotArmor -= damage;
-                damage = 0;
+                CurrentPlotArmor -= damageData.damage;
+                damageData.damage = 0;
             }
         }
 
         // Damage does its worst, the OnTakeDamage event triggers,
         // and the amount is finally returned
-        CurrentPower = Math.Max(CurrentPower - damage, 0);
+        CurrentPower = Math.Max(CurrentPower - damageData.damage, 0);
 
-        await OnTakeDamage.InvokeAsync(damage);
+        await OnTakeDamage.InvokeAsync(damageData);
 
         Owner.uiManager.UpdateTotalPower();
 

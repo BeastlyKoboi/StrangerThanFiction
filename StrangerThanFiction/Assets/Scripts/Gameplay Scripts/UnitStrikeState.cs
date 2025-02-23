@@ -5,9 +5,9 @@ using UnityEngine;
 public class UnitStrikeState 
 {
     public CardModel striker;
-    public CardModel target;
+    public IDamagable target;
 
-    public UnitStrikeState(CardModel striker = null, CardModel target = null)
+    public UnitStrikeState(CardModel striker = null, IDamagable target = null)
     {
         this.striker = striker;
         this.target = target;

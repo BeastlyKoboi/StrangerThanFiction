@@ -6,7 +6,7 @@ using UnityEngine;
 
 public sealed class Donkey : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
         Owner.OnUnitSummoned.AddListener(OnCopySummonGrantMePower);
         return UniTask.CompletedTask;
@@ -20,6 +20,9 @@ public sealed class Donkey : CardModel
 
     private async UniTask OnCopySummonGrantMePower(CardModel unit)
     {
+        if (unit == this)
+            return;
+
         if (unit.Title == Title && unit != this)
         {
             await GrantPower(1);

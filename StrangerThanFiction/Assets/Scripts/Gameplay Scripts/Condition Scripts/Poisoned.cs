@@ -13,7 +13,7 @@ public class Poisoned : Condition
     }
     public override async UniTask OnTrigger()
     {
-        await card.TakeDamage(amount, true);
+        await card.TakeDamage(new DamageData(amount, this, ignorePlotArmor: true));
         amount -= 1;
         if (amount == 0)
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TheLateLumberjane : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
         Owner.OnUnitDestroyed.AddListener(OnDestroyEffect);
         Owner.enemyPlayer.OnUnitDestroyed.AddListener(OnDestroyEffect);
@@ -21,6 +21,8 @@ public class TheLateLumberjane : CardModel
 
     private async UniTask OnDestroyEffect(CardModel unit)
     {
+        if (unit == this)
+            return;
         await GrantPower(1);
     }
 }

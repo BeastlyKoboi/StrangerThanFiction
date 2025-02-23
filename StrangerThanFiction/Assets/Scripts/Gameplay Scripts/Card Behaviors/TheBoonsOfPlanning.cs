@@ -9,14 +9,15 @@ public class TheBoonsOfPlanning : CardModel
 {
     protected override UniTask PlayEffect(CardPlayState cardPlayState)
     {
-        cardPlayState.card.Owner.OnCardPlayed.AddListener(CreateCopyOfNextCardPlayed);
+        cardPlayState.card.Owner.OnAfterCardPlayed.AddListener(CreateCopyOfNextCardPlayed);
         return UniTask.CompletedTask;
     }
 
-    private static async UniTask CreateCopyOfNextCardPlayed(CardPlayState cardPlayState)
+    private static UniTask CreateCopyOfNextCardPlayed(CardPlayState cardPlayState)
     {
         cardPlayState.card.Owner.CreateCardInDiscard(cardPlayState.card.GetType().Name);
-        cardPlayState.card.Owner.OnCardPlayed.RemoveListener(CreateCopyOfNextCardPlayed);
+        cardPlayState.card.Owner.OnAfterCardPlayed.RemoveListener(CreateCopyOfNextCardPlayed);
+        return UniTask.CompletedTask;
     }
 
 }

@@ -27,6 +27,8 @@ MonoBehaviour:
     cardData: {fileID: 11400000, guid: 9d06d6c9b00a6aa4f81beb982b502e4d, type: 2}
   - cardName: Donkey
     cardData: {fileID: 11400000, guid: 8897281c1da0b55448dd2bdded05f5ba, type: 2}
+  - cardName: DonkeyFever
+    cardData: {fileID: 11400000, guid: 50b95fa0ba2c8d24594614297cac7f55, type: 2}
   - cardName: GrowthSpurt
     cardData: {fileID: 11400000, guid: 21278a59f44c0794993b68bd5c8786ac, type: 2}
   - cardName: IWillHuff

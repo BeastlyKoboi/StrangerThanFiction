@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MagicalWoodcarving : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
         OnRoundEnd.AddListener(RoundEndEffect);
         return UniTask.CompletedTask;
@@ -22,7 +22,6 @@ public class MagicalWoodcarving : CardModel
         CardModel randomEnemy = Board.GetRandomUnit(Owner.enemyPlayer);
         if (randomEnemy)
         {
-            StartCoroutine(GetComponent<UnitAnim>().Strike(1.0f));
             await Strike(randomEnemy);
         }
 

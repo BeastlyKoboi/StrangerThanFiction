@@ -11,7 +11,7 @@ public class MurderOfCrows : CardModel
 
         for (int i = 0; i < enemies.Length; i++)
         {
-            await enemies[i].TakeDamage(1);
+            await enemies[i].TakeDamage(new DamageData(1, this));
         }
     }
 }

@@ -20,6 +20,9 @@ public class GameData
 
     public BattleNodeData nextBattleNode;
 
+    [Header("Binding")]
+    public int bindingPower;
+
     public GameData()
     {
         this.totalRunsCount = 0;
@@ -27,6 +30,7 @@ public class GameData
         this.player1Deck = new DeckInventory();
         this.player2Deck = new DeckInventory();
         this.testDeck = new DeckInventory();
+        this.bindingPower = 20;
     }
 
 

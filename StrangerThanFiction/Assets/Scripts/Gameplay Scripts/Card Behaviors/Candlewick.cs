@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Candlewick : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
         Owner.OnUnitSummoned.AddListener(CandlewickEffect);
         return UniTask.CompletedTask;
@@ -19,6 +19,9 @@ public class Candlewick : CardModel
 
     private async UniTask CandlewickEffect(CardModel unit)
     {
+        if (unit == this)
+            return;
+
         if (unit.CurrentCost <= 1)
         {
             await unit.GrantPower(1);

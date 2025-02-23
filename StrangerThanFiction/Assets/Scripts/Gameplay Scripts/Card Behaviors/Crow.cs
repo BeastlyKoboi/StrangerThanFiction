@@ -11,7 +11,7 @@ public class Crow : CardModel
 
         if (randomEnemy)
         { 
-            await randomEnemy.TakeDamage(1);
+            await randomEnemy.TakeDamage(new DamageData(1, this));
         }
 
         // make checks for murder of crows
@@ -41,6 +41,7 @@ public class Crow : CardModel
     private async UniTask SummonMurder(CardModel card)
     {
         CardModel murderOfCrows = CardFactory.Instance.CreateCard("MurderOfCrows", true, transform, Owner, Board, Title);
+        await murderOfCrows.Deploy();
         await murderOfCrows.Summon();
     }
 }

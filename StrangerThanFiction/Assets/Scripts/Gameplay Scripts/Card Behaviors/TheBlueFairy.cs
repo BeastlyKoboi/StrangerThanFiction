@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class TheBlueFairy : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
-        Owner.OnCardPlayed.AddListener(IfCardPlayedIsCostReducedDrawCard);
+        Owner.OnAfterCardPlayed.AddListener(IfCardPlayedIsCostReducedDrawCard);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnCardPlayed.RemoveListener(IfCardPlayedIsCostReducedDrawCard);
+        Owner.OnAfterCardPlayed.RemoveListener(IfCardPlayedIsCostReducedDrawCard);
         return UniTask.CompletedTask;
     }
 

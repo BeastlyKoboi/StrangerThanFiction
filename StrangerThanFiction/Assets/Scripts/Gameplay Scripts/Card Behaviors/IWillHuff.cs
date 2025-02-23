@@ -14,7 +14,7 @@ public class IWillHuff : CardModel
 
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
-        await cardPlayState.enemyUnitTargets[0].TakeDamage(1);
+        await cardPlayState.enemyUnitTargets[0].TakeDamage(new DamageData(1, this));
 
         Owner.CreateCardInDeck("AndIWillPuff");
         Owner.CreateCardInDeck("AndIWillPuff");

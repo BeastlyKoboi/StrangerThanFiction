@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class WittyWhittler : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
         Owner.OnUnitSummoned.AddListener(OnAllySummonedGrantPoison);
         return UniTask.CompletedTask;
@@ -19,6 +19,9 @@ public class WittyWhittler : CardModel
 
     public async UniTask OnAllySummonedGrantPoison(CardModel ally)
     {
+        if (ally == this)
+            return;
+
         CardModel enemy = Board.GetRandomUnit(Owner.enemyPlayer);
         if (enemy)
             await enemy.ApplyCondition(new Poisoned(enemy, 1));

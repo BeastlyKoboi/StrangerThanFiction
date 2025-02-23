@@ -5,10 +5,15 @@ using UnityEngine;
 
 public class TheCoachman : CardModel
 {
+    protected override UniTask DeployEffect()
+    {
+        Owner.OnRoundStart.AddListener(SummonDonkey);
+        return UniTask.CompletedTask;
+    }
+
     protected override async UniTask SummonEffect()
     {
         await SummonDonkey();
-        Owner.OnRoundStart.AddListener(SummonDonkey);
     }
 
     protected override UniTask RemoveEffect(CardModel card)
@@ -20,7 +25,7 @@ public class TheCoachman : CardModel
     private async UniTask SummonDonkey()
     {
         CardModel donkey = CardFactory.Instance.CreateCard("Donkey", true, transform, Owner, Board, Title);
-
+        await donkey.Deploy();
         await donkey.Summon();
     }
 }

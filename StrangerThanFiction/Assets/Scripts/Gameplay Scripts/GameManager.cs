@@ -35,8 +35,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public BoardManager boardManager;
 
     [HeaderAttribute("Game State Information")]
-    public int bindingPower = 20;
-    public int bindingDamage = 0;
+    public Binding binding;
     public int roundNumber = 0;
     public const int maxRounds = 6;
     public int unusedInk = 0;
@@ -135,7 +134,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
             roundNumber++;
             await RoundActivity();
 
-        } while (roundNumber < maxRounds && bindingDamage < bindingPower);
+        } while (roundNumber < maxRounds && binding.BindingDamage < binding.BindingPower);
 
         await EndGame();
     }
@@ -146,7 +145,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
     /// <returns></returns>
     private async UniTask RoundActivity()
     {
-        uiManager.RoundStart(roundNumber);
+        uiManager.RoundStart(roundNumber, maxRounds);
 
         // Consider reseting mana before round start. 
         player1.ResetMana();
@@ -175,23 +174,28 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
         } while ((player1.CanDoSomething() && !player1.hasEndedTurn) ||
             (player2.CanDoSomething() && !player2.hasEndedTurn));
-        // 
+
+        await DiscardHands();
 
         await OnRoundEnd.InvokeAsync();
 
         uiManager.UpdateTotalPower();
 
         // Apply damage to binding
-        int currentRoundDamage = boardManager.CalculateCurrentBindingDamage();
-        int prevBindingDamage = bindingDamage;
-        bindingDamage += currentRoundDamage;
+        CardModel[] units = boardManager.GetUnits(player1);
+        for (int i = 0; i < units.Length; i++)
+        {
+            await units[i].Strike(binding);
+        }
 
-        uiManager.UpdateBinding(new BindingState(bindingPower, prevBindingDamage, bindingDamage));
-        await UniTask.Delay(1000);
-
-        //await boardManager.ResolveCombat();
-
-        await DiscardHands();
+        if (binding.BindingDamage < binding.BindingPower)
+        {
+            units = boardManager.GetUnits(player2);
+            for (int i = 0; i < units.Length; i++)
+            {
+                await units[i].Strike(binding);
+            }
+        }
 
         await CardFactory.Instance.QueueLockedCards();
     }
@@ -240,10 +244,10 @@ public class GameManager : MonoBehaviour, IDataPersistence
     private async UniTask EndGame()
     {
         uiManager.GameOver(new GameOverState(
-            bindingDamage >= bindingPower, 
-            unusedInk, 
-            bindingPower, 
-            bindingDamage)); // Maybe add this to event
+            binding.BindingDamage >= binding.BindingPower, 
+            unusedInk,
+            binding.BindingPower,
+            binding.BindingDamage)); // Maybe add this to event
         await OnGameOver.InvokeAsync();
     }
 

@@ -22,21 +22,30 @@ public class BoardManager : MonoBehaviour
 
     public UnitRow enemyRow;
 
+    public UniTask DeployUnit(CardModel unit, UnitRow row)
+    {
+        row.AddUnit(unit);
+
+        unit.OnDestroy.AddListener(DestroyUnit);
+        unit.OnRemove.AddListener(RemoveUnit);
+
+        return UniTask.CompletedTask;
+    }
+
+    public void ReplaceUnit(CardModel oldUnit, CardModel newUnit)
+    {
+        newUnit.SelectedArea = oldUnit.SelectedArea;
+        newUnit.SelectedArea.ReplaceUnit(oldUnit, newUnit);
+    }
+
     /// <summary>
     /// Adds a unit to the board.
     /// </summary>
     /// <param name="unit"></param>
     /// <param name="row"></param>
-    public async UniTask SummonUnit(CardModel unit, UnitRow row)
+    public UniTask SummonUnit(CardModel unit, UnitRow row)
     {
-        unit.IsHidden = false;
-
-        row.AddUnit(unit);
-
-        await unit.Owner.UnitSummoned(unit);
-
-        unit.OnDestroy.AddListener(DestroyUnit);
-        unit.OnRemove.AddListener(RemoveUnit);
+        return UniTask.CompletedTask;
     }
 
     private async UniTask DestroyUnit(CardModel unit)
@@ -48,12 +57,14 @@ public class BoardManager : MonoBehaviour
             unit.SelectedArea.RemoveUnit(unit);
     }
 
-    private async UniTask RemoveUnit(CardModel unit)
+    private UniTask RemoveUnit(CardModel unit)
     {
         if (unit.SelectedArea != null)
             unit.SelectedArea.RemoveUnit(unit);
 
         unit.OnRemove.RemoveListener(RemoveUnit);
+
+        return UniTask.CompletedTask;
     }
 
 
@@ -168,7 +179,7 @@ public class BoardManager : MonoBehaviour
         return unitRow;
     }
 
-    public CardModel[] GetUnits(Player player) => (gameManager.player1 ? playerRow : enemyRow).GetUnits();
+    public CardModel[] GetUnits(Player player) => (player == gameManager.player1 ? playerRow : enemyRow).GetUnits();
 
 
     public int CalculateCurrentBindingDamage()

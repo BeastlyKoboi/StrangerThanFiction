@@ -26,7 +26,8 @@ public class Player : MonoBehaviour
     public UniTaskEvent<CardModel> OnCardDrawn = new UniTaskEvent<CardModel>();
     public UniTaskEvent<CardModel> OnUnitSummoned = new UniTaskEvent<CardModel>();
     public UniTaskEvent<CardModel> OnUnitDestroyed = new UniTaskEvent<CardModel>();
-    public UniTaskEvent<CardPlayState> OnCardPlayed = new UniTaskEvent<CardPlayState>();
+    public UniTaskEvent<CardPlayState> OnBeforeCardPlayed = new UniTaskEvent<CardPlayState>();
+    public UniTaskEvent<CardPlayState> OnAfterCardPlayed = new UniTaskEvent<CardPlayState>();
     public event Action OnMyTurnStart;
 
     [HeaderAttribute("Game and Enemy Info")]
@@ -379,12 +380,15 @@ public class Player : MonoBehaviour
             RefreshPlayableCards();
         }
 
-        await OnCardPlayed.InvokeAsync(playState);
+        await OnBeforeCardPlayed.InvokeAsync(playState);
 
         if (playState.replacedCard != null)
             await playState.replacedCard.Remove();
 
         await playState.card.Play(playState);
+
+        await OnAfterCardPlayed.InvokeAsync(playState);
+
 
         handManager.SetCardPlayState(null);
 

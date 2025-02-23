@@ -13,7 +13,7 @@ public class DoubleLife : CardModel
 
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
-        await cardPlayState.enemyCardTargets[0].TakeDamage(_damage);
+        await cardPlayState.enemyCardTargets[0].TakeDamage(new DamageData(_damage, this));
 
         _damage /= 2;
     }

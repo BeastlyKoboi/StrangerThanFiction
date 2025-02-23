@@ -25,6 +25,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI discardLabelPlayer1;
     [SerializeField] private TextMeshProUGUI manaPlayer1;
     [SerializeField] private TextMeshProUGUI powerPlayer1;
+    [SerializeField] private TextMeshProUGUI chapterLabel;
 
     [HeaderAttribute("Player 2")]
     [SerializeField] private Player player2; // The AI eventually 
@@ -33,7 +34,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI manaPlayer2;
     [SerializeField] private TextMeshProUGUI powerPlayer2;
     [SerializeField] private TextMeshProUGUI bindingLabel;
-    [SerializeField] private TextMeshProUGUI projectedBindingDamageLabel;
 
     [HeaderAttribute("Paused Menu")]
     [SerializeField] private GameObject PausedMenu;
@@ -62,22 +62,24 @@ public class UIManager : MonoBehaviour
     /// Activates the Round Start Popup
     /// </summary>
     /// <param name="roundNum"></param>
-    public void RoundStart(int roundNum)
+    public void RoundStart(int roundNum, int maxRounds)
     {
         RoundPopup.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"Round {roundNum}";
         RoundPopup.SetTrigger("Popup");
+
+        chapterLabel.text = $"Chapter {roundNum} of {maxRounds}";
     }
 
-    public async void GameStart()
-    {
+    //public async void GameStart()
+    //{
 
 
-    }
+    //}
 
     /// <summary>
     /// Activates the Game over Popup and show the results.
     /// </summary>
-    public async void GameOver(GameOverState gameOverState)
+    public void GameOver(GameOverState gameOverState)
     {
         int playerTotalPower = board.GetTotalPower(gameManager.player1);
         int enemyTotalPower = board.GetTotalPower(gameManager.player2);
@@ -146,20 +148,12 @@ public class UIManager : MonoBehaviour
 
         totalPower = board.GetTotalPower(player2);
         powerPlayer2.text = totalPower.ToString();
-
-        UpdateProjectedBindingDamage(board.CalculateCurrentBindingDamage());
     }
 
     public void UpdateBinding(BindingState bindingState)
     {
         bindingLabel.text = $"{bindingState.currTotalBindingDamage}/{bindingState.bindingPower}";
     }
-
-    public void UpdateProjectedBindingDamage(int bindingDamage)
-    {
-        projectedBindingDamageLabel.text = bindingDamage.ToString();
-    }
-
 
     public void TogglePausedMenu(bool isActive)
     {

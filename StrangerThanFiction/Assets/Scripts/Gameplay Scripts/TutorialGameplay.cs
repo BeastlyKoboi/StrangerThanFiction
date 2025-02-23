@@ -34,9 +34,9 @@ public class TutorialGameplay : MonoBehaviour
 
         gameManager.OnGameStart.AddListener(OnGameStart);
         gameManager.OnRoundStart.AddListener(OnRound1Start);
-        gameManager.player1.OnCardPlayed.AddListener(OnFirstCardPlayed);
-        gameManager.player1.OnCardPlayed.AddListener(OnFirstUnitPlayed);
-        gameManager.player1.OnCardPlayed.AddListener(OnFirstSpellPlayed);
+        gameManager.player1.OnBeforeCardPlayed.AddListener(OnFirstCardPlayed);
+        gameManager.player1.OnBeforeCardPlayed.AddListener(OnFirstUnitPlayed);
+        gameManager.player1.OnBeforeCardPlayed.AddListener(OnFirstSpellPlayed);
         gameManager.OnRoundEnd.AddListener(OnRound1End);
     }
 
@@ -108,7 +108,7 @@ public class TutorialGameplay : MonoBehaviour
     {
         await CyclePrompts(OnFirstCardPlayedPrompts);
 
-        gameManager.player1.OnCardPlayed.RemoveListener(OnFirstCardPlayed);
+        gameManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstCardPlayed);
     }
 
     private async UniTask OnFirstUnitPlayed(CardPlayState playState)
@@ -117,7 +117,7 @@ public class TutorialGameplay : MonoBehaviour
 
         await CyclePrompts(OnFirstUnitPlayedPrompts);
 
-        gameManager.player1.OnCardPlayed.RemoveListener(OnFirstUnitPlayed);
+        gameManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstUnitPlayed);
     }
 
     private async UniTask OnFirstSpellPlayed(CardPlayState playState)
@@ -126,7 +126,7 @@ public class TutorialGameplay : MonoBehaviour
 
         await CyclePrompts(OnFirstSpellPlayedPrompts);
 
-        gameManager.player1.OnCardPlayed.RemoveListener(OnFirstSpellPlayed);
+        gameManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstSpellPlayed);
     }
 
 

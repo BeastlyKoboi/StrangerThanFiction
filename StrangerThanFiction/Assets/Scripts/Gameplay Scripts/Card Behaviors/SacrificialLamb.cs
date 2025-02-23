@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SacrificialLamb : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
         Owner.OnUnitSummoned.AddListener(Sacrifice);
         return UniTask.CompletedTask;
@@ -19,6 +19,9 @@ public class SacrificialLamb : CardModel
 
     private async UniTask Sacrifice(CardModel unit)
     {
+        if (unit == this)
+            return;
+
         await unit.Strike(this);
         await unit.GrantPower(CurrentPower);
     }

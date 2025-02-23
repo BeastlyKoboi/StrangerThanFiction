@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TheBigBadWolf : CardModel
 {
-    protected override UniTask SummonEffect()
+    protected override UniTask DeployEffect()
     {
         Owner.OnUnitDestroyed.AddListener(SummonCrow);
         return UniTask.CompletedTask;
@@ -19,7 +19,10 @@ public class TheBigBadWolf : CardModel
 
     private async UniTask SummonCrow(CardModel card)
     {
+        if (card == this)
+            return;
         CardModel crow = CardFactory.Instance.CreateCard("Crow", true, transform, Owner, Board, Title);
+        await crow.Deploy();
         await crow.Summon();
     }
 }

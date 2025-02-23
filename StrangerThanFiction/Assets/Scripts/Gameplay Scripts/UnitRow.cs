@@ -42,6 +42,17 @@ public class UnitRow : MonoBehaviour
         }
     }
 
+    public void ReplaceUnit(CardModel oldUnit, CardModel newUnit)
+    {
+        int index = units.IndexOf(oldUnit);
+        if (index != -1)
+        {
+            units[index] = newUnit;
+            unitRects[index] = newUnit.GetComponent<RectTransform>();
+            UpdateUnitPositions();
+        }
+    }
+
     public void UpdateUnitPositions()
     {
         if (units.Count == 0) return;
