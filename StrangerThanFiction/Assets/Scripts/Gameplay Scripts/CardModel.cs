@@ -57,10 +57,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         private set
         {
             _currentCost = value;
-            UpdateCardStatText();
-
-            if (unitView)
-                UpdateUnitStatText();
+            cardView.UpdateCardStatText(this);
+            // Add check here later for if it's a spell or unit
+            cardView.UpdateUnitStatText(this);
         }
     }
     private int _currentPower;
@@ -70,10 +69,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         private set
         {
             _currentPower = value;
-            UpdateCardStatText();
-
-            if (Type == CardType.Unit)
-                UpdateUnitStatText();
+            cardView.UpdateCardStatText(this);
+            // Add check here later for if it's a spell or unit
+            cardView.UpdateUnitStatText(this);
         }
     }
     private int _currentPlotArmor;
@@ -83,10 +81,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         private set
         {
             _currentPlotArmor = value;
-            UpdateCardStatText();
-
-            if (Type == CardType.Unit)
-                UpdateUnitStatText();
+            cardView.UpdateCardStatText(this);
+            // Add check here later for if it's a spell or unit
+            cardView.UpdateUnitStatText(this);
         }
     }
 
@@ -122,7 +119,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
             }
 
             // Not the most efficient, but it works for now.
-            cardView.Find("Glow").gameObject.SetActive(value);
+            cardView.ToggleGlow(value);
             GetComponent<Draggable>().enabled = value;
         }
     }
@@ -135,15 +132,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     public UnitRow SelectedArea { get; set; }
 
     // Ref to update view.
-    public Transform cardView;
-    private TextMeshProUGUI cardTextCost;
-    private TextMeshProUGUI cardTextPower;
-    private TextMeshProUGUI cardTextPlotArmor;
-
-    public Transform unitView;
-    private TextMeshProUGUI unitTextPower;
-    private TextMeshProUGUI unitTextPlotArmor;
-
+    public CardView cardView;
 
     // ----------------------------------------------------------------------------
     // All Card Events 
@@ -176,10 +165,8 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
     private void Awake()
     {
-        if (cardData == null)
-            cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
-
-        CardInfo cardInfo = cardData.cardDictionary.GetCardDataByName(name);
+        cardView = GetComponent<CardView>();
+        CardInfo cardInfo = cardView.CardInfo;
 
         Title = cardInfo.Title;
         Description = cardInfo.Description;
@@ -196,6 +183,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         CurrentPlotArmor = BasePlotArmor;
 
         MaxPower = CurrentPower;
+
 
         OnPlay.AddListener(PlayAnim);
         OnSummon.AddListener(SummonAnim);
@@ -245,9 +233,16 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     {
         float delay = 0.5f;
         float dur = 0.25f;
-        StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDiscard(pulseDur: delay, discardDur: dur));
+        bool isDone = false;
+        StartCoroutine(gameObject.AddComponent<Disappear>().AnimateDiscard(pulseDur: delay, discardDur: dur, () =>
+        {
+            isDone = true;
+        }));
 
-        await UniTask.Delay((int)((delay + dur) * 1000));
+        while (!isDone)
+        {
+            await UniTask.Yield();
+        }
     }
     protected virtual async UniTask DestroyAnim(CardModel card)
     {
@@ -318,8 +313,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
     public async UniTask<bool> Deploy()
     {
-        cardView.gameObject.SetActive(false);
-        unitView.gameObject.SetActive(true);
+        cardView.ToggleViewType(true);
 
         if (SelectedArea == null)
         {
@@ -397,8 +391,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         // Create the new unit, but don't summon yet
         CardModel newUnit = CardFactory.Instance.CreateCard(newUnitName, false, transform.parent, Owner, Board);
 
-        newUnit.cardView.gameObject.SetActive(false);
-        newUnit.unitView.gameObject.SetActive(true);
+        newUnit.cardView.ToggleViewType(true);
 
         // Replace in the same board slot
         Board.ReplaceUnit(this, newUnit);
@@ -618,134 +611,4 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         return conditions.Values.ToArray();
     }
 
-    // ----------------------------------------------------------------------------
-    // Loading Assets & Overwriting Card Prefabs
-    // ----------------------------------------------------------------------------
-
-    /// <summary>
-    /// At instantiation will be used to overwrite placeholder card gameobject
-    /// with correct sprites and initial values.
-    /// </summary>
-    public void OverwriteCardPrefab()
-    {
-        cardView = transform.Find("CardPrefab(Clone)");
-        cardView.gameObject.SetActive(true);
-
-        if (cardView == null)
-            return;
-
-        // Load portrait picture
-        Transform portrait = cardView.Find("Portrait");
-        portrait.GetComponent<Image>().sprite = Portrait;
-
-        cardTextCost = cardView.Find("Cost").GetComponent<TextMeshProUGUI>();
-        cardTextCost.text = CurrentCost.ToString();
-
-
-        Transform spellBackground = cardView.Find("SpellBackground");
-        Transform unitBackground = cardView.Find("UnitBackground");
-
-        if (Type == CardType.Spell)
-        {
-            spellBackground.gameObject.SetActive(true);
-            unitBackground.gameObject.SetActive(false);
-
-            cardView.Find("Power").gameObject.SetActive(false);
-            cardView.Find("PlotArmor").gameObject.SetActive(false);
-        }
-        else
-        {
-            unitBackground.gameObject.SetActive(true);
-            spellBackground.gameObject.SetActive(false);
-
-            cardTextPower = cardView.Find("Power").GetComponent<TextMeshProUGUI>();
-            cardTextPower.text = CurrentPower.ToString();
-            cardTextPlotArmor = cardView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
-            cardTextPlotArmor.text = CurrentPlotArmor.ToString();
-        }
-
-        cardView.Find("Name").GetComponent<TextMeshProUGUI>().text = Title;
-        cardView.Find("Description").GetComponent<TextMeshProUGUI>().text = Description;
-        cardView.Find("Cardback").gameObject.SetActive(IsHidden);
-    }
-
-    /// <summary>
-    /// At instantiation will be used to overwrite placeholder unit gameobject
-    /// with correct sprites and initial values. 
-    /// </summary>
-    public void OverwriteUnitPrefab()
-    {
-        unitView = transform.Find("UnitPrefab(Clone)");
-
-        if (unitView == null)
-            return;
-
-        // Load portrait picture
-        Sprite sprite = Portrait;
-        Transform portrait = unitView.Find("Portrait");
-
-        if (sprite != null)
-            portrait.GetComponent<Image>().sprite = sprite;
-
-        unitTextPower = unitView.Find("Power").GetComponent<TextMeshProUGUI>();
-        unitTextPower.text = CurrentPower.ToString();
-
-        unitTextPlotArmor = unitView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
-        unitTextPlotArmor.text = CurrentPlotArmor.ToString();
-
-        unitView.Find("Name").GetComponent<TextMeshProUGUI>().text = Title;
-
-        unitView.gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Updates the card stat text on the card view.
-    /// </summary>
-    private void UpdateCardStatText()
-    {
-        if (!cardView) return;
-        cardTextCost.text = CurrentCost.ToString();
-
-        // Spells need to be updated, but will not have these saved. 
-        if (cardTextPower)
-        {
-            cardTextPower.text = CurrentPower.ToString();
-            if (CurrentPower > BasePower)
-                cardTextPower.color = Color.green;
-            else
-                cardTextPower.color = Color.white;
-        }
-        if (cardTextPlotArmor)
-        {
-            cardTextPlotArmor.text = CurrentPlotArmor.ToString();
-            if (CurrentPlotArmor > BasePlotArmor)
-                cardTextPlotArmor.color = Color.green;
-            else
-                cardTextPlotArmor.color = Color.white;
-        }
-    }
-
-    /// <summary>
-    /// Updates the unit stat text on the unit view.
-    /// </summary>
-    private void UpdateUnitStatText()
-    {
-        if (!unitView) return;
-        unitTextPower.text = CurrentPower.ToString();
-        unitTextPlotArmor.text = CurrentPlotArmor.ToString();
-
-        if (CurrentPower < MaxPower)
-            unitTextPower.color = Color.red;
-        else if (CurrentPower > BasePower)
-            unitTextPower.color = Color.green;
-        else
-            unitTextPower.color = Color.white;
-
-        if (CurrentPlotArmor > BasePlotArmor)
-            unitTextPlotArmor.color = Color.green;
-        else if (CurrentPlotArmor < BasePlotArmor)
-            unitTextPlotArmor.color = Color.yellow;
-        else
-            unitTextPlotArmor.color = Color.white;
-    }
 }

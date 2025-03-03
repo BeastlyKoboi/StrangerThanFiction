@@ -17,7 +17,6 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public MapNode selectedNode;
 
-
     public MapNode CreateNode(NodeData data, Vector3 pos)
     {
         GameObject nodeObj = Instantiate(simpleNodePrefab, pos, Quaternion.identity, nodeParent.transform);
@@ -128,11 +127,16 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
         CreateNodeMap();
 
+        CardFactory.Instance.Initialize();
+
         //throw new System.NotImplementedException();
     }
 
     public void SaveData(GameData data)
     {
+        if (selectedNode.GetNodeData() is BattleNodeData)
+            data.nextBattleNode = (BattleNodeData)selectedNode.GetNodeData();
+
         //throw new System.NotImplementedException();
     }
 

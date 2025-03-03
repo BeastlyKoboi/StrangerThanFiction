@@ -5,4 +5,8 @@ using UnityEngine;
 public class CardDataMono : MonoBehaviour
 {
     public CardDictionary cardDictionary;
+
+    [HeaderAttribute("Card Prefabs")]
+    public GameObject cardPrefab;
+    public GameObject unitPrefab;
 }

@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class TutorialGameplay : MonoBehaviour
 {
-    private GameManager gameManager;
+    private CombatManager combatManager;
 
     [HeaderAttribute("Input Actions")]
     [SerializeField] private InputActionReference click;
@@ -30,14 +30,14 @@ public class TutorialGameplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GetComponent<GameManager>();
+        combatManager = GetComponent<CombatManager>();
 
-        gameManager.OnGameStart.AddListener(OnGameStart);
-        gameManager.OnRoundStart.AddListener(OnRound1Start);
-        gameManager.player1.OnBeforeCardPlayed.AddListener(OnFirstCardPlayed);
-        gameManager.player1.OnBeforeCardPlayed.AddListener(OnFirstUnitPlayed);
-        gameManager.player1.OnBeforeCardPlayed.AddListener(OnFirstSpellPlayed);
-        gameManager.OnRoundEnd.AddListener(OnRound1End);
+        combatManager.OnGameStart.AddListener(OnGameStart);
+        combatManager.OnRoundStart.AddListener(OnRound1Start);
+        combatManager.player1.OnBeforeCardPlayed.AddListener(OnFirstCardPlayed);
+        combatManager.player1.OnBeforeCardPlayed.AddListener(OnFirstUnitPlayed);
+        combatManager.player1.OnBeforeCardPlayed.AddListener(OnFirstSpellPlayed);
+        combatManager.OnRoundEnd.AddListener(OnRound1End);
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class TutorialGameplay : MonoBehaviour
 
     private void ClosePrompt(InputAction.CallbackContext context)
     {
-        gameManager.uiManager.SetPrompt(false);
+        combatManager.uiManager.SetPrompt(false);
         _promptClosed = true;
         click.action.performed -= ClosePrompt;
     }
@@ -63,7 +63,7 @@ public class TutorialGameplay : MonoBehaviour
     {
         for (int i = 0; i < prompts.Length; i++)
         {
-            gameManager.uiManager.SetPrompt(true, prompts[i]);
+            combatManager.uiManager.SetPrompt(true, prompts[i]);
 
             if (i < prompts.Length - 1)
             {
@@ -87,28 +87,28 @@ public class TutorialGameplay : MonoBehaviour
     {
         await CyclePrompts(OnGameStartPrompts);
 
-        gameManager.OnGameStart.RemoveListener(OnGameStart);
+        combatManager.OnGameStart.RemoveListener(OnGameStart);
     }
 
     private async UniTask OnRound1Start()
     {
         await CyclePrompts(OnRound1StartPrompts);
 
-        gameManager.OnRoundStart.RemoveListener(OnRound1Start);
+        combatManager.OnRoundStart.RemoveListener(OnRound1Start);
     }
 
     private async UniTask OnRound1End()
     {
         await CyclePrompts(OnRound1EndPrompts);
 
-        gameManager.OnRoundEnd.RemoveListener(OnRound1End);
+        combatManager.OnRoundEnd.RemoveListener(OnRound1End);
     }
 
     private async UniTask OnFirstCardPlayed(CardPlayState playState)
     {
         await CyclePrompts(OnFirstCardPlayedPrompts);
 
-        gameManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstCardPlayed);
+        combatManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstCardPlayed);
     }
 
     private async UniTask OnFirstUnitPlayed(CardPlayState playState)
@@ -117,7 +117,7 @@ public class TutorialGameplay : MonoBehaviour
 
         await CyclePrompts(OnFirstUnitPlayedPrompts);
 
-        gameManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstUnitPlayed);
+        combatManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstUnitPlayed);
     }
 
     private async UniTask OnFirstSpellPlayed(CardPlayState playState)
@@ -126,7 +126,7 @@ public class TutorialGameplay : MonoBehaviour
 
         await CyclePrompts(OnFirstSpellPlayedPrompts);
 
-        gameManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstSpellPlayed);
+        combatManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstSpellPlayed);
     }
 
 

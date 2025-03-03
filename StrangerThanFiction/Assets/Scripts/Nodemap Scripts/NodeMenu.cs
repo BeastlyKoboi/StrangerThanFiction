@@ -10,7 +10,6 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
     public SceneLoader sceneLoader;
     private GameData _gameData;
     public GameObject mainMenu;
-    public StoryPage storyPage;
 
     public CanvasGroup mainMenuCanvasGroup;
     public TextMeshProUGUI title;
@@ -89,7 +88,6 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
             {
                 flavor.text = "You encountered " + newCard.Title;
                 flavor.text += "\n" + newCard.EncounterText;
-                storyPage.AddToStorybook(flavor.text);
                 _gameData.player1Deck.deckEntries.Add(new DeckEntry(newCard.name, 1));
 
             }

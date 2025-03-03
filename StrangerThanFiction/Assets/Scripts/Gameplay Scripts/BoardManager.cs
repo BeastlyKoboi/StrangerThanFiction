@@ -16,7 +16,7 @@ using static UnityEngine.UI.CanvasScaler;
 /// </summary>
 public class BoardManager : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
+    [SerializeField] private CombatManager combatManager;
 
     public UnitRow playerRow;
 
@@ -114,7 +114,7 @@ public class BoardManager : MonoBehaviour
 
     public async UniTask SetOnClickForPlayersUnits(Player player, Action<CardModel> action)
     {
-        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
+        UnitRow unitRow = player == combatManager.player1 ? playerRow : enemyRow;
 
         await unitRow.ForEach(unit => { 
             unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
@@ -137,7 +137,7 @@ public class BoardManager : MonoBehaviour
     /// <returns></returns>
     public CardModel GetStrongestUnit(Player player)
     {
-        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
+        UnitRow unitRow = player == combatManager.player1 ? playerRow : enemyRow;
 
         return unitRow.GetStrongestUnit();
     }
@@ -149,7 +149,7 @@ public class BoardManager : MonoBehaviour
     /// <returns></returns>
     public CardModel GetWeakestUnit(Player player)
     {
-        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
+        UnitRow unitRow = player == combatManager.player1 ? playerRow : enemyRow;
 
         return unitRow.GetWeakestUnit();
     }
@@ -165,13 +165,13 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public int GetTotalPower(Player player) => (player == gameManager.player1 ? playerRow : enemyRow).GetTotalPower();
+    public int GetTotalPower(Player player) => (player == combatManager.player1 ? playerRow : enemyRow).GetTotalPower();
 
     public UnitRow GetEnemyRow() => enemyRow;
 
     public UnitRow GetValidRow(Player player)
     {
-        UnitRow unitRow = player == gameManager.player1 ? playerRow : enemyRow;
+        UnitRow unitRow = player == combatManager.player1 ? playerRow : enemyRow;
 
         if (unitRow.GetIsFull())
             return null;
@@ -179,13 +179,13 @@ public class BoardManager : MonoBehaviour
         return unitRow;
     }
 
-    public CardModel[] GetUnits(Player player) => (player == gameManager.player1 ? playerRow : enemyRow).GetUnits();
+    public CardModel[] GetUnits(Player player) => (player == combatManager.player1 ? playerRow : enemyRow).GetUnits();
 
 
     public int CalculateCurrentBindingDamage()
     {
-        int playerPower = GetTotalPower(gameManager.player1);
-        int enemyPower = GetTotalPower(gameManager.player2);
+        int playerPower = GetTotalPower(combatManager.player1);
+        int enemyPower = GetTotalPower(combatManager.player2);
 
         return playerPower - enemyPower / 2;
     }

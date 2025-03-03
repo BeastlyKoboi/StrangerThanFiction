@@ -31,10 +31,11 @@ public class Player : MonoBehaviour
     public event Action OnMyTurnStart;
 
     [HeaderAttribute("Game and Enemy Info")]
-    public GameManager gameManager;
+    public CombatManager combatManager;
     public UIManager uiManager;
     public BoardManager board;
     public Player enemyPlayer;
+
 
     private int _maxMana = 5;
     public int MaxMana
@@ -68,9 +69,11 @@ public class Player : MonoBehaviour
     public HandManager handManager;
     public CardPile Deck { get; private set; }
     public GameObject deckGameObject;
+    public GameObject deckViewParent;
 
     public CardPile Discard { get; private set; }
     public GameObject discardGameObject;
+    public GameObject discardViewParent;
 
     [HeaderAttribute("Card Prefabs")]
     public GameObject cardPrefab;
@@ -95,6 +98,20 @@ public class Player : MonoBehaviour
         {
             uiManager.UpdateDeck(this);
         };
+        Deck.OnCardAdded += (card) =>
+        {
+            if (deckViewParent == null) return;
+            card.transform.SetParent(deckViewParent.transform);
+        };
+        Deck.OnCardRemoved += (card) =>
+        {
+            if (deckViewParent == null) return;
+            card.transform.SetParent(deckGameObject.transform);
+            RectTransform cardRect = card.GetComponent<RectTransform>();
+            cardRect.anchoredPosition = Vector2.zero;
+            cardRect.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
+            cardRect.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
+        };
 
         foreach (DeckEntry entry in deckInventory.deckEntries)
         {
@@ -110,6 +127,20 @@ public class Player : MonoBehaviour
         Discard.OnChange += () =>
         {
             uiManager.UpdateDiscard(this);
+        };
+
+        Discard.OnCardAdded += (card) =>
+        {
+            if (discardViewParent == null) return;
+            card.transform.SetParent(discardViewParent.transform);
+        };
+        Discard.OnCardRemoved += (card) =>
+        {
+            if (discardViewParent == null) return;
+            card.transform.SetParent(discardViewParent.transform);
+            card.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            card.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
+            card.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
         };
     }
 
@@ -181,7 +212,7 @@ public class Player : MonoBehaviour
         hasEndedTurn = false;
         bool playedSuccessfully = false;
 
-        if (gameManager.player1 == this)
+        if (combatManager.player1 == this)
             uiManager.SetRightMiddleButton("End Turn", PassTurn);
 
         RefreshPlayableCards();
@@ -207,7 +238,7 @@ public class Player : MonoBehaviour
 
         } while (!playedSuccessfully && !hasEndedTurn);
 
-        if (gameManager.player1 == this)
+        if (combatManager.player1 == this)
             uiManager.SetRightMiddleButton("", () => { });
 
         handManager.LockCards();
@@ -239,10 +270,10 @@ public class Player : MonoBehaviour
         handManager.RemoveCardFromHand(card);
         RefreshPlayableCards();
 
-        Discard.Add(card);
         card.gameObject.transform.SetParent(discardGameObject.transform, true);
-
         await card.Discard(this);
+
+        Discard.Add(card);
     }
 
     /// <summary>
@@ -286,7 +317,7 @@ public class Player : MonoBehaviour
         // Check if the player has the requirements to play the card.
         PlayRequirements playReqs = playState.card.PlayRequirements;
 
-        if (gameManager.player1 == this)
+        if (combatManager.player1 == this)
         {
             uiManager.SetRightMiddleButton("Cancel", CancelPlay);
 
@@ -299,7 +330,7 @@ public class Player : MonoBehaviour
             async UniTask getTargetsFromBoard(Player player, List<CardModel> targetList, int playReq)
             {
                 uiManager.SetPrompt(true, $"Select {playReq} " +
-                    $"{(gameManager.player1 == player? "allied" : "enemy")} " +
+                    $"{(combatManager.player1 == player? "allied" : "enemy")} " +
                     $"unit{(playReq > 1? "s": "")}");
                 await board.SetOnClickForPlayersUnits(player, onCardClicked);
 
@@ -417,9 +448,11 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < Discard.Count; i++)
         {
-            Deck.Add(Discard[i]);
             Discard[i].gameObject.transform.SetParent(deckGameObject.transform, true);
-            Discard[i].GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            Deck.Add(Discard[i]);
+            RectTransform cardRect = Discard[i].GetComponent<RectTransform>();
+            cardRect.anchoredPosition = Vector2.zero;
+
         }
 
         Discard.Clear();

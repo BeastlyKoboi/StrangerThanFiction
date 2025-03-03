@@ -15,7 +15,7 @@ using Cysharp.Threading.Tasks;
 /// TODO: Rework save data 
 /// TODO:
 /// </summary>
-public class GameManager : MonoBehaviour, IDataPersistence
+public class CombatManager : MonoBehaviour, IDataPersistence
 {
     // Basic gameplay events that objects can add to
     public UniTaskEvent OnGameStart = new UniTaskEvent();
@@ -39,10 +39,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     public int roundNumber = 0;
     public const int maxRounds = 6;
     public int unusedInk = 0;
-
-    [HeaderAttribute("Card Prefabs")]
-    public GameObject cardPrefab;
-    public GameObject unitPrefab;
 
     [HeaderAttribute("Text Assets")]
     [SerializeField] private bool usingInspector;
@@ -70,7 +66,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
 
     private void Awake()
     {
-        CardFactory.Instance.Initialize(cardPrefab, unitPrefab);
+        CardFactory.Instance.Initialize();
 
         OnGameStart.Clear();
 

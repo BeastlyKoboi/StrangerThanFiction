@@ -25,6 +25,7 @@ public class CardFactory
     private CardFactory() { }
 
     private GameObject cardStorage;
+    private CardDataMono cardData;
 
     // The script that handles card previews
     public CardPreview cardPreview;
@@ -41,16 +42,19 @@ public class CardFactory
 
 
     // Example method to set prefabs if needed
-    public void Initialize(GameObject cardPrefab, GameObject unitPrefab)
+    public void Initialize()
     {
         this.cardStorage = GameObject.Find("Card Storage");
-        this.cardPrefab = cardPrefab;
-        this.unitPrefab = unitPrefab;
         this.cardPreview = GameObject.Find("CardPreview").GetComponent<CardPreview>();
         this.lockedSpellCardPool = new Queue<GameObject>();
         this.lockedUnitCardPool = new Queue<GameObject>();
         this.spellCardPool = new Queue<GameObject>();
         this.unitCardPool = new Queue<GameObject>();
+
+        if (cardData == null)
+            cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
+        this.cardPrefab = cardData.cardPrefab;
+        this.unitPrefab = cardData.unitPrefab;
     }
 
     public CardModel CreateCard(Type type, bool isHidden, Transform parent, Player owner, BoardManager board, string creator = "")
@@ -64,19 +68,12 @@ public class CardFactory
         GameObject cardObj = new GameObject(cardName, typeof(RectTransform));
         cardObj.transform.SetParent(parent, false);
 
-        Type cardScriptType = Type.GetType(cardName);
-        if (cardScriptType != null)
-        {
-            cardObj.AddComponent(cardScriptType);
-        }
+        if (cardData == null)
+            cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
 
-        CardModel cardScript = cardObj.GetComponent<CardModel>();
-        cardScript.IsHidden = isHidden;
-        cardScript.Owner = owner;
-        cardScript.Board = board;
+        CardInfo cardInfo = cardData.cardDictionary.GetCardDataByName(cardName);
 
-
-        GameObject queuedCard = GetCardFromPool(cardScript.Type);
+        GameObject queuedCard = GetCardFromPool(cardInfo.Type);
 
         if (queuedCard)
         {
@@ -92,23 +89,94 @@ public class CardFactory
             GameObject instantiatedCardPrefab = GameObject.Instantiate(cardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
             instantiatedCardPrefab.transform.SetParent(cardObj.transform, false);
 
-            if (cardScript.Type == CardType.Unit)
+            if (cardInfo.Type == CardType.Unit)
             {
                 GameObject instantiatedUnitPrefab = GameObject.Instantiate(unitPrefab, new Vector3(0, 0, 0), Quaternion.identity);
                 instantiatedUnitPrefab.transform.SetParent(cardObj.transform, false);
             }
         }
 
-        cardScript.OverwriteCardPrefab();
+        cardObj.AddComponent<CardView>();
+        CardView cardView = cardObj.GetComponent<CardView>();
+        cardView.Instantiate(cardInfo);
+
+        Type cardScriptType = Type.GetType(cardName);
+        if (cardScriptType != null)
+        {
+            cardObj.AddComponent(cardScriptType);
+        }
+
+        CardModel cardScript = cardObj.GetComponent<CardModel>();
+        cardScript.IsHidden = isHidden;
+        cardScript.Owner = owner;
+        cardScript.Board = board;
+
+        cardView.OverwriteCardPrefab(cardScript);
 
         if (cardScript.Type == CardType.Unit)
-            cardScript.OverwriteUnitPrefab();
+            cardView.OverwriteUnitPrefab(cardScript);
 
         cardObj.AddComponent<Clickable>();
         cardObj.GetComponent<Clickable>().OnClickWithoutDrag += CardPreviewClickHandler;
 
         return cardScript;
+    }
 
+    public CardView CreateNonPlayableCard(string cardName, bool isHidden, Transform parent, string creator = "")
+    {
+        GameObject cardObj = new GameObject(cardName, typeof(RectTransform));
+        cardObj.transform.SetParent(parent, false);
+
+        if (cardData == null)
+            cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
+
+        CardInfo cardInfo = cardData.cardDictionary.GetCardDataByName(cardName);
+
+        GameObject queuedCard = GetCardFromPool(cardInfo.Type);
+
+        if (queuedCard)
+        {
+            while (queuedCard.transform.childCount != 0)
+            {
+                queuedCard.transform.GetChild(0).SetParent(cardObj.transform, false);
+            }
+
+            GameObject.Destroy(queuedCard);
+        }
+        else
+        {
+            GameObject instantiatedCardPrefab = GameObject.Instantiate(cardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            instantiatedCardPrefab.transform.SetParent(cardObj.transform, false);
+
+            if (cardInfo.Type == CardType.Unit)
+            {
+                GameObject instantiatedUnitPrefab = GameObject.Instantiate(unitPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                instantiatedUnitPrefab.transform.SetParent(cardObj.transform, false);
+            }
+        }
+
+        cardObj.AddComponent<CardView>();
+        CardView cardView = cardObj.GetComponent<CardView>();
+        cardView.Instantiate(cardInfo);
+
+        Type cardScriptType = Type.GetType(cardName);
+        if (cardScriptType != null)
+        {
+            cardObj.AddComponent(cardScriptType);
+        }
+
+        CardModel cardScript = cardObj.GetComponent<CardModel>();
+        cardScript.IsHidden = isHidden;
+
+        cardView.OverwriteCardPrefab(cardScript);
+
+        if (cardScript.Type == CardType.Unit)
+            cardView.OverwriteUnitPrefab(cardScript);
+
+        cardObj.AddComponent<Clickable>();
+        cardObj.GetComponent<Clickable>().OnClickWithoutDrag += CardPreviewClickHandler;
+
+        return cardView;
     }
 
     public void CardPreviewClickHandler(CardModel cardModel) { if (cardPreview) cardPreview.OnClick(cardModel); }

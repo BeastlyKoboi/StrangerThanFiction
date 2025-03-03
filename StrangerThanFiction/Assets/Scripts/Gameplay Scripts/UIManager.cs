@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +13,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [HeaderAttribute("Game State")]
-    [SerializeField] private GameManager gameManager;
+    [SerializeField] private CombatManager combatManager;
     [SerializeField] private BoardManager board;
 
     [HeaderAttribute("Animators")]
@@ -25,7 +26,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI discardLabelPlayer1;
     [SerializeField] private TextMeshProUGUI manaPlayer1;
     [SerializeField] private TextMeshProUGUI powerPlayer1;
-    [SerializeField] private TextMeshProUGUI chapterLabel;
 
     [HeaderAttribute("Player 2")]
     [SerializeField] private Player player2; // The AI eventually 
@@ -33,7 +33,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI discardLabelPlayer2;
     [SerializeField] private TextMeshProUGUI manaPlayer2;
     [SerializeField] private TextMeshProUGUI powerPlayer2;
+
+    [HeaderAttribute("Binding")]
     [SerializeField] private TextMeshProUGUI bindingLabel;
+    [SerializeField] private TextMeshProUGUI bindingWindowTitle;
+    [SerializeField] private TextMeshProUGUI chapterLabel;
 
     [HeaderAttribute("Paused Menu")]
     [SerializeField] private GameObject PausedMenu;
@@ -81,8 +85,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void GameOver(GameOverState gameOverState)
     {
-        int playerTotalPower = board.GetTotalPower(gameManager.player1);
-        int enemyTotalPower = board.GetTotalPower(gameManager.player2);
+        int playerTotalPower = board.GetTotalPower(combatManager.player1);
+        int enemyTotalPower = board.GetTotalPower(combatManager.player2);
 
         playerTotalPowerCount.text = playerTotalPower.ToString();
         enemyTotalPowerCount.text = enemyTotalPower.ToString();
@@ -153,6 +157,11 @@ public class UIManager : MonoBehaviour
     public void UpdateBinding(BindingState bindingState)
     {
         bindingLabel.text = $"{bindingState.currTotalBindingDamage}/{bindingState.bindingPower}";
+    }
+
+    public void UpdateBindingWindow(BindingState bindingState)
+    {
+        bindingWindowTitle.text = bindingState.BattleNodeData.Title;
     }
 
     public void TogglePausedMenu(bool isActive)

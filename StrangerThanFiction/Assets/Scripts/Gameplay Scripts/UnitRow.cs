@@ -10,6 +10,7 @@ public class UnitRow : MonoBehaviour
 {
     private List<CardModel> units;
     private List<RectTransform> unitRects;
+    private List<CardView> unitViews;
     delegate bool filterDelegate(CardModel unit);
 
     private int maxUnits = 7;
@@ -18,6 +19,7 @@ public class UnitRow : MonoBehaviour
     {
         units = new List<CardModel>();
         unitRects = new List<RectTransform>();
+        unitViews = new List<CardView>();
     }
 
     public void AddUnit(CardModel newUnit)
@@ -26,6 +28,7 @@ public class UnitRow : MonoBehaviour
 
         units.Add(newUnit);
         unitRects.Add(newUnit.GetComponent<RectTransform>());
+        unitViews.Add(newUnit.cardView);
 
         UpdateUnitPositions();
     }
@@ -38,6 +41,7 @@ public class UnitRow : MonoBehaviour
         {
             units.RemoveAt(index);
             unitRects.RemoveAt(index);
+            unitViews.RemoveAt(index);
             UpdateUnitPositions();
         }
     }
@@ -49,6 +53,7 @@ public class UnitRow : MonoBehaviour
         {
             units[index] = newUnit;
             unitRects[index] = newUnit.GetComponent<RectTransform>();
+            unitViews[index] = newUnit.cardView;
             UpdateUnitPositions();
         }
     }
@@ -56,7 +61,7 @@ public class UnitRow : MonoBehaviour
     public void UpdateUnitPositions()
     {
         if (units.Count == 0) return;
-        float unitWidth = units[0].unitView.transform.localScale.x * units[0].unitView.GetComponent<RectTransform>().rect.width;
+        float unitWidth = unitViews[0].unitTransform.transform.localScale.x * unitViews[0].unitTransform.GetComponent<RectTransform>().rect.width;
         // Find out why next line does not work
         //float unitWidth = units[0].unitView.transform.localScale.x * unitRects[0].rect.width;
         float filledRowWidth = units.Count * unitWidth;

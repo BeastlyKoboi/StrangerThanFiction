@@ -9,8 +9,8 @@ public class CardPile
     public List<CardModel> cards = new List<CardModel>();
 
     public event Action OnChange;
-    public event Action OnCardAdded;
-    public event Action OnCardRemoved;
+    public event Action<CardModel> OnCardAdded;
+    public event Action<CardModel> OnCardRemoved;
     public event Action OnShuffle;
     public CardModel this[int index]
     {
@@ -46,35 +46,36 @@ public class CardPile
         cards.Add(card);
 
         OnChange?.Invoke();
-        OnCardAdded?.Invoke();
+        OnCardAdded?.Invoke(card);
     }
     public void Insert(int index, CardModel card)
     {
         cards.Insert(index, card);
 
         OnChange?.Invoke();
-        OnCardAdded?.Invoke();
+        OnCardAdded?.Invoke(card);
     }
     public void Remove(CardModel card)
     {
         cards.Remove(card);
 
         OnChange?.Invoke();
-        OnCardRemoved?.Invoke();
+        OnCardRemoved?.Invoke(card);
     }
     public void RemoveAt(int index)
     {
+        CardModel card = cards[index];
         cards.RemoveAt(index);
 
         OnChange?.Invoke();
-        OnCardRemoved?.Invoke();
+        OnCardRemoved?.Invoke(card);
     }
     public void Clear()
     {
         cards.Clear();
 
         OnChange?.Invoke();
-        OnCardRemoved?.Invoke();
+        //OnCardRemoved?.Invoke();
     }
     public void Shuffle()
     {
