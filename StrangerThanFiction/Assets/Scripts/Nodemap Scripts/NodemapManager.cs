@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NodemapManager : MonoBehaviour, IDataPersistence
 {
-    [SerializeField] private GameObject startPoint;
-    [SerializeField] private GameObject nodeParent;
+    [SerializeField] private ScrollRect mapScrollRect;
+    [SerializeField] private GameObject bookcaseContent;
     [SerializeField] private NodeMenu nodeMenu;
 
-    public GameObject simpleNodePrefab;
-    public GameObject arrowPrefab;
+    [SerializeField] private GameObject bookNodePrefab;
+    [SerializeField] private GameObject emptyShelfPrefab;
     public SpecialNodeData[] specialNodeDatas;
     public BattleNodeData[] battleNodeDatas;
 
@@ -17,9 +18,9 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public MapNode selectedNode;
 
-    public MapNode CreateNode(NodeData data, Vector3 pos)
+    public MapNode CreateNode(NodeData data, GameObject parent)
     {
-        GameObject nodeObj = Instantiate(simpleNodePrefab, pos, Quaternion.identity, nodeParent.transform);
+        GameObject nodeObj = Instantiate(bookNodePrefab, Vector3.zero, Quaternion.identity, parent.transform);
         MapNode mapNode = nodeObj.GetComponent<MapNode>();
         mapNode.Initialize(data);
         return mapNode;
@@ -40,30 +41,40 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         // creates nodes bottom to top, left to right
         for (int i = 0; i < mapNodes.Count; i += 2)
         {
+            GameObject bookshelf;
+            GameObject bookrow;
+
             MapNode specialNode;
             SpecialNodeData specialNodeData;
             MapNode battleNode;
             BattleNodeData battleNodeData;
 
-            int spacing = 250;
+            // Special Nodes
+            // create bookshelf
+            bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
+            bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
             specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
-            specialNode = CreateNode(specialNodeData, startPoint.transform.position + new Vector3(-200, i * spacing, 0));
+            specialNode = CreateNode(specialNodeData, bookrow);
             specialNode.ToggleSelectable(false);
             mapNodes[i].Add(specialNode);
 
             specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
-            specialNode = CreateNode(specialNodeData, startPoint.transform.position + new Vector3(200, i * spacing, 0));
+            specialNode = CreateNode(specialNodeData, bookrow);
             specialNode.ToggleSelectable(false);
             mapNodes[i].Add(specialNode);
+
+            // Battle nodes
+            bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
+            bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
             battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
-            battleNode = CreateNode(battleNodeData, startPoint.transform.position + new Vector3(-200, (i + 1) * spacing, 0));
+            battleNode = CreateNode(battleNodeData, bookrow);
             battleNode.ToggleSelectable(false);
             mapNodes[i + 1].Add(battleNode);
 
             battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
-            battleNode = CreateNode(battleNodeData, startPoint.transform.position + new Vector3(200, (i + 1) * spacing, 0));
+            battleNode = CreateNode(battleNodeData, bookrow);
             battleNode.ToggleSelectable(false);
             mapNodes[i + 1].Add(battleNode);
 
@@ -86,13 +97,13 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
             }
         }
 
-
         foreach (MapNode node in mapNodes[0])
         {
             node.SetOnClick(SelectNewNode);
             node.ToggleSelectable(true);
         }
 
+        mapScrollRect.verticalNormalizedPosition = 0;
     }
 
     public void SelectNewNode(MapNode selectedNode)
@@ -134,21 +145,10 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(GameData data)
     {
-        if (selectedNode.GetNodeData() is BattleNodeData)
+        if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData)
             data.nextBattleNode = (BattleNodeData)selectedNode.GetNodeData();
 
         //throw new System.NotImplementedException();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

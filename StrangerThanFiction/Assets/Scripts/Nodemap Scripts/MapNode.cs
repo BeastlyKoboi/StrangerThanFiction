@@ -26,20 +26,22 @@ public class MapNode : MonoBehaviour
         _nodeData = data;
         _neighbors = new List<MapNode>();
 
-        _selectNodeObj = transform.Find("SelectNodeBtn").gameObject;
-        _selectNodeObj.GetComponent<Image>().sprite = _nodeData.Icon;
+
+        _selectNodeObj = transform.Find("Seal").gameObject;
+        _selectNodeObj.transform.Find("Icon").GetComponent<Image>().sprite = _nodeData.Icon;
 
         _selectNodeBtn = _selectNodeObj.GetComponent<Button>();
+
 
         if (_nodeData is BattleNodeData)
         {
             BattleNodeData battleNodeData = (BattleNodeData)_nodeData;
-            _selectNodeObj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = battleNodeData.Title;
+            transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = battleNodeData.Title;
         }
         else if (_nodeData is SpecialNodeData)
         {
             SpecialNodeData specialNodeData = (SpecialNodeData)_nodeData;
-            _selectNodeObj.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = specialNodeData.Title;
+            transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = specialNodeData.Title;
         }
 
     }
