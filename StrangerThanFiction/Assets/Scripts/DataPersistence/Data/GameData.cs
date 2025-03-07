@@ -23,6 +23,13 @@ public class GameData
     [Header("Binding")]
     public int bindingPower;
 
+    [Header("Nodemap")]
+    public FlatNodeMap nodeMap;
+
+    [Header("Combat Results")]
+    public CombatResults combatResults;
+
+
     public GameData()
     {
         this.totalRunsCount = 0;
@@ -31,6 +38,8 @@ public class GameData
         this.player2Deck = new DeckInventory();
         this.testDeck = new DeckInventory();
         this.bindingPower = 20;
+        this.nodeMap = new FlatNodeMap();
+        this.combatResults = new CombatResults();
     }
 
 

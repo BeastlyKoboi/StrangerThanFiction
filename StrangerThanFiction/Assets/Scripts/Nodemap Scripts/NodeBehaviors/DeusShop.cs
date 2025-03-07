@@ -2,29 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeusShop : MonoBehaviour, IDataPersistence
+public class DeusShop : SpecialNode
 {
     private GameData gameData;
     public CanvasGroup shopCanvasGroup;
 
-
-
-
-    public void OpenShop()
+    private void Start()
     {
-        Debug.Log("Shop Opened");
-
-        shopCanvasGroup.alpha = 1;
-        shopCanvasGroup.interactable = true;
-
+        mapNode.AddOnClick((MapNode mapNode) => { nodeMenu.OpenShopMenu(this); });
     }
 
-    public void LoadData(GameData data)
+
+    public override void LoadData(GameData data)
     {
         this.gameData = data;
     }
 
-    public void SaveData(GameData data)
+    public override void SaveData(GameData data)
     {
 
     }

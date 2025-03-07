@@ -143,6 +143,9 @@ public class DataPersistenceManager : MonoBehaviour
             return;
         }
 
+        // Added this here, created objects in the scene are not found in the awake method
+        this.dataPersistenceObjects = FindAllDataPersistenceObjects();
+
         // pass the data to other scripts so they can update it 
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
         {

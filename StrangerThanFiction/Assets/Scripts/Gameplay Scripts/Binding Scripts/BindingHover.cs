@@ -24,4 +24,9 @@ public class BindingHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
+    public void SetPopupWindow(GameObject window)
+    {
+        popupWindow = window;
+    }
+
 }

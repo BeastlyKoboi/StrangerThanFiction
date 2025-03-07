@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class NodemapManager : MonoBehaviour, IDataPersistence
 {
+    private GameData gameData;
+
     [SerializeField] private ScrollRect mapScrollRect;
     [SerializeField] private GameObject bookcaseContent;
     [SerializeField] private NodeMenu nodeMenu;
@@ -18,93 +21,133 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public MapNode selectedNode;
 
-    public MapNode CreateNode(NodeData data, GameObject parent)
+    public MapNode CreateNode(NodeData nodeData, GameObject parent)
     {
         GameObject nodeObj = Instantiate(bookNodePrefab, Vector3.zero, Quaternion.identity, parent.transform);
         MapNode mapNode = nodeObj.GetComponent<MapNode>();
-        mapNode.Initialize(data);
+        mapNode.Initialize(nodeData, gameData);
         return mapNode;
     }
 
     public void CreateNodeMap()
     {
-        int numModules = 3;
-
+        int baseBinding = 20;
         mapNodes = new List<List<MapNode>>();
+        List<MapNode> startingSelectableNodes = new List<MapNode>();
 
-        for (int i = 0; i < numModules; i++)
+        if (gameData.nodeMap.flatNodeMap == null || gameData.nodeMap.flatNodeMap.Length == 0)
         {
-            mapNodes.Add(new List<MapNode>());
-            mapNodes.Add(new List<MapNode>());
+            int numModules = 3;
+
+            for (int i = 0; i < numModules; i++)
+            {
+                mapNodes.Add(new List<MapNode>());
+                mapNodes.Add(new List<MapNode>());
+            }
+
+            for (int i = 0; i < mapNodes.Count; i += 2)
+            {
+                CreateSpecialNodes(i);
+                baseBinding = (int)(baseBinding * 1.2);
+                CreateBattleNodes(i + 1, baseBinding);
+            }
+            
+            startingSelectableNodes = mapNodes[0];
+        }
+        else
+        {
+            for (int i = 0; i < gameData.nodeMap.flatNodeMap.Length; i++)
+            {
+                mapNodes.Add(new List<MapNode>());
+                GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
+                GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
+
+                for (int j = 0; j < gameData.nodeMap.flatNodeMap[i].flatNodesArr.Length; j++)
+                {
+                    FlatNode nodeFlat = gameData.nodeMap.flatNodeMap[i].flatNodesArr[j];
+
+                    MapNode baseNode = CreateNode(nodeFlat.nodeData, bookrow);
+                    baseNode.ToggleSelectable(nodeFlat.isSelectable);
+                    mapNodes[i].Add(baseNode);
+
+                    if (nodeFlat.isSelectable)
+                    {
+                        startingSelectableNodes.Add(baseNode);
+                    }
+
+                    if (nodeFlat.isSelected && nodeFlat.nodeData is BattleNodeData && gameData.combatResults.victory)
+                    {
+                        startingSelectableNodes.Remove(baseNode);
+                        baseNode.ToggleSelectable(false);
+                    }
+                }
+            }
         }
 
-        // creates nodes bottom to top, left to right
-        for (int i = 0; i < mapNodes.Count; i += 2)
+        ConnectNodes();
+        InitializeSelectableNodes(startingSelectableNodes);
+        mapScrollRect.verticalNormalizedPosition = 0;
+    }
+
+    private void CreateSpecialNodes(int index, SpecialNodeData specialNodeData = null)
+    {
+        GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
+        GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
+
+        for (int j = 0; j < 2; j++)
         {
-            GameObject bookshelf;
-            GameObject bookrow;
-
-            MapNode specialNode;
-            SpecialNodeData specialNodeData;
-            MapNode battleNode;
-            BattleNodeData battleNodeData;
-
-            // Special Nodes
-            // create bookshelf
-            bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
-            bookrow = bookshelf.transform.Find("BookRow").gameObject;
-
-            specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
-            specialNode = CreateNode(specialNodeData, bookrow);
-            specialNode.ToggleSelectable(false);
-            mapNodes[i].Add(specialNode);
-
-            specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
-            specialNode = CreateNode(specialNodeData, bookrow);
-            specialNode.ToggleSelectable(false);
-            mapNodes[i].Add(specialNode);
-
-            // Battle nodes
-            bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
-            bookrow = bookshelf.transform.Find("BookRow").gameObject;
-
-            battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
-            battleNode = CreateNode(battleNodeData, bookrow);
-            battleNode.ToggleSelectable(false);
-            mapNodes[i + 1].Add(battleNode);
-
-            battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
-            battleNode = CreateNode(battleNodeData, bookrow);
-            battleNode.ToggleSelectable(false);
-            mapNodes[i + 1].Add(battleNode);
-
-
+            if (specialNodeData == null)
+                specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
+            MapNode baseNode = CreateNode(specialNodeData, bookrow);
+            baseNode.ToggleSelectable(false);
+            mapNodes[index].Add(baseNode);
         }
+    }
 
-        // connect nodes
+    private void CreateBattleNodes(int index, int binding, BattleNodeData battleNodeData = null)
+    {
+        GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
+        GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
+
+        for (int j = 0; j < 2; j++)
+        {
+            if (battleNodeData == null)
+                battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
+            MapNode baseNode = CreateNode(battleNodeData, bookrow);
+            baseNode.ToggleSelectable(false);
+
+            BattleNode battleNode = baseNode.GetComponent<BattleNode>();
+            battleNode.SetBinding(binding);
+            mapNodes[index].Add(baseNode);
+        }
+    }
+
+    private void ConnectNodes()
+    {
         for (int i = 0; i < mapNodes.Count; i++)
         {
             for (int j = 0; j < mapNodes[i].Count; j++)
             {
                 if (i + 1 < mapNodes.Count)
                 {
-                    foreach (MapNode node in mapNodes[i + 1]) 
+                    foreach (MapNode node in mapNodes[i + 1])
                     {
                         mapNodes[i][j].AddNeighbor(node);
-
                     }
                 }
             }
         }
+    }
 
-        foreach (MapNode node in mapNodes[0])
+    private void InitializeSelectableNodes(List<MapNode> selectableNodes)
+    {
+        foreach (MapNode node in selectableNodes)
         {
-            node.SetOnClick(SelectNewNode);
+            node.AddOnClick(SelectNewNode);
             node.ToggleSelectable(true);
         }
-
-        mapScrollRect.verticalNormalizedPosition = 0;
     }
+
 
     public void SelectNewNode(MapNode selectedNode)
     {
@@ -112,29 +155,30 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         {
             foreach (MapNode node in nodeList)
             {
-                node.ToggleSelectable(false);
-                node.ResetOnClick();
+                if (node != selectedNode)
+                {
+                    node.ToggleSelectable(false);
+                    node.RemoveOnClick(SelectNewNode);
+                }
             }
         }
 
         this.selectedNode = selectedNode;
+        this.selectedNode.RemoveOnClick(SelectNewNode);
 
-        nodeMenu.OpenMenu(selectedNode);
-    }
-
-    public void SetSelectableNodes()
-    {
         foreach (MapNode node in selectedNode.GetNeighbors())
         {
-            node.SetOnClick(SelectNewNode);
+            node.AddOnClick(SelectNewNode);
             node.ToggleSelectable(true);
         }
     }
-
+    
     public void LoadData(GameData data)
     {
 
         //if (data.)
+
+        gameData = data;
 
         CreateNodeMap();
 
@@ -145,8 +189,46 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(GameData data)
     {
+        Debug.Log("Saving node map");
+
         if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData)
+        {
             data.nextBattleNode = (BattleNodeData)selectedNode.GetNodeData();
+
+            data.player2Deck.deckEntries.Clear();
+
+            foreach (DeckEntry entry in data.nextBattleNode.DeckInventory.deckEntries)
+            {
+                data.player2Deck.deckEntries.Add(new DeckEntry(entry.cardName, entry.numCopies));
+            }
+        }
+
+        // save the nodemap to the data
+        
+
+        data.nodeMap = new FlatNodeMap();
+        data.nodeMap.flatNodeMap = new FlatNodeRow[mapNodes.Count];
+
+        for (int i = 0; i < mapNodes.Count; i++)
+        {
+            Debug.Log("Inside First for loop");
+            data.nodeMap.flatNodeMap[i] = new FlatNodeRow();
+            data.nodeMap.flatNodeMap[i].flatNodesArr = new FlatNode[mapNodes[i].Count];
+            for (int j = 0; j < mapNodes[i].Count; j++)
+            {
+                Debug.Log("Inside second for loop");
+                data.nodeMap.flatNodeMap[i].flatNodesArr[j] = mapNodes[i][j].GetFlattenedNode();
+
+                if (selectedNode == mapNodes[i][j])
+                {
+                    data.nodeMap.flatNodeMap[i].flatNodesArr[j].isSelected = true;
+                    Debug.Log("Selected node saved. ");
+                }
+            }
+        }
+
+        Debug.Log(data.nodeMap);
+
 
         //throw new System.NotImplementedException();
     }

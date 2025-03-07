@@ -41,7 +41,7 @@ public class Hoverable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         draggable = GetComponent<Draggable>();
         startPos = rectTransform.anchoredPosition;
         // replace 375 with card height
-        endPos = new Vector2(startPos.x, -Camera.main.pixelHeight / 2 + 375 / 2); 
+        endPos = new Vector2(startPos.x, -Camera.main.pixelHeight / 2 + rectTransform.rect.height / 2); 
         startRotation = rectTransform.localRotation;
         endRotation = Quaternion.Euler(0, 0, 0);
     }

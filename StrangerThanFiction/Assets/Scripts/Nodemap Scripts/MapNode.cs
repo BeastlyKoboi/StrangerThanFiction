@@ -4,24 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapNodeFlat
-{
-    public string Title;
-    public Vector3 Pos;
-    public List<string> neighbors;
-}
-
-
 public class MapNode : MonoBehaviour
 {
     private NodeData _nodeData;
     private List<MapNode> _neighbors;
-
+    
     private bool _isSelectable;
     private GameObject _selectNodeObj;
     private Button _selectNodeBtn;
 
-    public void Initialize(NodeData data)
+    private NodePulse nodePulse; 
+
+    public void Initialize(NodeData data, GameData gameData, int binding = 0)
     {
         _nodeData = data;
         _neighbors = new List<MapNode>();
@@ -31,17 +25,29 @@ public class MapNode : MonoBehaviour
         _selectNodeObj.transform.Find("Icon").GetComponent<Image>().sprite = _nodeData.Icon;
 
         _selectNodeBtn = _selectNodeObj.GetComponent<Button>();
+        
+        transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = _nodeData.Title;
 
 
         if (_nodeData is BattleNodeData)
         {
             BattleNodeData battleNodeData = (BattleNodeData)_nodeData;
-            transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = battleNodeData.Title;
+
+            BattleNode battleNode = gameObject.AddComponent<BattleNode>();
+
+            battleNode.Initialize(battleNodeData, gameData, binding);
+
         }
         else if (_nodeData is SpecialNodeData)
         {
             SpecialNodeData specialNodeData = (SpecialNodeData)_nodeData;
-            transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = specialNodeData.Title;
+            Type nodeType = Type.GetType(specialNodeData.name);
+            if (nodeType == null)
+            {
+                Debug.LogError("Node type not found: " + _nodeData.name);
+                return;
+            }
+            gameObject.AddComponent(nodeType);
         }
 
     }
@@ -71,15 +77,19 @@ public class MapNode : MonoBehaviour
 
     public void ToggleSelectable(bool isSelectable)
     {
-        if (_isSelectable == isSelectable)
-            return;
+        if (isSelectable && nodePulse == null)
+        {
+            nodePulse = _selectNodeObj.AddComponent<NodePulse>();
+
+        }
+        else if (!isSelectable && nodePulse != null)
+        {
+            Destroy(nodePulse);
+            nodePulse = null;
+        }
 
         _isSelectable = isSelectable;
-
-        if (_isSelectable)
-            _selectNodeObj.AddComponent<NodePulse>();
-        else
-            Destroy(_selectNodeObj.GetComponent<NodePulse>());
+        _selectNodeBtn.interactable = isSelectable;
     }
 
     public void ResetOnClick()
@@ -91,6 +101,27 @@ public class MapNode : MonoBehaviour
     {
         _selectNodeBtn.onClick.RemoveAllListeners();
         _selectNodeBtn.onClick.AddListener(() => { action(this); });
+    }
+
+    public void AddOnClick(Action<MapNode> action)
+    {
+        _selectNodeBtn.onClick.AddListener(() => { action(this); });
+    }
+
+    public void RemoveOnClick(Action<MapNode> action)
+    {
+        _selectNodeBtn.onClick.RemoveListener(() => { action(this); });
+    }
+
+    public FlatNode GetFlattenedNode()
+    {
+        return new FlatNode
+        {
+            Title = _nodeData.Title,
+            isSelectable = _isSelectable,
+            nodeData = _nodeData,
+            isSelected = false
+        };
     }
 
 }

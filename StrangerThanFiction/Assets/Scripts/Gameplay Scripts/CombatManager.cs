@@ -62,6 +62,13 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     {
         data.player1Deck = player1Deck;
         data.player2Deck = player2Deck;
+
+        data.combatResults = new CombatResults()
+        {
+            victory = binding.BindingDamage >= binding.BindingPower,
+            spentInk = 0,
+            gainedDeus = unusedInk
+        };
     }
 
     private void Awake()
@@ -177,6 +184,8 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
         uiManager.UpdateTotalPower();
 
+        unusedInk += player1.CurrentMana;
+
         // Apply damage to binding
         CardModel[] units = boardManager.GetUnits(player1);
         for (int i = 0; i < units.Length; i++)
@@ -239,6 +248,8 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     /// </summary>
     private async UniTask EndGame()
     {
+        unusedInk += (maxRounds - roundNumber) * player1.MaxMana;
+
         uiManager.GameOver(new GameOverState(
             binding.BindingDamage >= binding.BindingPower, 
             unusedInk,

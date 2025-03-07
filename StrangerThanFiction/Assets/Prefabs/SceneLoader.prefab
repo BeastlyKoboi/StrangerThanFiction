@@ -238,8 +238,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingScreen: {fileID: 1136400805809291675}
-  canvas: {fileID: 0}
-  canvasGroup: {fileID: 0}
+  canvas: {fileID: 7557117150900443197}
+  canvasGroup: {fileID: 2691093025976885843}
   sceneToLoad: 
   fadeFinished:
     m_PersistentCalls:
