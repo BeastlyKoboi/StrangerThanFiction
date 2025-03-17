@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b4f7bc5a41de67b40b350efa8cd581d8, type: 3}
   m_Name: OnAfterRerollTokensChange
-  m_EditorClassIdentifier: Assembly-CSharp::GameEventAsync
+  m_EditorClassIdentifier: 

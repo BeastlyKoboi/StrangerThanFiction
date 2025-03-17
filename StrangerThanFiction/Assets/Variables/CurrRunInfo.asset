@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae44f888d794d0043b81b321bf3fff6c, type: 3}
   m_Name: CurrRunInfo
   m_EditorClassIdentifier: 
-  currency: 10
-  rerollTokens: 3
+  currency: 0
+  rerollTokens: 0
   deckInventory:
     deckEntries:
     - cardName: Pinocchio

@@ -7,5 +7,4 @@ using UnityEngine;
 public class FlatNodeRow
 {
     public FlatNode[] flatNodesArr;
-
 }

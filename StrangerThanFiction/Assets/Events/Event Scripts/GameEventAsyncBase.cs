@@ -51,6 +51,4 @@ public abstract class GameEventAsyncBase<T> : ScriptableObject
 
 }
 
-[CreateAssetMenu(menuName = "Game Event Async/EventState")]
-public class GameEventAsync : GameEventAsyncBase<EventState> { }
 
