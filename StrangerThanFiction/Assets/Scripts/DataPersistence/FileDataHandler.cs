@@ -22,6 +22,8 @@ public class FileDataHandler
 
         // use Path.Combine to account for different OS's having different path seperators
         string fullPath = Path.Combine(dataDirPath, profileId, dataFileName);
+        Debug.Log("Loading data from: " + fullPath);
+
         GameData loadedData = null;
         if (File.Exists(fullPath))
         {

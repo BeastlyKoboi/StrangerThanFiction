@@ -21,6 +21,8 @@ public class Binding : MonoBehaviour, IDataPersistence, IDamagable
     public void LoadData(GameData data)
     {
         battleNodeData = data.nextBattleNode;
+        Debug.Log($"Battle Node Data in binding: {battleNodeData}");
+
         BindingPower = data.bindingPower;
     }
 

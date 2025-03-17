@@ -9,6 +9,7 @@ public class CharacterProfile : MonoBehaviour
     [SerializeField] private string profileId = "";
     [SerializeField] public bool hasData;
     [SerializeField] private TextMeshProUGUI startBtnText;
+    [SerializeField] private GameObject newGameButton;
 
     public void SetData(GameData gameData)
     {
@@ -21,6 +22,7 @@ public class CharacterProfile : MonoBehaviour
         {
             hasData = true;
             startBtnText.text = "Continue";
+            newGameButton.SetActive(true);
         }
     }
 

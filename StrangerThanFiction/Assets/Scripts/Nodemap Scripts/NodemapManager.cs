@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,6 +7,7 @@ using UnityEngine.UI;
 
 public class NodemapManager : MonoBehaviour, IDataPersistence
 {
+    [SerializeField] private RunInfo runInfo;
     private GameData gameData;
 
     [SerializeField] private ScrollRect mapScrollRect;
@@ -79,6 +81,7 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
                     {
                         startingSelectableNodes.Remove(baseNode);
                         baseNode.ToggleSelectable(false);
+                        runInfo.AddCurrency(gameData.combatResults.gainedDeus).Forget();
                     }
                 }
             }
@@ -211,23 +214,20 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
         for (int i = 0; i < mapNodes.Count; i++)
         {
-            Debug.Log("Inside First for loop");
             data.nodeMap.flatNodeMap[i] = new FlatNodeRow();
             data.nodeMap.flatNodeMap[i].flatNodesArr = new FlatNode[mapNodes[i].Count];
             for (int j = 0; j < mapNodes[i].Count; j++)
             {
-                Debug.Log("Inside second for loop");
                 data.nodeMap.flatNodeMap[i].flatNodesArr[j] = mapNodes[i][j].GetFlattenedNode();
 
                 if (selectedNode == mapNodes[i][j])
                 {
                     data.nodeMap.flatNodeMap[i].flatNodesArr[j].isSelected = true;
-                    Debug.Log("Selected node saved. ");
                 }
             }
         }
 
-        Debug.Log(data.nodeMap);
+        Debug.Log(data.nextBattleNode);
 
 
         //throw new System.NotImplementedException();

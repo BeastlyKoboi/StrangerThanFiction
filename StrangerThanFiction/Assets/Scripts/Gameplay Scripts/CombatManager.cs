@@ -53,6 +53,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         if (usingInspector) return;
 
         // load the binding from the data
+        Debug.Log("Loading data in combat manager");
 
         player1Deck = data.player1Deck;
         player2Deck = data.player2Deck;

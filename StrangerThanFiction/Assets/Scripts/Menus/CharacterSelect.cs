@@ -29,7 +29,7 @@ public class CharacterSelect : MonoBehaviour
         }
     }
 
-    public void OnProfileClicked(CharacterProfile characterProfile)
+    public void OnContinueClicked(CharacterProfile characterProfile)
     {
         DataPersistenceManager.instance.ChangeSelectedProfileId(characterProfile.GetProfileId());
         if (!characterProfile.hasData)
@@ -37,5 +37,11 @@ public class CharacterSelect : MonoBehaviour
             DataPersistenceManager.instance.NewGame(characterProfile.GetProfileId());
         }
 
+    }
+
+    public void OnNewGameClicked(CharacterProfile characterProfile)
+    {
+        DataPersistenceManager.instance.ChangeSelectedProfileId(characterProfile.GetProfileId());
+        DataPersistenceManager.instance.NewGame(characterProfile.GetProfileId());
     }
 }

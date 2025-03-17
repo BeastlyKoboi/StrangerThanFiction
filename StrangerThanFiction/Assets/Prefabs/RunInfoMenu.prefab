@@ -425,6 +425,7 @@ MonoBehaviour:
   deckPageContent: {fileID: 916649617833010368}
   powerPageContent: {fileID: 0}
   questsPageContent: {fileID: 0}
+  runInfo: {fileID: 11400000, guid: a6f0853b56debfb47a0616b1288acdfe, type: 2}
 --- !u!1 &1882358909394063048
 GameObject:
   m_ObjectHideFlags: 0

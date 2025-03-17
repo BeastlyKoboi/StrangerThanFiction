@@ -7,7 +7,7 @@ public class GameData
 {
     public long lastUpdated;
 
-    [Header("Stats")]
+    [Header("Long Term Stats")]
     public int totalRunsCount;
 
     [Header("Story")]
@@ -29,17 +29,28 @@ public class GameData
     [Header("Combat Results")]
     public CombatResults combatResults;
 
+    [Header("Current Run Stats")]
+    public Random.State randomState;
+    public int currency;
+    public int rerollTokens; 
+
 
     public GameData()
     {
         this.totalRunsCount = 0;
+
         this.storyParagraphs = new List<string>();
+
         this.player1Deck = new DeckInventory();
         this.player2Deck = new DeckInventory();
         this.testDeck = new DeckInventory();
+
         this.bindingPower = 20;
+
         this.nodeMap = new FlatNodeMap();
+
         this.combatResults = new CombatResults();
+
     }
 
 
