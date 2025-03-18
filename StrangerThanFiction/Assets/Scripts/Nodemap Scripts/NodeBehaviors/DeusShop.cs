@@ -7,6 +7,8 @@ public class DeusShop : SpecialNode
     private GameData gameData;
     public CanvasGroup shopCanvasGroup;
 
+    public bool isShopOpen = false;
+
     private void Start()
     {
         mapNode.AddOnClick((MapNode mapNode) => { nodeMenu.OpenShopMenu(this); });

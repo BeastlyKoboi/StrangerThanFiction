@@ -23,11 +23,11 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public MapNode selectedNode;
 
-    public MapNode CreateNode(NodeData nodeData, GameObject parent)
+    public MapNode CreateNode(NodeData nodeData, GameObject parent, FlatNode flatNode = null)
     {
         GameObject nodeObj = Instantiate(bookNodePrefab, Vector3.zero, Quaternion.identity, parent.transform);
         MapNode mapNode = nodeObj.GetComponent<MapNode>();
-        mapNode.Initialize(nodeData, gameData);
+        mapNode.Initialize(nodeData, gameData, flatNode);
         return mapNode;
     }
 
@@ -68,7 +68,7 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
                 {
                     FlatNode nodeFlat = gameData.nodeMap.flatNodeMap[i].flatNodesArr[j];
 
-                    MapNode baseNode = CreateNode(nodeFlat.nodeData, bookrow);
+                    MapNode baseNode = CreateNode(nodeFlat.nodeData, bookrow, nodeFlat);
                     baseNode.ToggleSelectable(nodeFlat.isSelectable);
                     mapNodes[i].Add(baseNode);
 
@@ -192,8 +192,6 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(GameData data)
     {
-        Debug.Log("Saving node map");
-
         if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData)
         {
             data.nextBattleNode = (BattleNodeData)selectedNode.GetNodeData();
@@ -229,8 +227,6 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
         Debug.Log(data.nextBattleNode);
 
-
-        //throw new System.NotImplementedException();
     }
 
 }

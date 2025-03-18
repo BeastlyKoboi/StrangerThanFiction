@@ -10,4 +10,6 @@ public class FlatNode
     public bool isSelectable;
     public bool isSelected;
     public NodeData nodeData;
+    public FlatNodeSpecial flatNodeSpecial;
+    public FlatNodeBattle flatNodeBattle;
 }

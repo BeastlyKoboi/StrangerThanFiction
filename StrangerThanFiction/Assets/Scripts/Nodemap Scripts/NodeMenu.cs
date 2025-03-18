@@ -32,7 +32,7 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
         shopMenuCanvasGroup.interactable = true;
         shopMenuCanvasGroup.blocksRaycasts = true;
 
-        shopUI.PopulateShop(deusShop);
+        shopUI.Initialize(deusShop);
     }
 
 

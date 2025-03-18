@@ -22,15 +22,11 @@ public class CardShop : MonoBehaviour
         float random = Random.Range(0, 1);
 
         Debug.Log(random);
-        Debug.Log(Random.state);
-
-
     }
 
     public string GetNextPurchaseableCard()
     {
-
-        return "";
+        return cardDictionary.cardEntries[Random.Range(0, cardDictionary.cardEntries.Count)].cardName;
     }
 
 

@@ -2,16 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChanceEncounter : MonoBehaviour
+public class ChanceEncounter : SpecialNode
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void LoadData(GameData data)
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void SaveData(GameData data)
     {
         
     }

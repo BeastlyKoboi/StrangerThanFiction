@@ -35,8 +35,6 @@ public class RunManager : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-        Debug.Log("Loading Run Data");
-
         runInfo.SetCurrency(data.currency).Forget();
         runInfo.SetRerollTokens(data.rerollTokens).Forget();
         runInfo.SetDeckInventory(data.player1Deck).Forget();

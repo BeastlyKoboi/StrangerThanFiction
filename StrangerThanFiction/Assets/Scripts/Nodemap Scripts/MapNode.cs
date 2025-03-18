@@ -13,11 +13,15 @@ public class MapNode : MonoBehaviour
     private GameObject _selectNodeObj;
     private Button _selectNodeBtn;
 
-    private NodePulse nodePulse; 
+    private NodePulse nodePulse;
 
-    public void Initialize(NodeData data, GameData gameData, int binding = 0)
+    // Only one of these will be used at a time
+    private SpecialNode specialNodeScript;
+    private BattleNode battleNodeScript;
+
+    public void Initialize(NodeData nodeData, GameData gameData, FlatNode flatNode = null)
     {
-        _nodeData = data;
+        _nodeData = nodeData;
         _neighbors = new List<MapNode>();
 
 
@@ -29,25 +33,23 @@ public class MapNode : MonoBehaviour
         transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = _nodeData.Title;
 
 
-        if (_nodeData is BattleNodeData)
+        if (_nodeData is BattleNodeData battleNodeData)
         {
-            BattleNodeData battleNodeData = (BattleNodeData)_nodeData;
+            battleNodeScript = gameObject.AddComponent<BattleNode>();
 
-            BattleNode battleNode = gameObject.AddComponent<BattleNode>();
-
-            battleNode.Initialize(battleNodeData, gameData, binding);
+            battleNodeScript.Initialize(battleNodeData, gameData, flatNode);
 
         }
-        else if (_nodeData is SpecialNodeData)
+        else if (_nodeData is SpecialNodeData specialNodeData)
         {
-            SpecialNodeData specialNodeData = (SpecialNodeData)_nodeData;
             Type nodeType = Type.GetType(specialNodeData.name);
             if (nodeType == null)
             {
                 Debug.LogError("Node type not found: " + _nodeData.name);
                 return;
             }
-            gameObject.AddComponent(nodeType);
+            specialNodeScript = (SpecialNode)gameObject.AddComponent(nodeType);
+            specialNodeScript.Initialize(specialNodeData, gameData, flatNode);
         }
 
     }
@@ -120,7 +122,9 @@ public class MapNode : MonoBehaviour
             Title = _nodeData.Title,
             isSelectable = _isSelectable,
             nodeData = _nodeData,
-            isSelected = false
+            isSelected = false,
+            flatNodeSpecial = specialNodeScript != null? specialNodeScript.GetFlatNodeSpecial() : null,
+            flatNodeBattle = battleNodeScript != null? battleNodeScript.GetFlatNodeBattle() : null
         };
     }
 

@@ -13,7 +13,7 @@ public class BattleNode : MonoBehaviour, IDataPersistence
     private MapNode mapNode; 
     private SceneLoader sceneLoader;
 
-    public void Initialize(BattleNodeData nodeData, GameData gameData, int binding = 0)
+    public void Initialize(BattleNodeData nodeData, GameData gameData, FlatNode flatNode = null)
     {
         _battleNodeData = nodeData;
         this.gameData = gameData;
@@ -28,7 +28,8 @@ public class BattleNode : MonoBehaviour, IDataPersistence
             sceneLoader.LoadScene("Gameplay");
         });
 
-        SetBinding(binding);
+        if (flatNode != null)
+            SetBinding(flatNode.flatNodeBattle.binding);
     }
 
     public void SetBinding(int newBinding)
@@ -49,5 +50,13 @@ public class BattleNode : MonoBehaviour, IDataPersistence
     public void SaveData(GameData data)
     {
         
+    }
+
+    public FlatNodeBattle GetFlatNodeBattle()
+    {
+        return new FlatNodeBattle
+        {
+            binding = _binding
+        };
     }
 }
