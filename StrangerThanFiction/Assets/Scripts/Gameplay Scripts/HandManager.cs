@@ -32,6 +32,8 @@ public class HandManager : MonoBehaviour
 
     public void AddCardToHandFromDeck(CardModel card)
     {
+        if (this == null || gameObject == null || !gameObject.activeInHierarchy) return;
+
         if (!card.GetComponent<Appear>()) card.gameObject.AddComponent<Appear>();
         if (!card.GetComponent<Hoverable>()) card.gameObject.AddComponent<Hoverable>();
         if (!card.GetComponent<Draggable>()) card.gameObject.AddComponent<Draggable>();

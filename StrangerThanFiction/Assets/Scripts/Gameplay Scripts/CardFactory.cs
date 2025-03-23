@@ -26,6 +26,7 @@ public class CardFactory
 
     private GameObject cardStorage;
     private CardDataMono cardData;
+    private ItemDataMono itemData;
 
     // The script that handles card previews
     public CardPreview cardPreview;
@@ -40,6 +41,9 @@ public class CardFactory
     private Queue<GameObject> spellCardPool;
     private Queue<GameObject> unitCardPool;
 
+    private Dictionary<Player, DeckInventory> registeredDecks = new Dictionary<Player, DeckInventory>();
+
+    private RunInfo runInfo;
 
     // Example method to set prefabs if needed
     public void Initialize()
@@ -55,6 +59,18 @@ public class CardFactory
             cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
         this.cardPrefab = cardData.cardPrefab;
         this.unitPrefab = cardData.unitPrefab;
+
+        if (itemData == null)
+            itemData = GameObject.Find("ItemData").GetComponent<ItemDataMono>();
+
+        if (runInfo == null)
+            runInfo = GameObject.Find("RunData").GetComponent<RunDataMono>().runInfo;
+    }
+
+    public void RegisterDeck(Player player, DeckInventory deck)
+    {
+        if (!registeredDecks.ContainsKey(player))
+            registeredDecks.Add(player, deck);
     }
 
     public CardModel CreateCard(Type type, bool isHidden, Transform parent, Player owner, BoardManager board, string creator = "")
@@ -119,10 +135,39 @@ public class CardFactory
         cardObj.AddComponent<Clickable>();
         cardObj.GetComponent<Clickable>().OnClickWithoutDrag += CardPreviewClickHandler;
 
+
+        DeckInventory deckInventory;
+
+        if (registeredDecks.ContainsKey(owner))
+        {
+            deckInventory = registeredDecks[owner];
+        }
+        else
+        {
+            deckInventory = runInfo.GetDeckInventory();
+        }
+
+        foreach (DeckEntry entry in deckInventory.deckEntries)
+        {
+            if (entry.cardName == cardName)
+            {
+                foreach (string itemString in entry.items)
+                {
+                    ItemInfo itemInfo = itemData.itemDictionary.GetItemDataByName(itemString);
+                    Type itemScript = Type.GetType(itemString);
+                    Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, cardScript);
+                    cardScript.AddItem(item);
+                }
+
+                break;
+            }
+        }
+
+
         return cardScript;
     }
 
-    public CardView CreateNonPlayableCard(string cardName, bool isHidden, Transform parent, string creator = "")
+    public CardModel CreateNonPlayableCard(string cardName, bool isHidden, Transform parent, string creator = "")
     {
         GameObject cardObj = new GameObject(cardName, typeof(RectTransform));
         cardObj.transform.SetParent(parent, false);
@@ -174,9 +219,33 @@ public class CardFactory
             cardView.OverwriteUnitPrefab(cardScript);
 
         cardObj.AddComponent<Clickable>();
-        cardObj.GetComponent<Clickable>().OnClickWithoutDrag += CardPreviewClickHandler;
+        cardObj.GetComponent<Clickable>().OnRightClick += CardPreviewClickHandler;
 
-        return cardView;
+
+
+
+        DeckInventory deckInventory = runInfo.GetDeckInventory();
+
+        foreach (DeckEntry entry in deckInventory.deckEntries)
+        {
+            if (entry.cardName == cardName)
+            {
+                foreach (string itemString in entry.items)
+                {
+                    ItemInfo itemInfo = itemData.itemDictionary.GetItemDataByName(itemString);
+                    Type itemScript = Type.GetType(itemString);
+                    Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, cardScript);
+                    cardScript.AddItem(item);
+                }
+
+                break;
+            }
+        }
+
+
+
+
+        return cardScript;
     }
 
     public void CardPreviewClickHandler(CardModel cardModel) { if (cardPreview) cardPreview.OnClick(cardModel); }

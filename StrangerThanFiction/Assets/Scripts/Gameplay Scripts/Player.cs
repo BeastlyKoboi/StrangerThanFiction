@@ -90,6 +90,8 @@ public class Player : MonoBehaviour
 
     public void PopulateDeck(DeckInventory deckInventory, bool isHidden)
     {
+        CardFactory.Instance.RegisterDeck(this, deckInventory);
+
         hasCardsHidden = isHidden;
 
         Deck = new CardPile();

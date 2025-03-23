@@ -19,18 +19,33 @@ public class RunManager : MonoBehaviour, IDataPersistence
         
         nodemapManager = GetComponent<NodemapManager>();
         CardFactory.Instance.Initialize();
+
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
+        runInfo.OnAfterDeckInventoryChange.AddListener(RefreshDeck);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        runInfo.OnAfterDeckInventoryChange.RemoveListener(RefreshDeck);
+    }
+
+    private UniTask RefreshDeck(EventState eventState = null)
+    {
+        foreach (Transform child in deckPageContent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (DeckEntry entry in runInfo.GetDeckInventory().deckEntries)
+        {
+            for (int i = 0; i < entry.numCopies; i++)
+            {
+                CardFactory.Instance.CreateNonPlayableCard(entry.cardName, false, deckPageContent.transform);
+            }
+        }
+        return UniTask.CompletedTask;
     }
 
     public void LoadData(GameData data)
@@ -39,16 +54,7 @@ public class RunManager : MonoBehaviour, IDataPersistence
         runInfo.SetRerollTokens(data.rerollTokens).Forget();
         runInfo.SetDeckInventory(data.player1Deck).Forget();
 
-
-        foreach (DeckEntry entry in runInfo.GetDeckInventory().deckEntries)
-        {
-            for (int i = 0; i < entry.numCopies; i++)
-            {
-                CardFactory.Instance.CreateNonPlayableCard(entry.cardName, false, deckPageContent.transform);
-            }
-        }
-
-
+        RefreshDeck();
     }
 
     public void SaveData(GameData data)

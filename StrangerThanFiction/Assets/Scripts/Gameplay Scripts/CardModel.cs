@@ -90,10 +90,21 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     // Used in conditions like Resilient
     public virtual int DamageResistence { get; set; } = 0;
 
+    public virtual int DamageDealtModifier { get; set; } = 0;
+    public virtual float DamageDealtMultiplier { get; set; } = 1.0f;
+
+    public virtual int CalculateDamageDealt(int damage)
+    {
+        return Mathf.Clamp((int)((damage + DamageDealtModifier) * DamageDealtMultiplier), 0, int.MaxValue);
+    }
+
+
     /// <summary>
     /// Holds labeled objects for the conditions applied to a card: Resilient, Poisoned, etc.
     /// </summary>
     private Dictionary<string, Condition> conditions = new Dictionary<string, Condition>();
+
+    private List<Item> items = new List<Item>();
 
     /// <summary>
     /// Holds play requirements, if any: Target 1, Ally 1, etc. 
@@ -382,6 +393,12 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
             await RemoveCondition(conditionName);
         }
 
+        // Remove all items
+        foreach (Item item in items)
+        {
+            await item.OnRemove();
+        }
+
         await OnRemove.InvokeAsync(this);
     }
 
@@ -611,4 +628,14 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         return conditions.Values.ToArray();
     }
 
+    public async UniTask AddItem(Item item)
+    {
+        items.Add(item);
+        await item.OnAdd();
+    }
+
+    public Item[] GetItems()
+    {
+        return items.ToArray();
+    }
 }

@@ -68,6 +68,7 @@ public class UIManager : MonoBehaviour
     /// <param name="roundNum"></param>
     public void RoundStart(int roundNum, int maxRounds)
     {
+        if (RoundPopup == null) return;
         RoundPopup.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"Round {roundNum}";
         RoundPopup.SetTrigger("Popup");
 

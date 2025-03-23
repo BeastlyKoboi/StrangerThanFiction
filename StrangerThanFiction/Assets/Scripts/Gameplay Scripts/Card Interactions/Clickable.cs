@@ -11,6 +11,9 @@ public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler,
     public event Action<CardModel> OnClickWithoutDrag;
     public event Action OnDoubleClick;
 
+    public event Action<CardModel> OnLeftClick;
+    public event Action<CardModel> OnRightClick;
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount == 2) OnDoubleClick?.Invoke();
@@ -26,6 +29,16 @@ public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler,
         if (Vector3.Distance(downPos, eventData.position) < 7)
         {
             OnClickWithoutDrag?.Invoke(GetComponent<CardModel>());
+
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                OnLeftClick?.Invoke(GetComponent<CardModel>());
+            }
+
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                OnRightClick?.Invoke(GetComponent<CardModel>());
+            }
         }
     }
 

@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Cysharp.Threading.Tasks;
+using System.Threading;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages the flow of game in a single match. 
@@ -27,9 +29,6 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     public Player player1; // The human player
     public Player player2; // The AI eventually 
 
-    [HeaderAttribute("Input Actions")]
-    [SerializeField] private InputActionReference pause;
-
     [HeaderAttribute("Managers")]
     public UIManager uiManager;
     public BoardManager boardManager;
@@ -45,7 +44,8 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     [SerializeField] private DeckInventory player1Deck;
     [SerializeField] private DeckInventory player2Deck;
 
-    // Something for battlefield conditions
+
+    private CancellationTokenSource cts;
 
 
     public void LoadData(GameData data)
@@ -74,6 +74,9 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
     private void Awake()
     {
+        cts = new CancellationTokenSource();
+        SceneManager.activeSceneChanged += OnSceneChanged;
+
         CardFactory.Instance.Initialize();
 
         OnGameStart.Clear();
@@ -96,8 +99,6 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     /// </summary>
     void Start()
     { 
-        pause.action.performed += ctx => TogglePause();
-
         // initialize all needed stuff for beginning of game 
 
         //player1.PopulateDeck(player1Deck.ToArray(), false);
@@ -118,9 +119,14 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     private void StartGame()
     {
         // Setup 
-
-
-        GameLoop();
+        try
+        {
+            GameLoop();
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("Task was cancelled");
+        }
     }
 
 
@@ -129,14 +135,23 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     /// </summary>
     private async void GameLoop()
     {
-        await UniTask.Delay(1000);
+        await UniTask.Delay(1000, cancellationToken: cts.Token);
 
         await OnGameStart.InvokeAsync();
 
         do
         {
             roundNumber++;
-            await RoundActivity();
+            try
+            {
+                await RoundActivity();
+
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log("Round Activity was cancelled");
+
+            }
 
         } while (roundNumber < maxRounds && binding.BindingDamage < binding.BindingPower);
 
@@ -164,12 +179,12 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         // Draw Cards
         do
         {
-            await UniTask.Delay(100);
+            await UniTask.Delay(100, cancellationToken: cts.Token);
 
             if (player1.CanDoSomething())
                 await player1.PlayerTurn();
 
-            await UniTask.Delay(100);
+            await UniTask.Delay(100, cancellationToken: cts.Token);
 
             if (player2.CanDoSomething())
                 await player2.PlayerTurn();
@@ -217,7 +232,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         {
             await player1.DrawCard();
             await player2.DrawCard();
-            await UniTask.Delay(500);
+            await UniTask.Delay(500, cancellationToken: cts.Token);
         }
     }
 
@@ -229,7 +244,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     {
         await DiscardPlayerHand(player1);
         await DiscardPlayerHand(player2);
-        await UniTask.Delay(2000);
+        await UniTask.Delay(2000, cancellationToken: cts.Token);
     }
 
     /// <summary>
@@ -259,25 +274,18 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         await OnGameOver.InvokeAsync();
     }
 
-    private void TogglePause()
+    private void OnSceneChanged(Scene oldScene, Scene newScene)
     {
-        if (Time.timeScale == 1)
-        {
-            Time.timeScale = 0;
-            uiManager.TogglePausedMenu(true);
-        }
-        else
-        {
-            Time.timeScale = 1;
-            uiManager.TogglePausedMenu(false);
-        }
+        cts?.Cancel(); // Cancel any running tasks when the scene changes
+        cts?.Dispose();
+        cts = new CancellationTokenSource(); // Reset for new tasks
     }
 
-    /// <summary>
-    /// Method to quit the game.
-    /// </summary>
-    public void QuitGame()
+    private void OnDestroy()
     {
-        Application.Quit();
+        SceneManager.activeSceneChanged -= OnSceneChanged;
+        cts?.Cancel();
+        cts?.Dispose();
     }
+
 }

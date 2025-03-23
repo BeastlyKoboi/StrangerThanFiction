@@ -53,15 +53,30 @@ public class RunInfo : ScriptableObject
         deckInventory = value;
         await OnAfterDeckInventoryChange.InvokeAsync(new EventState());
     }
-    public async UniTask AddCardToDeckInventory(string cardName)
+    public async UniTask AddCardToDeckInventory(DeckEntry newEntry)
     {
-        if (deckInventory.deckEntries.Find(entry => entry.cardName == cardName) is DeckEntry deckEntry)
+        if (deckInventory.deckEntries.Find(entry => entry.cardName == newEntry.cardName) is DeckEntry deckEntry)
         {
             deckEntry.numCopies++;
+
+            foreach (string item in newEntry.items)
+            {
+                if (!deckEntry.items.Contains(item))
+                {
+                    deckEntry.items.Add(item);
+                }
+            }
         }
         else
         {
-            deckInventory.deckEntries.Add(new DeckEntry(cardName, 1));
+            DeckEntry copiedEntry = new DeckEntry(newEntry.cardName, newEntry.numCopies);
+
+            foreach (string item in newEntry.items)
+            {
+                copiedEntry.items.Add(item);
+            }
+
+            deckInventory.deckEntries.Add(copiedEntry);
         }
         await OnAfterDeckInventoryChange.InvokeAsync(new EventState());
     }

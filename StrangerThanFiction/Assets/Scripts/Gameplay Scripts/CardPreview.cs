@@ -10,6 +10,7 @@ public class CardPreview : MonoBehaviour
     public Transform cardView;
     public Transform blurPanel;
     public Transform conditionsBox;
+    public Transform itemsBox;
     public Transform flavorBox;
     public TextMeshProUGUI cardTextCost;
     public TextMeshProUGUI cardTextPower;
@@ -25,6 +26,7 @@ public class CardPreview : MonoBehaviour
         cardView = transform.Find("Sample Card");
         blurPanel = transform.Find("Blur");
         conditionsBox = transform.Find("Conditions");
+        itemsBox = transform.Find("Items");
         cardTextCost = cardView.Find("Cost").GetComponent<TextMeshProUGUI>();
         cardTextPower = cardView.Find("Power").GetComponent<TextMeshProUGUI>();
         cardTextPlotArmor = cardView.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
@@ -38,10 +40,17 @@ public class CardPreview : MonoBehaviour
         cardView.gameObject.SetActive(false);
         blurPanel.gameObject.SetActive(false);
         conditionsBox.gameObject.SetActive(false);
+        itemsBox.gameObject.SetActive(false);
         flavorBox.gameObject.SetActive(false);
 
         // Clear all children from conditionsBox
         foreach (Transform child in conditionsBox)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Clear all children from itemsBox
+        foreach (Transform child in itemsBox)
         {
             Destroy(child.gameObject);
         }
@@ -56,6 +65,7 @@ public class CardPreview : MonoBehaviour
         cardView.gameObject.SetActive(true);
         blurPanel.gameObject.SetActive(true);
         conditionsBox.gameObject.SetActive(true);
+        itemsBox.gameObject.SetActive(true);
         flavorBox.gameObject.SetActive(true);
     }
 
@@ -117,6 +127,16 @@ public class CardPreview : MonoBehaviour
             conditionBox.transform.Translate(0, i * -175,0);
             conditionBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
                 .text = conditions[i].ToString();
+        }
+
+        Item[] items = card.GetItems();
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            GameObject itemBox = Instantiate(conditionBoxPrefab, itemsBox);
+            itemBox.transform.Translate(0, i * -175, 0);
+            itemBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
+                .text = items[i].ToString();
         }
 
         flavorText.text = card.FlavorText;

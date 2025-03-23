@@ -23,7 +23,6 @@ public class CardDictionary : ScriptableObject
             if (!cardDictionary.ContainsKey(entry.cardName))
                 cardDictionary[entry.cardName] = entry.cardData;
 
-
         }
     }
 

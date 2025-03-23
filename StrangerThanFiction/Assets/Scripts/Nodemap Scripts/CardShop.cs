@@ -5,6 +5,7 @@ using UnityEngine;
 public class CardShop : MonoBehaviour
 {
     [SerializeField] private CardDictionary cardDictionary;
+    [SerializeField] private ItemDictionary itemDictionary;
 
     [SerializeField] private int baseCardPrice; 
 
@@ -24,9 +25,21 @@ public class CardShop : MonoBehaviour
         Debug.Log(random);
     }
 
-    public string GetNextPurchaseableCard()
+    public DeckEntry GetNextPurchaseableCard()
     {
-        return cardDictionary.cardEntries[Random.Range(0, cardDictionary.cardEntries.Count)].cardName;
+        DeckEntry deckEntry = new DeckEntry();
+        deckEntry.cardName = cardDictionary.cardEntries[Random.Range(0, cardDictionary.cardEntries.Count)].cardName;
+        deckEntry.numCopies = 1;
+        if (Random.Range(0f, 1f) < 0.5f)
+        {
+            deckEntry.items.Add(itemDictionary.itemEntries[Random.Range(0, itemDictionary.itemEntries.Count)].itemName);
+        }
+        return deckEntry;
+    }
+
+    public int CalculateCardPrice(DeckEntry deckEntry)
+    {
+        return baseCardPrice + deckEntry.items.Count * baseCommonItemPrice;
     }
 
 
