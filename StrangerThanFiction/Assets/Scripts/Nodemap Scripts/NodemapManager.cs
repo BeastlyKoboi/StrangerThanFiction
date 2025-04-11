@@ -39,7 +39,7 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
         if (gameData.nodeMap.flatNodeMap == null || gameData.nodeMap.flatNodeMap.Length == 0)
         {
-            int numModules = 3;
+            int numModules = 5;
 
             for (int i = 0; i < numModules; i++)
             {

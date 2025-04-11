@@ -51,7 +51,7 @@ public class GameData
 
         this.combatResults = new CombatResults();
 
-        this.currency = 5;
+        this.currency = 25;
         this.rerollTokens = 3;
 
     }

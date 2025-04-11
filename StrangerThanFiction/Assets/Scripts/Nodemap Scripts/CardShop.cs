@@ -16,7 +16,7 @@ public class CardShop : MonoBehaviour
 
     private void Awake()
     {
-        Random.InitState(10);
+        //Random.InitState(10);
         Random.State state = Random.state;
         string stateSerialized = JsonUtility.ToJson(state);
         Debug.Log(stateSerialized);

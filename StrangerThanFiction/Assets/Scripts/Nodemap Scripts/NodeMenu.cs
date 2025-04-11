@@ -9,7 +9,6 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
     public NodemapManager nodemapManager;
     public SceneLoader sceneLoader;
     private GameData _gameData;
-    public GameObject mainMenu;
 
 
     [Header("Shop Menu")]

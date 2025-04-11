@@ -5,7 +5,6 @@ using UnityEngine;
 public class DeusShop : SpecialNode
 {
     private GameData gameData;
-    public CanvasGroup shopCanvasGroup;
 
     public bool isShopOpen = false;
 
