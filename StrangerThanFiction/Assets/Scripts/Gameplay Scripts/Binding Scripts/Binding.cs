@@ -17,10 +17,11 @@ public class Binding : MonoBehaviour, IDataPersistence, IDamagable
     [SerializeField] private CombatManager combatManager;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private GameObject popupWindow;
+    [SerializeField] private BattleNodeDictionary battleNodeDictionary;
 
     public void LoadData(GameData data)
     {
-        battleNodeData = data.nextBattleNode;
+        battleNodeData = battleNodeDictionary.GetByKey(data.nextBattleNode);
         Debug.Log($"Battle Node Data in binding: {battleNodeData}");
 
         BindingPower = data.bindingPower;

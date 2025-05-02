@@ -121,7 +121,7 @@ public class MapNode : MonoBehaviour
         {
             Title = _nodeData.Title,
             isSelectable = _isSelectable,
-            nodeData = _nodeData,
+            nodeDataKey = _nodeData.name,
             isSelected = false,
             flatNodeSpecial = specialNodeScript != null? specialNodeScript.GetFlatNodeSpecial() : null,
             flatNodeBattle = battleNodeScript != null? battleNodeScript.GetFlatNodeBattle() : null

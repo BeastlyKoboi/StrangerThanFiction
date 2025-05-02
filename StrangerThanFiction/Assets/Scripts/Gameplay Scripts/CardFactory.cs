@@ -87,7 +87,7 @@ public class CardFactory
         if (cardData == null)
             cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
 
-        CardInfo cardInfo = cardData.cardDictionary.GetCardDataByName(cardName);
+        CardInfo cardInfo = cardData.cardDictionary.GetByKey(cardName);
 
         GameObject queuedCard = GetCardFromPool(cardInfo.Type);
 
@@ -153,7 +153,7 @@ public class CardFactory
             {
                 foreach (string itemString in entry.items)
                 {
-                    ItemInfo itemInfo = itemData.itemDictionary.GetItemDataByName(itemString);
+                    ItemInfo itemInfo = itemData.itemDictionary.GetByKey(itemString);
                     Type itemScript = Type.GetType(itemString);
                     Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, cardScript);
                     cardScript.AddItem(item);
@@ -175,7 +175,7 @@ public class CardFactory
         if (cardData == null)
             cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
 
-        CardInfo cardInfo = cardData.cardDictionary.GetCardDataByName(cardName);
+        CardInfo cardInfo = cardData.cardDictionary.GetByKey(cardName);
 
         GameObject queuedCard = GetCardFromPool(cardInfo.Type);
 
@@ -232,7 +232,7 @@ public class CardFactory
             {
                 foreach (string itemString in entry.items)
                 {
-                    ItemInfo itemInfo = itemData.itemDictionary.GetItemDataByName(itemString);
+                    ItemInfo itemInfo = itemData.itemDictionary.GetByKey(itemString);
                     Type itemScript = Type.GetType(itemString);
                     Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, cardScript);
                     cardScript.AddItem(item);

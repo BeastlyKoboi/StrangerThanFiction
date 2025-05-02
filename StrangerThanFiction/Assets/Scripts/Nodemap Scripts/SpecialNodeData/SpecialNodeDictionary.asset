@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e866b163cbacda42b3d0fe693e4259d, type: 3}
+  m_Name: SpecialNodeDictionary
+  m_EditorClassIdentifier: 
+  entries:
+  - Key: ACallback
+    Value: {fileID: 11400000, guid: 5b6061d8e69227f459be20eb17d55080, type: 2}
+  - Key: ChanceEncounter
+    Value: {fileID: 11400000, guid: e6d264b09b162da44917b5ec56fc048f, type: 2}
+  - Key: DeusShop
+    Value: {fileID: 11400000, guid: 046505a615034a5489ca0f8dafa8ebbc, type: 2}
+  - Key: HeroicSacrifice
+    Value: {fileID: 11400000, guid: b25b52c21356bbe49b393ce51a86e1b4, type: 2}
+  - Key: TestOfCharacter
+    Value: {fileID: 11400000, guid: fe6bec79c2cf4fa48b77056d0bfc24e0, type: 2}

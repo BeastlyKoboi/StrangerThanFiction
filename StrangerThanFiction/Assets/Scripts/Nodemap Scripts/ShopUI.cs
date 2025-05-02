@@ -103,7 +103,7 @@ public class ShopUI : MonoBehaviour
             {
                 Debug.Log(cardEntry.items[0]);
 
-                ItemInfo itemInfo = itemData.itemDictionary.GetItemDataByName(cardEntry.items[0]);
+                ItemInfo itemInfo = itemData.itemDictionary.GetByKey(cardEntry.items[0]);
                 Type itemScript = Type.GetType(cardEntry.items[0]);
                 Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, card);
                 card.AddItem(item);

@@ -18,7 +18,7 @@ public class GameData
     public DeckInventory player2Deck;
     public DeckInventory testDeck;
 
-    public BattleNodeData nextBattleNode;
+    public string nextBattleNode;
 
     [Header("Binding")]
     public int bindingPower;

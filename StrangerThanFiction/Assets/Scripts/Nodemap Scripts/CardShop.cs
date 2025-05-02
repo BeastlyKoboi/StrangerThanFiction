@@ -28,11 +28,11 @@ public class CardShop : MonoBehaviour
     public DeckEntry GetNextPurchaseableCard()
     {
         DeckEntry deckEntry = new DeckEntry();
-        deckEntry.cardName = cardDictionary.cardEntries[Random.Range(0, cardDictionary.cardEntries.Count)].cardName;
+        deckEntry.cardName = cardDictionary.GetEntries()[Random.Range(0, cardDictionary.GetEntries().Count)].Key;
         deckEntry.numCopies = 1;
         if (Random.Range(0f, 1f) < 0.5f)
         {
-            deckEntry.items.Add(itemDictionary.itemEntries[Random.Range(0, itemDictionary.itemEntries.Count)].itemName);
+            deckEntry.items.Add(itemDictionary.GetEntries()[Random.Range(0, itemDictionary.GetEntries().Count)].Key);
         }
         return deckEntry;
     }

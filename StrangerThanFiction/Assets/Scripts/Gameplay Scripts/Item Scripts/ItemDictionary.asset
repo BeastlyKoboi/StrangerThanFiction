@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7fe259b53a18dd479b2c8048b006eab, type: 3}
   m_Name: ItemDictionary
   m_EditorClassIdentifier: 
-  itemEntries:
-  - itemName: Epiphany
-    itemData: {fileID: 11400000, guid: 34c8a968bd4cf0644a6769f192989ae8, type: 2}
-  - itemName: FineNib
-    itemData: {fileID: 11400000, guid: 46b1e854ad93ec24385205e565a32535, type: 2}
-  - itemName: SetTheStage
-    itemData: {fileID: 11400000, guid: a067d5b2d25198447ad995d99892b3f9, type: 2}
+  entries:
+  - Key: Epiphany
+    Value: {fileID: 11400000, guid: 34c8a968bd4cf0644a6769f192989ae8, type: 2}
+  - Key: FineNib
+    Value: {fileID: 11400000, guid: 46b1e854ad93ec24385205e565a32535, type: 2}
+  - Key: SetTheStage
+    Value: {fileID: 11400000, guid: a067d5b2d25198447ad995d99892b3f9, type: 2}

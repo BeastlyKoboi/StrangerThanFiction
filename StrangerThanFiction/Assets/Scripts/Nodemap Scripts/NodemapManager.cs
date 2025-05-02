@@ -18,6 +18,8 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
     [SerializeField] private GameObject emptyShelfPrefab;
     public SpecialNodeData[] specialNodeDatas;
     public BattleNodeData[] battleNodeDatas;
+    [SerializeField] private BattleNodeDictionary battleNodeDictionary;
+    [SerializeField] private SpecialNodeDictionary specialNodeDictionary;
 
     public List<List<MapNode>> mapNodes;
 
@@ -67,8 +69,10 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
                 for (int j = 0; j < gameData.nodeMap.flatNodeMap[i].flatNodesArr.Length; j++)
                 {
                     FlatNode nodeFlat = gameData.nodeMap.flatNodeMap[i].flatNodesArr[j];
+                    NodeData nodeData = battleNodeDictionary.GetByKey(nodeFlat.nodeDataKey) as NodeData ??
+                       specialNodeDictionary.GetByKey(nodeFlat.nodeDataKey) as NodeData;
 
-                    MapNode baseNode = CreateNode(nodeFlat.nodeData, bookrow, nodeFlat);
+                    MapNode baseNode = CreateNode(nodeData, bookrow, nodeFlat);
                     baseNode.ToggleSelectable(nodeFlat.isSelectable);
                     mapNodes[i].Add(baseNode);
 
@@ -77,7 +81,7 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
                         startingSelectableNodes.Add(baseNode);
                     }
 
-                    if (nodeFlat.isSelected && nodeFlat.nodeData is BattleNodeData && gameData.combatResults.victory)
+                    if (nodeFlat.isSelected && nodeData is BattleNodeData && gameData.combatResults.victory)
                     {
                         startingSelectableNodes.Remove(baseNode);
                         baseNode.ToggleSelectable(false);
@@ -192,13 +196,13 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(GameData data)
     {
-        if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData)
+        if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData battleNodeData)
         {
-            data.nextBattleNode = (BattleNodeData)selectedNode.GetNodeData();
+            data.nextBattleNode = battleNodeData.name;
 
             data.player2Deck.deckEntries.Clear();
 
-            foreach (DeckEntry entry in data.nextBattleNode.DeckInventory.deckEntries)
+            foreach (DeckEntry entry in battleNodeData.DeckInventory.deckEntries)
             {
                 data.player2Deck.deckEntries.Add(new DeckEntry(entry.cardName, entry.numCopies));
             }

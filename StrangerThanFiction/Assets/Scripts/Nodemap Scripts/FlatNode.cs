@@ -9,7 +9,7 @@ public class FlatNode
     public string Title;
     public bool isSelectable;
     public bool isSelected;
-    public NodeData nodeData;
+    public string nodeDataKey;
     public FlatNodeSpecial flatNodeSpecial;
     public FlatNodeBattle flatNodeBattle;
 }
