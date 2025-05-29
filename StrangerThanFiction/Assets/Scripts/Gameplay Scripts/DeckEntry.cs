@@ -8,11 +8,13 @@ public class DeckEntry
     public string cardName;
     public int numCopies;
     public List<string> items; 
+    public int price;
 
     public DeckEntry(string cardName = "", int numCopies = 1)
     {
         this.cardName = cardName;
         this.numCopies = numCopies;
         items = new List<string>();
+        price = 0;
     }
 }

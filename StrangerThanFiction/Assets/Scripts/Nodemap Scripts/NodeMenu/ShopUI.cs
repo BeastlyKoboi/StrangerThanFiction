@@ -17,9 +17,10 @@ public class ShopUI : MonoBehaviour
     [SerializeField] private Button closeBtn;
     [SerializeField] private GameObject cardZone;
 
-    private CardShop cardShop;
-
-    private DeusShop deusShop;
+    // Events 
+    public UniTaskEvent OnReroll = new UniTaskEvent();
+    public UniTaskEvent OnBuy = new UniTaskEvent();
+    public UniTaskEvent OnClose = new UniTaskEvent();
 
     [SerializeField] private RunInfo runInfo;
 
@@ -28,41 +29,32 @@ public class ShopUI : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private GameObject shopSlotPrefab;
 
-    private ShopSlot selectedSlot; 
+    private ShopSlot selectedSlot;
+    public ShopSlot SelectedSlot
+    {
+        get { return selectedSlot; }
+    }
 
     private void Awake()
     {
-        cardShop = GetComponent<CardShop>();
-
-        rerollBtn.onClick.AddListener(() =>
+        rerollBtn.onClick.AddListener(async () =>
         {
-            RerollShop().Forget();
+            rerollBtn.interactable = false;
+            await OnReroll.InvokeAsync();
+            rerollBtn.interactable = true;
         });
 
-        buyBtn.onClick.AddListener(() =>
+        buyBtn.onClick.AddListener(async () =>
         {
-            if (selectedSlot == null) return;
-
-            if (runInfo.GetCurrency() < selectedSlot.GetPrice())
-            {
-                Debug.Log("Not enough currency");
-                return;
-            }
-
-            runInfo.SetCurrency(runInfo.GetCurrency() - selectedSlot.GetPrice()).Forget();
-
-            DeckEntry deckEntry = selectedSlot.GetDeckEntry();
-
-            runInfo.AddCardToDeckInventory(deckEntry).Forget();
-            
             buyBtn.interactable = false;
-
-            Destroy(selectedSlot.gameObject);
-
+            await OnBuy.InvokeAsync();
+            buyBtn.interactable = true;
         });
 
-        closeBtn.onClick.AddListener(() =>
+        closeBtn.onClick.AddListener(async () =>
         {
+            await OnClose.InvokeAsync();
+
             CloseShop();
         });
 
@@ -70,50 +62,31 @@ public class ShopUI : MonoBehaviour
             itemData = GameObject.Find("ItemData").GetComponent<ItemDataMono>();
     }
 
-    public void Initialize(DeusShop deusShop)
-    {
-        this.deusShop = deusShop;
 
-        if (!deusShop.isShopOpen)
-        {
-            PopulateShop();
-            deusShop.isShopOpen = true;
-        }
-    }
-
-    public void PopulateShop()
+    public void PopulateShop(List<DeckEntry> purchaseableCards)
     {
         foreach (Transform child in cardZone.transform)
         {
             Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < purchaseableCards.Count; i++)
         {
             ShopSlot shopSlot = Instantiate(shopSlotPrefab, cardZone.transform).GetComponent<ShopSlot>();
+            CardModel card = CardFactory.Instance.CreateNonPlayableCard(purchaseableCards[i].cardName, false, shopSlot.GetCardParent());
 
-            DeckEntry cardEntry = cardShop.GetNextPurchaseableCard();
-
-            CardModel card = CardFactory.Instance.CreateNonPlayableCard(cardEntry.cardName, false, shopSlot.GetCardParent());
-
-            Debug.Log(cardEntry.items.Count);
-
-
-            if (cardEntry.items.Count > 0)
+            if (purchaseableCards[i].items.Count > 0)
             {
-                Debug.Log(cardEntry.items[0]);
-
-                ItemInfo itemInfo = itemData.itemDictionary.GetByKey(cardEntry.items[0]);
-                Type itemScript = Type.GetType(cardEntry.items[0]);
+                ItemInfo itemInfo = itemData.itemDictionary.GetByKey(purchaseableCards[i].items[0]);
+                Type itemScript = Type.GetType(purchaseableCards[i].items[0]);
                 Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, card);
                 card.AddItem(item);
                 shopSlot.SetItemDescText(item.ToString());
                 shopSlot.ToggleItemDescText(true);
             }
 
-            int price = cardShop.CalculateCardPrice(cardEntry);
-            shopSlot.SetPriceText(price);
-            shopSlot.SetDeckEntry(cardEntry);
+            shopSlot.SetPriceText(purchaseableCards[i].price);
+            shopSlot.SetDeckEntry(purchaseableCards[i]);
 
             card.GetComponent<Clickable>().OnLeftClick += (CardModel card) => { SelectSlot(shopSlot); };
         }
@@ -132,15 +105,14 @@ public class ShopUI : MonoBehaviour
         buyBtn.interactable = true;
     }
 
-    public async UniTask RerollShop()
+    
+
+    public void OpenShop()
     {
-        if (runInfo.GetRerollTokens() <= 0) return; 
-
-        await runInfo.SetRerollTokens(runInfo.GetRerollTokens() - 1);
-        deusShop.IncrementRerollTokensUsed();
-        PopulateShop();
+        canvasGroup.alpha = 1;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
-
 
     public void CloseShop()
     {

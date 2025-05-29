@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class NodeMenu : MonoBehaviour, IDataPersistence
 {
     public NodemapManager nodemapManager;
-    public SceneLoader sceneLoader;
     private GameData _gameData;
-
+    [SerializeField] private RunInfo runInfo;
+    [SerializeField] private CardShop cardShop;
 
     [Header("Shop Menu")]
     [SerializeField] private CanvasGroup shopMenuCanvasGroup;
@@ -25,15 +25,12 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
         
     }
 
-    public void OpenShopMenu(DeusShop deusShop)
-    {
-        shopMenuCanvasGroup.alpha = 1;
-        shopMenuCanvasGroup.interactable = true;
-        shopMenuCanvasGroup.blocksRaycasts = true;
+    public ShopUI GetShopMenuUI() => shopUI;
 
-        shopUI.Initialize(deusShop);
-    }
+    public RunInfo GetRunInfo() => runInfo;
+
+    public CardShop GetCardShop() => cardShop;
 
 
-    
+
 }

@@ -575,7 +575,6 @@ GameObject:
   - component: {fileID: 98121193}
   - component: {fileID: 98121194}
   - component: {fileID: 98121195}
-  - component: {fileID: 98121196}
   m_Layer: 5
   m_Name: ShopMenu
   m_TagString: Untagged
@@ -644,25 +643,6 @@ MonoBehaviour:
   runInfo: {fileID: 11400000, guid: a6f0853b56debfb47a0616b1288acdfe, type: 2}
   itemData: {fileID: 0}
   shopSlotPrefab: {fileID: 7028067231930407571, guid: e0193fc0325ad634fbec4e3ae2142d33, type: 3}
---- !u!114 &98121196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 98121192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf53de00945664c49a82344fa86aaa15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardDictionary: {fileID: 11400000, guid: 79e48c56a8a4e404f981a2fc528c0dc1, type: 2}
-  itemDictionary: {fileID: 11400000, guid: 8433e6ff2ca78fb4fb007581807b22ba, type: 2}
-  baseCardPrice: 2
-  baseCommonItemPrice: 1
-  baseUncommonItemPrice: 0
-  baseRareItemPrice: 0
-  baseEpicItemPrice: 0
 --- !u!1 &125397518
 GameObject:
   m_ObjectHideFlags: 0
@@ -4223,7 +4203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b2ed3b57c176ec4f89f0982a720ca88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runInfo: {fileID: 0}
   isShopOpen: 0
+  hasOpenedShop: 0
 --- !u!1 &1051215402
 GameObject:
   m_ObjectHideFlags: 0
@@ -4524,6 +4506,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1141292435}
   - component: {fileID: 1141292436}
+  - component: {fileID: 1141292437}
   m_Layer: 5
   m_Name: NodeMenu
   m_TagString: Untagged
@@ -4567,9 +4550,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodemapManager: {fileID: 1602174196}
-  sceneLoader: {fileID: 0}
+  runInfo: {fileID: 11400000, guid: a6f0853b56debfb47a0616b1288acdfe, type: 2}
+  cardShop: {fileID: 1141292437}
   shopMenuCanvasGroup: {fileID: 98121194}
   shopUI: {fileID: 98121195}
+--- !u!114 &1141292437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141292434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf53de00945664c49a82344fa86aaa15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardDictionary: {fileID: 11400000, guid: 79e48c56a8a4e404f981a2fc528c0dc1, type: 2}
+  itemDictionary: {fileID: 11400000, guid: 8433e6ff2ca78fb4fb007581807b22ba, type: 2}
+  baseCardPrice: 2
+  baseCommonItemPrice: 1
+  baseUncommonItemPrice: 0
+  baseRareItemPrice: 0
+  baseEpicItemPrice: 0
 --- !u!1 &1168901021
 GameObject:
   m_ObjectHideFlags: 0
@@ -7364,7 +7367,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763898337}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
