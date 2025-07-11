@@ -157,7 +157,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     public UniTaskEvent<CardModel> OnRemove = new UniTaskEvent<CardModel>();
 
     // Unit Events - only called when in play, otherwise never.
-    public UniTaskEvent OnDeploy = new UniTaskEvent();
+    public UniTaskEvent<DeployState> OnDeploy = new UniTaskEvent<DeployState>();
     public UniTaskEvent OnSummon = new UniTaskEvent();
     public UniTaskEvent OnRoundStart = new UniTaskEvent();
     public UniTaskEvent OnRoundEnd = new UniTaskEvent();
@@ -282,7 +282,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     {
         return UniTask.CompletedTask;
     }
-    protected virtual UniTask DeployEffect()
+    protected virtual UniTask DeployEffect(DeployState deployState = null)
     {
         return UniTask.CompletedTask;
     }
@@ -341,7 +341,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
         await Board.DeployUnit(this, SelectedArea);
 
-        await OnDeploy.InvokeAsync();
+        await OnDeploy.InvokeAsync(new DeployState(this));
 
         return true;
     }
@@ -414,7 +414,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         Board.ReplaceUnit(this, newUnit);
 
         // Fire pre-summon event to set up any necessary adjustments
-        await newUnit.OnDeploy.InvokeAsync();
+        await newUnit.OnDeploy.InvokeAsync(new DeployState(this));
 
         // Transfer properties
         if (CurrentPower > BasePower)

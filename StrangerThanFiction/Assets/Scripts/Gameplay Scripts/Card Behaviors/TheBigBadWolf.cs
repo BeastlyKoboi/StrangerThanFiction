@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TheBigBadWolf : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnUnitDestroyed.AddListener(SummonCrow);
         return UniTask.CompletedTask;

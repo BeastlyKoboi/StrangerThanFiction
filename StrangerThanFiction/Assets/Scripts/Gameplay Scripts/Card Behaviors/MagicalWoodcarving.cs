@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MagicalWoodcarving : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         OnRoundEnd.AddListener(RoundEndEffect);
         return UniTask.CompletedTask;

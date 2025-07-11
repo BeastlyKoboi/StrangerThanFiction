@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public sealed class Pinocchio : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         OnRoundStart.AddListener(CreateTallTaleInHand);
         return UniTask.CompletedTask;

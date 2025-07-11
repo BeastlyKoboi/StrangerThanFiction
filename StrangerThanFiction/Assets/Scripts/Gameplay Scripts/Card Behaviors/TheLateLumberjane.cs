@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TheLateLumberjane : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnUnitDestroyed.AddListener(OnDestroyEffect);
         Owner.enemyPlayer.OnUnitDestroyed.AddListener(OnDestroyEffect);

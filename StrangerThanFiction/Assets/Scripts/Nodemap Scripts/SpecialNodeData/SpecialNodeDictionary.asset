@@ -23,3 +23,5 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: b25b52c21356bbe49b393ce51a86e1b4, type: 2}
   - Key: TestOfCharacter
     Value: {fileID: 11400000, guid: fe6bec79c2cf4fa48b77056d0bfc24e0, type: 2}
+  - Key: TheCuttingRoom
+    Value: {fileID: 11400000, guid: 6036c47a8aebfc64da46a15111498e5e, type: 2}

@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e47eccad712c42446b51f29e01d7f5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conditionsList: {fileID: 11400000, guid: 15f593b650b26d146b58cce18a9dd6b4, type: 2}
+  conditionsDictionary: {fileID: 11400000, guid: 34c62742f23e3414e834b3288a4b8f4e, type: 2}
 --- !u!1 &9212287057660627369
 GameObject:
   m_ObjectHideFlags: 0

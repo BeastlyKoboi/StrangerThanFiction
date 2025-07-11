@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PortraitPainter : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnCardDrawn.AddListener(OnDrawEffect);
         return UniTask.CompletedTask;

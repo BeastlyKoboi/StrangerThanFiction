@@ -13,7 +13,9 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
 
     [Header("Shop Menu")]
     [SerializeField] private CanvasGroup shopMenuCanvasGroup;
-    [SerializeField] private ShopUI shopUI;
+    [SerializeField] private ShopUI deusShopUI;
+    [SerializeField] private ShopUI theCuttingRoomUI;
+
 
     public void LoadData(GameData data)
     {
@@ -25,7 +27,12 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
         
     }
 
-    public ShopUI GetShopMenuUI() => shopUI;
+    public ShopUI GetNodeUI(SpecialNode node)
+    {
+        if (node is DeusShop) return deusShopUI;
+        if (node is TheCuttingRoom) return theCuttingRoomUI;
+        return null;
+    }
 
     public RunInfo GetRunInfo() => runInfo;
 

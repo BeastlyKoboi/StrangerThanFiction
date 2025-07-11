@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AnimatedArtisan : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnRoundStart.AddListener(RoundStartEffect);
         return UniTask.CompletedTask;

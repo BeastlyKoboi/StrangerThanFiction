@@ -20,7 +20,7 @@ MonoBehaviour:
   Type: 0
   Faction: 0
   BaseCost: 2
-  BasePower: 0
+  BasePower: 1
   BasePlotArmor: 3
   PlayRequirements:
     AllyUnitTargets: 0

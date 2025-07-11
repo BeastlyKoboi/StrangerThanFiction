@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class ConditionsDataMono : MonoBehaviour
 {
-    public ConditionsList conditionsList;
+    public ConditionDictionary conditionsDictionary;
+
 }

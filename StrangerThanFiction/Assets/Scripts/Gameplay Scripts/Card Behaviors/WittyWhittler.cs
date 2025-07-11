@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class WittyWhittler : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnUnitSummoned.AddListener(OnAllySummonedGrantPoison);
         return UniTask.CompletedTask;

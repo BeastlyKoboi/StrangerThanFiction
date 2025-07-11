@@ -4,7 +4,6 @@ using UnityEngine;
 public abstract class Condition : IDamageSource
 {
     public static ConditionsDataMono conditionsData = GameObject.Find("ConditionsData").GetComponent<ConditionsDataMono>();
-    public abstract uint Id { get; }
     public virtual string Name { get; } = "";
     public virtual string Description { get; } = "";
 
@@ -13,8 +12,10 @@ public abstract class Condition : IDamageSource
 
     public Condition(CardModel card, int amount)
     {
-        this.Name = conditionsData.conditionsList.conditions[Id].ConditionName;
-        this.Description = conditionsData.conditionsList.conditions[Id].Description;
+        ConditionInfo conditionInfo = conditionsData.conditionsDictionary.GetByKey(GetType().ToString());
+
+        this.Name = conditionInfo.ConditionName;
+        this.Description = conditionInfo.Description;
         this.card = card;
         this.amount = amount;
     }

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Fated : Condition
 {
-    public override uint Id => 2;
     public Fated(CardModel card, int amount) : base(card, amount) { }
 
     public override UniTask OnAdd()

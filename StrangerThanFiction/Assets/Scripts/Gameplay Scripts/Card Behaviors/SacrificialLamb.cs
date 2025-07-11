@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SacrificialLamb : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnUnitSummoned.AddListener(Sacrifice);
         return UniTask.CompletedTask;

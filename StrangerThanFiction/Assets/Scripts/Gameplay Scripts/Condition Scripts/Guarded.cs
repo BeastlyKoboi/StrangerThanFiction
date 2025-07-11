@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Guarded : Condition
 {
-    public override uint Id => 3;
     public Guarded(CardModel card, int amount) : base(card, amount) { }
 
     public override UniTask OnAdd()

@@ -2,8 +2,6 @@ using Cysharp.Threading.Tasks;
 
 public class Poisoned : Condition
 {
-    public override uint Id => 0;
-
     public Poisoned(CardModel card, int amount) : base(card, amount) { }
 
     public override UniTask OnAdd()

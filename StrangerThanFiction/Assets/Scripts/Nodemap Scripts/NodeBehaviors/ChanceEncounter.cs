@@ -1,16 +1,22 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ChanceEncounter : SpecialNode
 {
-    public override void LoadData(GameData data)
+    protected override UniTask AddListenersToUI()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void SaveData(GameData data)
+    protected override void PopulateUI()
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    protected override UniTask RemoveListenersFromUI()
+    {
+        throw new System.NotImplementedException();
     }
 }

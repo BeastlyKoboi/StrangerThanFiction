@@ -80,7 +80,7 @@ public class RunInfo : ScriptableObject
         }
         await OnAfterDeckInventoryChange.InvokeAsync(new EventState());
     }
-    public async UniTask RemoveCardToDeckInventory(string cardName)
+    public async UniTask RemoveCardFromDeckInventory(string cardName)
     {
         if (deckInventory.deckEntries.Find(entry => entry.cardName == cardName) is DeckEntry deckEntry)
         {

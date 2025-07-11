@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TheBlueFairy : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnAfterCardPlayed.AddListener(IfCardPlayedIsCostReducedDrawCard);
         return UniTask.CompletedTask;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Candlewick : CardModel
 {
-    protected override UniTask DeployEffect()
+    protected override UniTask DeployEffect(DeployState deployState)
     {
         Owner.OnUnitSummoned.AddListener(CandlewickEffect);
         return UniTask.CompletedTask;

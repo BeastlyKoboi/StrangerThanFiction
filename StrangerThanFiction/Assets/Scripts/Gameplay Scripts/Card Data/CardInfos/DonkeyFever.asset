@@ -18,7 +18,7 @@ MonoBehaviour:
   FlavorText: 
   Type: 1
   Faction: 0
-  BaseCost: 2
+  BaseCost: 3
   BasePower: 0
   BasePlotArmor: 0
   PlayRequirements:

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Resilient : Condition
 {
-    public override uint Id => 4;
     public Resilient(CardModel card, int amount) : base(card, amount) { }
 
     public override UniTask OnAdd()

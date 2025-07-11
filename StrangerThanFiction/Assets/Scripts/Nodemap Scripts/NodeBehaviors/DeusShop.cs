@@ -5,51 +5,23 @@ using UnityEngine;
 
 public class DeusShop : SpecialNode
 {
-    private GameData gameData;
-    [SerializeField] private RunInfo runInfo;
-
-    public bool isShopOpen = false;
-    public bool hasOpenedShop = false;
-
-    private ShopUI shopUI;
-
-    private void Start()
+    protected override UniTask AddListenersToUI()
     {
-        mapNode.AddOnClick((MapNode mapNode) => OpenShop());
-
-
+        nodeUI.OnReroll.AddListener(RerollShop);
+        nodeUI.OnBuy.AddListener(BuyCard);
+        nodeUI.OnClose.AddListener(RemoveListenersFromUI);
+        return UniTask.CompletedTask;
     }
 
-    private void OpenShop()
+    protected override UniTask RemoveListenersFromUI()
     {
-        isShopOpen = true;
-
-        shopUI = nodeMenu.GetShopMenuUI();
-        runInfo = nodeMenu.GetRunInfo();
-
-        shopUI.OpenShop();
-
-        shopUI.OnReroll.AddListener(RerollShop);
-        shopUI.OnBuy.AddListener(BuyCard);
-        
-        if (!hasOpenedShop)
-        {
-            PopulateShop();
-            hasOpenedShop = true;
-        }
+        nodeUI.OnReroll.RemoveListener(RerollShop);
+        nodeUI.OnBuy.RemoveListener(BuyCard);
+        nodeUI.OnClose.RemoveListener(RemoveListenersFromUI);
+        return UniTask.CompletedTask;
     }
 
-    private async UniTask RerollShop()
-    {
-        if (runInfo.GetRerollTokens() <= 0) return;
-
-        await runInfo.SetRerollTokens(runInfo.GetRerollTokens() - 1);
-        IncrementRerollTokensUsed();
-
-        PopulateShop();
-    }
-
-    private void PopulateShop() {
+    protected override void PopulateUI() {
         List<DeckEntry> purchaseableCards = new List<DeckEntry>();
         List<int> prices = new List<int>();
 
@@ -59,33 +31,35 @@ public class DeusShop : SpecialNode
             purchaseableCards[i].price = nodeMenu.GetCardShop().CalculateCardPrice(purchaseableCards[i]);
         }
 
-        shopUI.PopulateShop(purchaseableCards);
+        nodeUI.PopulateShop(purchaseableCards);
+    }
+
+    private async UniTask RerollShop()
+    {
+        Debug.Log("Reroll shop called");
+
+        if (runInfo.GetRerollTokens() <= 0) return;
+
+        await runInfo.SetRerollTokens(runInfo.GetRerollTokens() - 1);
+        IncrementRerollTokensUsed();
+
+        PopulateUI();
     }
 
     private async UniTask BuyCard()
     {
-        if (shopUI.SelectedSlot == null) return;
-        if (runInfo.GetCurrency() < shopUI.SelectedSlot.GetPrice())
+        if (nodeUI.SelectedSlot == null) return;
+        if (runInfo.GetCurrency() < nodeUI.SelectedSlot.GetPrice())
         {
             Debug.Log("Not enough currency");
             return;
         }
 
-        await runInfo.SetCurrency(runInfo.GetCurrency() - shopUI.SelectedSlot.GetPrice());
+        await runInfo.SetCurrency(runInfo.GetCurrency() - nodeUI.SelectedSlot.GetPrice());
 
-        await runInfo.AddCardToDeckInventory(shopUI.SelectedSlot.GetDeckEntry());
+        await runInfo.AddCardToDeckInventory(nodeUI.SelectedSlot.GetDeckEntry());
 
-        Destroy(shopUI.SelectedSlot.gameObject);
-    }
-
-    public override void LoadData(GameData data)
-    {
-        this.gameData = data;
-    }
-
-    public override void SaveData(GameData data)
-    {
-
+        Destroy(nodeUI.SelectedSlot.gameObject);
     }
 
 }
