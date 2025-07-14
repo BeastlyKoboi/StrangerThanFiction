@@ -147,7 +147,7 @@ public class CardFactory
             deckInventory = runInfo.GetDeckInventory();
         }
 
-        foreach (DeckEntry entry in deckInventory.deckEntries)
+        foreach (DeckEntry entry in deckInventory.GetDeckEntries())
         {
             if (entry.cardName == cardName)
             {
@@ -226,7 +226,7 @@ public class CardFactory
 
         DeckInventory deckInventory = runInfo.GetDeckInventory();
 
-        foreach (DeckEntry entry in deckInventory.deckEntries)
+        foreach (DeckEntry entry in deckInventory.GetDeckEntries())
         {
             if (entry.cardName == cardName)
             {

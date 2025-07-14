@@ -12,7 +12,7 @@ using UnityEngine;
 /// </summary>
 public class TooltipHandlerHover : MonoBehaviour
 {
-    [SerializeField] private ConditionsList conditionsList;
+    [SerializeField] private ConditionDictionary conditionDictionary;
 
     [SerializeField] private GameObject tooltipContainer;
     private TMP_Text _tooltipDescriptionTMP;
@@ -36,9 +36,9 @@ public class TooltipHandlerHover : MonoBehaviour
 
     private void GetTooltipInfo(string keyword, Vector3 mousePos)
     {
-        foreach (var entry in conditionsList.conditions)
+        foreach (var entry in conditionDictionary.GetEntries())
         {
-            if (entry.ConditionName == keyword)
+            if (entry.Value.ConditionName == keyword)
             {
                 if (!tooltipContainer.gameObject.activeInHierarchy)
                 {
@@ -46,7 +46,7 @@ public class TooltipHandlerHover : MonoBehaviour
                     tooltipContainer.gameObject.SetActive(true);
                 }
 
-                _tooltipDescriptionTMP.text = entry.Description;
+                _tooltipDescriptionTMP.text = entry.Value.Description;
                 return;
             }
         }

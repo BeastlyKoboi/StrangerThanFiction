@@ -10,25 +10,13 @@ public class Stackable : Condition
     public override UniTask OnAdd()
     {
         card.OnDeploy.AddListener(AddAura);
-        card.OnDestroy.AddListener(RemoveAura);
 
         return base.OnAdd();
-    }
-
-    public override UniTask OnTrigger()
-    {
-        return base.OnTrigger();
-    }
-
-    public override UniTask OnSurplus(Condition surplus)
-    {
-        return UniTask.CompletedTask;
     }
 
     public override UniTask OnRemove()
     {
         card.OnDeploy.RemoveListener(AddAura);
-        card.OnDestroy.RemoveListener(RemoveAura);
 
         return base.OnRemove();
     }
@@ -52,13 +40,14 @@ public class Stackable : Condition
         else
         {
             card.Owner.OnUnitSummoned.AddListener(StackableAura);
-
+            card.OnDestroy.AddListener(RemoveAura);
         }
     }
 
     private async UniTask RemoveAura(CardModel cardModel)
     {
-
+        card.Owner.OnUnitSummoned.RemoveListener(StackableAura);
+        card.OnDestroy.RemoveListener(RemoveAura);
     }
 
     private async UniTask StackableAura(CardModel unit)
@@ -66,19 +55,12 @@ public class Stackable : Condition
         // if self do nothing
         if (unit == card) return;
 
-        // if other copy is already on the board return
-        
-
-        
-
-        // if not make sure to add the aura to the card
-
         // The aura is: whenever a copy of this card is summoned, grant this card it's power and remove the copy. 
-
-        await card.GrantPower(card.CurrentPower);
-
-
-
+        if (unit.Title == card.Title && unit != card)
+        {
+            await card.GrantPower(unit.CurrentPower);
+            await unit.Remove();
+        }
 
     }
 

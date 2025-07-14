@@ -38,7 +38,7 @@ public class RunManager : MonoBehaviour, IDataPersistence
         {
             Destroy(child.gameObject);
         }
-        foreach (DeckEntry entry in runInfo.GetDeckInventory().deckEntries)
+        foreach (DeckEntry entry in runInfo.GetDeckInventory().GetDeckEntries())
         {
             for (int i = 0; i < entry.numCopies; i++)
             {

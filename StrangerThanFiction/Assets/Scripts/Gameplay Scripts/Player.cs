@@ -115,7 +115,7 @@ public class Player : MonoBehaviour
             cardRect.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
         };
 
-        foreach (DeckEntry entry in deckInventory.deckEntries)
+        foreach (DeckEntry entry in deckInventory.GetDeckEntries())
         {
             for (int i = 0; i < entry.numCopies; i++)
             {

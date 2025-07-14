@@ -23,3 +23,5 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 2de75df90cbe2874094df00a2a47e3b5, type: 2}
   - Key: Resilient
     Value: {fileID: 11400000, guid: 51b0de5924eb45a46b15f4ff6ed53749, type: 2}
+  - Key: Stackable
+    Value: {fileID: 11400000, guid: ee848f530de92b6489f3740b3560e5e0, type: 2}

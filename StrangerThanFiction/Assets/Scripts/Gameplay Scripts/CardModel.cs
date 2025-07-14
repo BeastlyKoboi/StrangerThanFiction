@@ -174,7 +174,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         cardView = GetComponent<CardView>();
         CardInfo cardInfo = cardView.CardInfo;

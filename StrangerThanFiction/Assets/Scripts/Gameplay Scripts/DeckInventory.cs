@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class DeckInventory
 {
-    public List<DeckEntry> deckEntries;
+    [SerializeField] private List<DeckEntry> deckEntries;
 
     public DeckInventory()
     {

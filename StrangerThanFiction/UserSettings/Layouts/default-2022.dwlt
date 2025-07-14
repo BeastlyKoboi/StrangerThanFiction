@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 916.8
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 3387
+  controlID: 107
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 3391
+  controlID: 45
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 3342
+  controlID: 46
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -269,8 +269,8 @@ MonoBehaviour:
     y: 0
     width: 363.19995
     height: 866.8
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -411,23 +411,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: 28780000
       m_LastClickedID: 0
-      m_ExpandedIDs: 0cf4ffffb0f8ffff687b00000a7c0000cc7c0000
+      m_ExpandedIDs: 8298fcff24a1fcff0e82fdffbcf0ffff14fbffffb8850000ce20010042230100e6230100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: 
-        m_OriginalName: 
+        m_Name: UIManager
+        m_OriginalName: UIManager
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 0
+        m_UserData: 33962
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 11
+        m_OriginalEventType: 0
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 8}
       m_SearchString: 
@@ -858,9 +858,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 875.5973, y: 527.68134, z: -10.658018}
+    m_Target: {x: 960, y: 540, z: 0}
     speed: 2
-    m_Value: {x: 875.5973, y: 527.68134, z: -10.658018}
+    m_Value: {x: 960, y: 540, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -910,9 +910,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 806.764
+    m_Target: 1101.4536
     speed: 2
-    m_Value: 806.764
+    m_Value: 1101.4536
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -972,7 +972,7 @@ MonoBehaviour:
     m_SaveData: []
     m_OverlaysVisible: 1
   m_SearchFilter:
-    m_NameFilter: state
+    m_NameFilter: 
     m_ClassNames: []
     m_AssetLabels: []
     m_AssetBundleNames: []
@@ -982,24 +982,24 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Gameplay Scripts
+    - Assets/Scripts/Gameplay Scripts/Card Data/CardInfos
     m_Globs: []
-    m_OriginalText: state
+    m_OriginalText: 
     m_ImportLogFlags: 0
     m_FilterByTypeIntersection: 0
   m_ViewMode: 1
   m_StartGridSize: 62
   m_LastFolders:
-  - Assets/Scripts/Gameplay Scripts
+  - Assets/Scripts/Gameplay Scripts/Card Data/CardInfos
   m_LastFoldersGridSize: 62
   m_LastProjectPath: C:\Users\itsal\Documents\Github\StrangerThanFiction\StrangerThanFiction
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 230.00458}
-    m_SelectedIDs: c6830000
-    m_LastClickedID: 33734
-    m_ExpandedIDs: 000000008279000084790000867900008a7900008e790000a0790000c6830000a2db000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 333.59628}
+    m_SelectedIDs: 66c50000
+    m_LastClickedID: 50534
+    m_ExpandedIDs: 000000004483000046830000488300004a8300004c8300004e8300005083000052830000748300008683000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1027,7 +1027,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000082790000847900008a7900008e790000c683000000ca9a3bffffff7f
+    m_ExpandedIDs: 000000004483000046830000488300004a8300004c8300004e8300005083000052830000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

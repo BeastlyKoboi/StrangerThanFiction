@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class AndIWillPuff : CardModel
 {
-    public override async void Start()
+    protected override async void Awake()
     {
-        base.Start();
+        base.Awake();
 
         await ApplyCondition(new Combust(this, 0));
     }

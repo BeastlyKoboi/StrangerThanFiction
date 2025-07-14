@@ -2270,71 +2270,76 @@ MonoBehaviour:
   usingInspector: 0
   player1Deck:
     deckEntries:
-    - cardName: AnimatedArtisan
-      numCopies: 2
-      items: []
     - cardName: Candlewick
       numCopies: 2
       items: []
+      price: 0
     - cardName: Donkey
-      numCopies: 2
+      numCopies: 10
       items: []
+      price: 0
     - cardName: GrowthSpurt
       numCopies: 2
       items: []
-    - cardName: MagicalWoodcarving
-      numCopies: 2
-      items: []
+      price: 0
     - cardName: Pinocchio
       numCopies: 2
       items: []
+      price: 0
     - cardName: PortraitPainter
       numCopies: 2
       items: []
-    - cardName: TheBlueFairy
-      numCopies: 2
-      items: []
+      price: 0
     - cardName: TheLateLumberjane
       numCopies: 2
       items: []
-    - cardName: TheTalkingCricket
+      price: 0
+    - cardName: TheCoachman
       numCopies: 2
       items: []
-    - cardName: DonkeyFever
-      numCopies: 2
-      items: []
+      price: 0
   player2Deck:
     deckEntries:
     - cardName: AnimatedArtisan
       numCopies: 2
       items: []
+      price: 0
     - cardName: Candlewick
       numCopies: 2
       items: []
+      price: 0
     - cardName: Donkey
       numCopies: 2
       items: []
+      price: 0
     - cardName: GrowthSpurt
       numCopies: 2
       items: []
+      price: 0
     - cardName: MagicalWoodcarving
       numCopies: 2
       items: []
+      price: 0
     - cardName: Pinocchio
       numCopies: 2
       items: []
+      price: 0
     - cardName: PortraitPainter
       numCopies: 2
       items: []
+      price: 0
     - cardName: TheBlueFairy
       numCopies: 2
       items: []
+      price: 0
     - cardName: TheLateLumberjane
       numCopies: 2
       items: []
+      price: 0
     - cardName: TheTalkingCricket
       numCopies: 2
       items: []
+      price: 0
 --- !u!4 &403953952
 Transform:
   m_ObjectHideFlags: 0
@@ -12116,7 +12121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4a6d27143a71744d9f7313f2076eeca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  conditionsList: {fileID: 11400000, guid: 15f593b650b26d146b58cce18a9dd6b4, type: 2}
+  conditionDictionary: {fileID: 11400000, guid: 34c62742f23e3414e834b3288a4b8f4e, type: 2}
   tooltipContainer: {fileID: 625875970}
 --- !u!1001 &1269763701
 PrefabInstance:

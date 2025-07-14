@@ -200,11 +200,11 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         {
             data.nextBattleNode = battleNodeData.name;
 
-            data.player2Deck.deckEntries.Clear();
+            data.player2Deck.GetDeckEntries().Clear();
 
-            foreach (DeckEntry entry in battleNodeData.DeckInventory.deckEntries)
+            foreach (DeckEntry entry in battleNodeData.DeckInventory.GetDeckEntries())
             {
-                data.player2Deck.deckEntries.Add(new DeckEntry(entry.cardName, entry.numCopies));
+                data.player2Deck.GetDeckEntries().Add(new DeckEntry(entry.cardName, entry.numCopies));
             }
         }
 
