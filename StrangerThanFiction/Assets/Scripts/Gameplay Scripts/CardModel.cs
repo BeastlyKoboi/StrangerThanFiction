@@ -169,6 +169,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     public UniTaskEvent OnHeal = new UniTaskEvent();
   
 
+    // Flags 
+    public bool IsRemoved { get; private set; } = false;
+
     private void OnEnable()
     {
         
@@ -384,6 +387,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
     public async UniTask Remove()
     {
+        if (IsRemoved) return;
+        IsRemoved = true;
+
         OnRemove.AddListener(CardFactory.Instance.RecycleCard);
         
         // Remove all conditions 

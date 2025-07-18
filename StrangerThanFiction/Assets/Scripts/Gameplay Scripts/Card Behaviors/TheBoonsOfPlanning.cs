@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class TheBoonsOfPlanning : CardModel
+public sealed class TheBoonsOfPlanning : CardModel
 {
     protected override UniTask PlayEffect(CardPlayState cardPlayState)
     {

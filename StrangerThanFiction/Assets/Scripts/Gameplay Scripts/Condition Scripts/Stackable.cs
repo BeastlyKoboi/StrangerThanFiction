@@ -5,7 +5,16 @@ using UnityEngine;
 
 public class Stackable : Condition
 {
-    public Stackable(CardModel card, int amount) : base(card, amount) { }
+    public List<string> stackableTitles;
+
+    public Stackable(CardModel card, int amount, List<string> additionalStackTitles = null) : base(card, amount) 
+    {
+        this.stackableTitles = new List<string>();
+        this.stackableTitles.Add(card.Title); // Add the card's own title to the stackable titles
+
+        if (additionalStackTitles != null)
+            this.stackableTitles.AddRange(additionalStackTitles);
+    }
 
     public override UniTask OnAdd()
     {
@@ -27,7 +36,7 @@ public class Stackable : Condition
         CardModel[] units = card.Board.GetUnits(card.Owner);
         for (int i = 0; i < units.Length; i++)
         {
-            if (units[i].Title == card.Title && units[i] != card)
+            if (stackableTitles.Contains(units[i].Title) && units[i] != card)
             {
                 otherCopyExists = true;
                 break;
@@ -56,12 +65,17 @@ public class Stackable : Condition
         if (unit == card) return;
 
         // The aura is: whenever a copy of this card is summoned, grant this card it's power and remove the copy. 
-        if (unit.Title == card.Title && unit != card)
+        if ((stackableTitles.Contains(unit.Title)) && unit != card && !unit.IsRemoved)
         {
             await card.GrantPower(unit.CurrentPower);
             await unit.Remove();
         }
 
+    }
+
+    private void AddStackableTitle(string newTitle)
+    {
+        stackableTitles.Add(newTitle);
     }
 
 }

@@ -255,7 +255,8 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     {
         foreach (CardModel card in player.handManager.Hand.ToArray())
         {
-            await player.DiscardCard(card);
+            if (!card.HasCondition("Keep"))
+                await player.DiscardCard(card);
         }
     }
 

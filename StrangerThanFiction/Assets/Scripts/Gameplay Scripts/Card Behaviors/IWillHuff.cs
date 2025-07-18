@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class IWillHuff : CardModel
+public sealed class IWillHuff : CardModel
 {
     protected override async void Awake()
     {

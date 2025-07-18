@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class TheTalkingCricket : CardModel
+public sealed class TheTalkingCricket : CardModel
 {
     protected override async UniTask SummonEffect()
     {

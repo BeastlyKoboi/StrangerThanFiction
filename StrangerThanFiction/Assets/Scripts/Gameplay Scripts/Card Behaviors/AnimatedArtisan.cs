@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class AnimatedArtisan : CardModel
+public sealed class AnimatedArtisan : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {

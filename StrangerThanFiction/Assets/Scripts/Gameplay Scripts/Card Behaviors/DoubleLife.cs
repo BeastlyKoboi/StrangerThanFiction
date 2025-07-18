@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class DoubleLife : CardModel
+public sealed class DoubleLife : CardModel
 {
     /// <summary>
     /// Needs to wait for responsive description implemntation before usning this card makes sense.

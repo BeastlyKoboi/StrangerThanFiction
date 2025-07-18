@@ -15,11 +15,17 @@ public sealed class TallTale : CardModel
 
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
-        if (Owner.Deck.Count > 0)
-        {
-            CardModel topUnit = Owner.Deck[^1];
+        //if (Owner.Deck.Count > 0)
+        //{
+        //    CardModel topUnit = Owner.Deck[^1];
 
-            await topUnit.GrantCostModification(-1);
+        //    await topUnit.GrantCostModification(-1);
+        //}
+
+        if (cardPlayState.allyCardTargets.Count > 0)
+        {
+            await cardPlayState.allyCardTargets[0].GrantCostModification(-1);
+            Owner.MoveCardFromHandToDeck(cardPlayState.allyCardTargets[0]);
         }
     }
 }

@@ -41,6 +41,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 9170dae9a94b6844cbfd3dcf319bf517, type: 2}
   - Key: PortraitPainter
     Value: {fileID: 11400000, guid: c6598c5c15726244db3e32b6bf876520, type: 2}
+  - Key: Rascals
+    Value: {fileID: 11400000, guid: 6ea3a4883b7a4af4390fc81f75fbccf9, type: 2}
   - Key: SacrificialLamb
     Value: {fileID: 11400000, guid: 2963754ea4cba614eab038d9002c71dc, type: 2}
   - Key: TallTale

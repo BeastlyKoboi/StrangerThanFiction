@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Crow : CardModel
+public sealed class Crow : CardModel
 {
     protected override async UniTask SummonEffect()
     {

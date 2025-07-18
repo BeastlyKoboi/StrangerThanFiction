@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class PortraitPainter : CardModel
+public sealed class PortraitPainter : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {

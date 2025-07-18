@@ -9,4 +9,12 @@ public class ItemInfo : ScriptableObject
     [TextArea]
     public string Description;
     public Sprite Image;
+    public ItemRequirement Requirement;
+}
+
+public enum ItemRequirement
+{
+    None,
+    Unit,
+    Spell,
 }

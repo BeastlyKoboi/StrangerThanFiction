@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class WittyWhittler : CardModel
+public sealed class WittyWhittler : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {

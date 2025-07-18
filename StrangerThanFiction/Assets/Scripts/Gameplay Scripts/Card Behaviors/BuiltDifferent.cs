@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class BuiltDifferent : CardModel
+public sealed class BuiltDifferent : CardModel
 {
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {

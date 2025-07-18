@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class Candlewick : CardModel
+public sealed class Candlewick : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {

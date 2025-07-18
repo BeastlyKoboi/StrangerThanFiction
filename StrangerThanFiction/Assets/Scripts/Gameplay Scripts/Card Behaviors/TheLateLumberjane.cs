@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class TheLateLumberjane : CardModel
+public sealed class TheLateLumberjane : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {

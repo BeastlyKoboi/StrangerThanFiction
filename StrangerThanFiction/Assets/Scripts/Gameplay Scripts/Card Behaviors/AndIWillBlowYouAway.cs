@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class AndIWillBlowYouAway : CardModel
+public sealed class AndIWillBlowYouAway : CardModel
 {
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {

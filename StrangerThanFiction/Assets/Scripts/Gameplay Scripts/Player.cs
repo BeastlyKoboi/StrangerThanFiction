@@ -170,6 +170,19 @@ public class Player : MonoBehaviour
         return card;
     }
 
+    public void MoveCardFromHandToDeck(CardModel card, bool moveToTop = false, bool shuffleAfter = true)
+    {
+        handManager.RemoveCardFromHand(card);
+
+        int deckIndex = moveToTop? Deck.Count - 1: 0;
+        Deck.Insert(deckIndex, card); // Add to end = top of deck (if Deck is LIFO)
+
+        if (shuffleAfter) 
+            Deck.Shuffle();
+
+        RefreshPlayableCards();
+    }
+
     /// <summary>
     /// This will eventually be called every time an action is 
     /// taken that can change whether a card is playable. It should 
@@ -353,6 +366,27 @@ public class Player : MonoBehaviour
                 await board.SetOnClickForPlayersUnits(player, CardFactory.Instance.CardPreviewClickHandler);
             }
 
+            async UniTask getTargetsFromCardsInHand(HandManager targetHand, List<CardModel> targetList, int playReq)
+            {
+                uiManager.SetPrompt(true, $"Select {playReq} " +
+                    $"card{(playReq > 1? "s": "")} in " + 
+                    $"{(handManager == targetHand? "allied" : "enemy")}" + " hand");
+                await targetHand.SetOnClickForCardsInHand(onCardClicked, new List<CardModel>() { playState.card });
+                do
+                {
+                    if (clickedCard == null)
+                        await UniTask.Yield();
+                    else
+                    {
+                        if (!targetList.Contains(clickedCard) && clickedCard != playState.replacedCard)
+                            targetList.Add(clickedCard);
+                        clickedCard = null;
+                    }
+                } while (!hasCanceledPlayCard && targetList.Count != playReq);
+                uiManager.SetPrompt(false);
+                await targetHand.SetOnClickForCardsInHand(CardFactory.Instance.CardPreviewClickHandler, new List<CardModel>() { playState.card });
+            }
+
             if (playState.card.Type == CardType.Unit && playState.card.SelectedArea.GetIsFull())
             {
                 uiManager.SetPrompt(true, $"Select a unit in that row to replace.");
@@ -380,11 +414,11 @@ public class Player : MonoBehaviour
             }
             if (playReqs.AllyCardTargets != 0)
             {
-                // cardPlayState.allyCardTargets = new List<CardModel>();
+                await getTargetsFromCardsInHand(handManager, playState.allyCardTargets, playReqs.AllyCardTargets);
             }
             if (playReqs.EnemyCardTargets != 0)
             {
-                // cardPlayState.enemyCardTargets = new List<CardModel>();
+                await getTargetsFromCardsInHand(enemyPlayer.handManager, playState.enemyCardTargets, playReqs.EnemyCardTargets);
             }
 
             if (hasCanceledPlayCard)

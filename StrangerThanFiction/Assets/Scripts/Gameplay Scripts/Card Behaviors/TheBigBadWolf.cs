@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class TheBigBadWolf : CardModel
+public sealed class TheBigBadWolf : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {

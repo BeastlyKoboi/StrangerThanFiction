@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class MagicalWoodcarving : CardModel
+public sealed class MagicalWoodcarving : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {

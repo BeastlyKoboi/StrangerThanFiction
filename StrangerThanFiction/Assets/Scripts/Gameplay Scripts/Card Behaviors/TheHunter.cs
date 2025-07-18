@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class TheHunter : CardModel
+public sealed class TheHunter : CardModel
 {
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {
