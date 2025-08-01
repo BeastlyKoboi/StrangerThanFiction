@@ -26,7 +26,7 @@ public sealed class Rascals : CardModel
 
     private UniTask CreateTrickOrTreatInHand()
     {
-        Owner.CreateCardInHand("TallTale");
+        Owner.CreateCardInHand(typeof(TallTale).ToString());
         return UniTask.CompletedTask;
     }
 }

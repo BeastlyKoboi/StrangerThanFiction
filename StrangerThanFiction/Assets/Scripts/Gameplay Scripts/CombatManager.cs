@@ -20,7 +20,7 @@ using UnityEngine.SceneManagement;
 public class CombatManager : MonoBehaviour, IDataPersistence
 {
     // Basic gameplay events that objects can add to
-    public UniTaskEvent OnGameStart = new UniTaskEvent();
+    public UniTaskEvent<CombatEnterState> OnGameStart = new UniTaskEvent<CombatEnterState>();
     public UniTaskEvent OnRoundStart = new UniTaskEvent();
     public UniTaskEvent OnRoundEnd = new UniTaskEvent();
     public UniTaskEvent OnGameOver = new UniTaskEvent();
@@ -32,6 +32,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     [HeaderAttribute("Managers")]
     public UIManager uiManager;
     public BoardManager boardManager;
+    public RunManager runManager;
 
     [HeaderAttribute("Game State Information")]
     public Binding binding;
@@ -42,8 +43,9 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     [HeaderAttribute("Text Assets")]
     [SerializeField] private bool usingInspector;
     [SerializeField] private DeckInventory player1Deck;
+    [SerializeField] private List<string> player1BoonsList;
     [SerializeField] private DeckInventory player2Deck;
-
+    [SerializeField] private List<string> player2BoonsList;
 
     private CancellationTokenSource cts;
 
@@ -56,6 +58,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         Debug.Log("Loading data in combat manager");
 
         player1Deck = data.player1Deck;
+        player1BoonsList = data.boonList;
         player2Deck = data.player2Deck;
     }
 
@@ -107,7 +110,23 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         player1.PopulateDeck(player1Deck, false);
         player2.PopulateDeck(player2Deck, true);
 
-       
+        player1.BoonCollection = runManager.BoonCollection;
+        player2.ApplyBoons(player2BoonsList);
+
+        OnGameStart.AddListener( async (CombatEnterState combatEnterState) =>
+        {
+            player1.BoonCollection.EnterCombat(player1);
+            player2.BoonCollection.EnterCombat(player2);
+        });
+
+        OnGameOver.AddListener(async () =>
+        {
+            player1.BoonCollection.ExitCombat();
+            player2.BoonCollection.ExitCombat();
+        });
+
+
+
         // Call on game start 
         StartGame();
 
@@ -137,7 +156,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
     {
         await UniTask.Delay(1000, cancellationToken: cts.Token);
 
-        await OnGameStart.InvokeAsync();
+        await OnGameStart.InvokeAsync(new CombatEnterState());
 
         do
         {

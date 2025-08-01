@@ -25,7 +25,8 @@ public sealed class TallTale : CardModel
         if (cardPlayState.allyCardTargets.Count > 0)
         {
             await cardPlayState.allyCardTargets[0].GrantCostModification(-1);
-            Owner.MoveCardFromHandToDeck(cardPlayState.allyCardTargets[0]);
+            Owner.MoveCardFromHandToDeck(cardPlayState.allyCardTargets[0], moveToTop: true, shuffleAfter: false);
         }
+
     }
 }

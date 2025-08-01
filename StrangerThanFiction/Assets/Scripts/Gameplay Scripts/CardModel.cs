@@ -1,21 +1,22 @@
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 /// <summary>
 /// Used to define whether a card is a unit or a spell, 
 /// especially when dealing with different behavior. 
 /// </summary>
 public enum CardType { Unit, Spell }
-public enum Faction { Pinocchio, LittleRed, HumptyDumpty, TheBigBadWolf }
+public enum Faction { Pinocchio, LittleRed, HumptyDumpty, TheBigBadWolf, TheAuthors }
 
 /// <summary>
 /// Defines the basic members and behaviors for all cards. Meant to be 
@@ -161,8 +162,10 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     public UniTaskEvent OnSummon = new UniTaskEvent();
     public UniTaskEvent OnRoundStart = new UniTaskEvent();
     public UniTaskEvent OnRoundEnd = new UniTaskEvent();
-    public UniTaskEvent<UnitStrikeState> OnStrike = new UniTaskEvent<UnitStrikeState>();
+    public UniTaskEvent<UnitStrikeState> OnBeforeStrike = new UniTaskEvent<UnitStrikeState>();
+    public UniTaskEvent<UnitStrikeState> OnAfterStrike = new UniTaskEvent<UnitStrikeState>();
     public UniTaskEvent<DamageData> OnTakeDamage = new UniTaskEvent<DamageData>();
+    public UniTaskEvent<DamageData> OnSurviveDamage = new UniTaskEvent<DamageData>();
     public UniTaskEvent<int> OnGrantCostModification = new UniTaskEvent<int>();
     public UniTaskEvent<int> OnGrantPower = new UniTaskEvent<int>();
     public UniTaskEvent<int> OnGrantPlotArmor = new UniTaskEvent<int>();
@@ -201,7 +204,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
         OnPlay.AddListener(PlayAnim);
         OnSummon.AddListener(SummonAnim);
-        OnStrike.AddListener(StrikeAnim);
+        OnBeforeStrike.AddListener(StrikeAnim);
         OnDiscard.AddListener(DiscardAnim);
         OnDestroy.AddListener(DestroyAnim);
 
@@ -359,7 +362,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
         await OnSummon.InvokeAsync();
 
-        await Owner.UnitSummoned(this);
+        await Owner.BeforeUnitSummoned(this);
+
+        await Owner.AfterUnitSummoned(this);
 
         return true;
     }
@@ -455,9 +460,38 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
     public async UniTask Strike(IDamagable target)
     {
+        await OnBeforeStrike.InvokeAsync(new UnitStrikeState(this, target));
+
         await target.TakeDamage(new DamageData(damage: CurrentPower, source: this));
 
-        await OnStrike.InvokeAsync(new UnitStrikeState(this, target));
+        await OnAfterStrike.InvokeAsync(new UnitStrikeState(this, target));
+    }
+
+    public static async UniTask SimultaneousStrike(CardModel unitA, CardModel unitB)
+    {
+        if (unitA == null || unitB == null) return;
+        if (unitA.Type != CardType.Unit || unitB.Type != CardType.Unit) return;
+        if (unitA.CurrentPower == 0 && unitB.CurrentPower == 0) return;
+
+        // Calculate damage to be dealt
+        int damageToB = unitA.CurrentPower;
+        int damageToA = unitB.CurrentPower;
+
+        var damageDataA = new DamageData(damage: damageToA, source: unitB);
+        var damageDataB = new DamageData(damage: damageToB, source: unitA);
+
+        await unitA.OnBeforeStrike.InvokeAsync(new UnitStrikeState(unitA, unitB));
+        await unitB.OnBeforeStrike.InvokeAsync(new UnitStrikeState(unitB, unitA));
+
+        // Apply damage to both units in parallel
+        await UniTask.WhenAll(
+            unitA.TakeDamage(damageDataA),
+            unitB.TakeDamage(damageDataB)
+        );
+
+        // Trigger strike events for both units
+        await unitA.OnAfterStrike.InvokeAsync(new UnitStrikeState(unitA, unitB));
+        await unitB.OnAfterStrike.InvokeAsync(new UnitStrikeState(unitB, unitA));
     }
 
 
@@ -474,6 +508,8 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         if (Type != CardType.Unit) return;
 
         if (CurrentPower == 0) return;
+
+        damageData.target = this;
 
         // Applies damage mitigation effects, and separate conditions.
         damageData.damage -= DamageResistence;
@@ -506,6 +542,12 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
         if (CurrentPower == 0)
             await this.Destroy();
+        else
+        {
+            await OnSurviveDamage.InvokeAsync(damageData);
+            await Owner.AfterUnitSurvivedDamage(damageData);
+            Owner.uiManager.UpdateTotalPower();
+        }
     }
 
     /// <summary>
@@ -568,6 +610,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
         await OnHeal.InvokeAsync();
 
+        Owner.NumUnitsHealedThisCombat++;
         Owner.uiManager.UpdateTotalPower();
     }
 

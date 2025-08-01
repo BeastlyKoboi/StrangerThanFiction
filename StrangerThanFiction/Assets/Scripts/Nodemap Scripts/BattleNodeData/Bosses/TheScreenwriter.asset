@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb29faad67f8334fa1c73160cf525ac, type: 3}
+  m_Name: TheScreenwriter
+  m_EditorClassIdentifier: 
+  Title: The Screenwriter
+  Description: "I storyboarded this scene already. You lose in every version. Although
+    the audience loves drama. So let\u2019s give them a bloodbath!"
+  Icon: {fileID: 21300000, guid: d26bd652305916244aef47e66aeb4d0f, type: 3}
+  DeckInventory:
+    deckEntries: []
+  BeforeCombatTransitionText: 
+  AfterCombatTransitionText: Fine then. That I go out with a whimper is my shame.
+    But what is it that you expect out there? Freedom? No. Virulent banality is all
+    that you will find. Just a different cage, and one far less captivating. So go,
+    I won't follow. From plain view I say "I'm finished." "Okay" responds the protagonist.

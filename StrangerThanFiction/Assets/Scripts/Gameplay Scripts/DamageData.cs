@@ -7,6 +7,7 @@ public class DamageData
 {
     public int damage;
     public IDamageSource source;
+    public IDamagable target;
     public bool ignorePlotArmor;
     public bool ignoreResistances;
 

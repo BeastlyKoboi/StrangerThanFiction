@@ -7,13 +7,13 @@ public sealed class SacrificialLamb : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {
-        Owner.OnUnitSummoned.AddListener(Sacrifice);
+        Owner.OnBeforeUnitSummoned.AddListener(Sacrifice);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitSummoned.RemoveListener(Sacrifice);
+        Owner.OnBeforeUnitSummoned.RemoveListener(Sacrifice);
         return base.RemoveEffect(card);
     }
 

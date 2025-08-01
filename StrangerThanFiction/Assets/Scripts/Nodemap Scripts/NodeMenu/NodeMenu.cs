@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class NodeMenu : MonoBehaviour, IDataPersistence
 {
     public NodemapManager nodemapManager;
-    private GameData _gameData;
     [SerializeField] private RunInfo runInfo;
     [SerializeField] private CardShop cardShop;
 
@@ -19,7 +18,7 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-        _gameData = data;
+
     }
 
     public void SaveData(GameData data)

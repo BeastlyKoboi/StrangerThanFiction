@@ -24,7 +24,9 @@ public class Player : MonoBehaviour
     public UniTaskEvent OnGameOver = new UniTaskEvent();
 
     public UniTaskEvent<CardModel> OnCardDrawn = new UniTaskEvent<CardModel>();
-    public UniTaskEvent<CardModel> OnUnitSummoned = new UniTaskEvent<CardModel>();
+    public UniTaskEvent<CardModel> OnBeforeUnitSummoned = new UniTaskEvent<CardModel>();
+    public UniTaskEvent<CardModel> OnAfterUnitSummoned = new UniTaskEvent<CardModel>();
+    public UniTaskEvent<DamageData> OnAfterUnitSurvivedDamage = new UniTaskEvent<DamageData>();
     public UniTaskEvent<CardModel> OnUnitDestroyed = new UniTaskEvent<CardModel>();
     public UniTaskEvent<CardPlayState> OnBeforeCardPlayed = new UniTaskEvent<CardPlayState>();
     public UniTaskEvent<CardPlayState> OnAfterCardPlayed = new UniTaskEvent<CardPlayState>();
@@ -35,6 +37,7 @@ public class Player : MonoBehaviour
     public UIManager uiManager;
     public BoardManager board;
     public Player enemyPlayer;
+    public BoonCollection BoonCollection { get; set; } = new BoonCollection();
 
 
     private int _maxMana = 5;
@@ -59,11 +62,11 @@ public class Player : MonoBehaviour
     }
 
     [HeaderAttribute("Game State Info")]
-    public bool hasCardsHidden;
-    public int totalDepth = 0;
+    private bool hasCardsHidden;
     public bool hasEndedTurn = false;
-    public bool hasEndedRound = false;
-    public bool hasCanceledPlayCard = false;
+    private bool hasCanceledPlayCard = false;
+    public int NumUnitsHealedThisCombat { get; set; } = 0;
+    public int NumUnitsRevivedThisCombat { get; set; } = 0;
 
     [HeaderAttribute("The Cards")]
     public HandManager handManager;
@@ -74,6 +77,10 @@ public class Player : MonoBehaviour
     public CardPile Discard { get; private set; }
     public GameObject discardGameObject;
     public GameObject discardViewParent;
+
+    [HeaderAttribute("Boons")]
+    public List<Boon> boons = new List<Boon>();
+
 
     [HeaderAttribute("Card Prefabs")]
     public GameObject cardPrefab;
@@ -146,6 +153,19 @@ public class Player : MonoBehaviour
         };
     }
 
+    public void ApplyBoons(List<string> boonNames)
+    {
+        foreach (string boonName in boonNames)
+        {
+            Type boonType = Type.GetType(boonName);
+            Boon boon = (Boon)Activator.CreateInstance(boonType);
+            BoonCollection.AddBoon(boon);
+
+            // Update Binding 
+
+        }
+    }
+
     public CardModel CreateCardInDeck(string cardName)
     {
         CardModel card = CardFactory.Instance.CreateCard(cardName, hasCardsHidden, deckGameObject.transform, this, board);
@@ -174,8 +194,8 @@ public class Player : MonoBehaviour
     {
         handManager.RemoveCardFromHand(card);
 
-        int deckIndex = moveToTop? Deck.Count - 1: 0;
-        Deck.Insert(deckIndex, card); // Add to end = top of deck (if Deck is LIFO)
+        int deckIndex = moveToTop? Deck.Count: 0;
+        Deck.Insert(deckIndex, card); 
 
         if (shuffleAfter) 
             Deck.Shuffle();
@@ -262,13 +282,23 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Method to draw a card from the player's deck.
     /// </summary>
-    public async UniTask DrawCard()
+    public async UniTask DrawCard(CardModel specificCard = null)
     {
         if (Deck.Count == 0) ShuffleDiscardIntoDeck();
         if (Deck.Count == 0) return;
 
-        CardModel drawnCard = Deck[Deck.Count - 1];
-        Deck.RemoveAt(Deck.Count - 1);
+        CardModel drawnCard;
+
+        if (specificCard != null && Deck.ToArray().Contains(specificCard))
+        {
+            Deck.Remove(specificCard);
+            drawnCard = specificCard;
+        }
+        else
+        {
+            drawnCard = Deck[Deck.Count - 1];
+            Deck.RemoveAt(Deck.Count - 1);
+        }
 
         await OnCardDrawn.InvokeAsync(drawnCard);
 
@@ -372,6 +402,14 @@ public class Player : MonoBehaviour
                     $"card{(playReq > 1? "s": "")} in " + 
                     $"{(handManager == targetHand? "allied" : "enemy")}" + " hand");
                 await targetHand.SetOnClickForCardsInHand(onCardClicked, new List<CardModel>() { playState.card });
+                handManager.Hand.ForEach((cardInHand) =>
+                {
+                    if (cardInHand == playState.card)
+                        cardInHand.Playable = false;
+                    else
+                        cardInHand.Playable = true;
+                });
+
                 do
                 {
                     if (clickedCard == null)
@@ -383,8 +421,16 @@ public class Player : MonoBehaviour
                         clickedCard = null;
                     }
                 } while (!hasCanceledPlayCard && targetList.Count != playReq);
+
                 uiManager.SetPrompt(false);
                 await targetHand.SetOnClickForCardsInHand(CardFactory.Instance.CardPreviewClickHandler, new List<CardModel>() { playState.card });
+                handManager.Hand.ForEach((cardInHand) =>
+                {
+                    if (cardInHand == playState.card)
+                        cardInHand.Playable = false;
+                    else
+                        cardInHand.Playable = true;
+                });
             }
 
             if (playState.card.Type == CardType.Unit && playState.card.SelectedArea.GetIsFull())
@@ -512,9 +558,19 @@ public class Player : MonoBehaviour
     /// Method to invoke OnUnitSummoned event attached to player.
     /// </summary>
     /// <param name="unit"></param>
-    public async UniTask UnitSummoned(CardModel unit)
+    public async UniTask BeforeUnitSummoned(CardModel unit)
     {
-        await OnUnitSummoned.InvokeAsync(unit);
+        await OnBeforeUnitSummoned.InvokeAsync(unit);
+    }
+
+    public async UniTask AfterUnitSummoned(CardModel unit)
+    {
+        await OnAfterUnitSummoned.InvokeAsync(unit);
+    }
+
+    public async UniTask AfterUnitSurvivedDamage(DamageData damageData)
+    {
+        await OnAfterUnitSurvivedDamage.InvokeAsync(damageData);
     }
 
     public async UniTask UnitDestroyed(CardModel unit)

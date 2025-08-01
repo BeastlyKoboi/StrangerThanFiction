@@ -7,13 +7,13 @@ public sealed class WittyWhittler : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {
-        Owner.OnUnitSummoned.AddListener(OnAllySummonedGrantPoison);
+        Owner.OnBeforeUnitSummoned.AddListener(OnAllySummonedGrantPoison);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitSummoned.RemoveListener(OnAllySummonedGrantPoison);
+        Owner.OnBeforeUnitSummoned.RemoveListener(OnAllySummonedGrantPoison);
         return UniTask.CompletedTask;
     }
 

@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Stackable
   m_EditorClassIdentifier: 
   ConditionName: Stackable
-  Description: When you summon a copy of me, grant me it's power and remove it.
+  Description: When you summon a copy of me, grant me it's power and plot armor,
+    then remove it.
   Image: {fileID: 0}

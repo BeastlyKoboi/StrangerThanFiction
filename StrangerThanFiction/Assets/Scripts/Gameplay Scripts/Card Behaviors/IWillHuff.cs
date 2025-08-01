@@ -16,7 +16,7 @@ public sealed class IWillHuff : CardModel
     {
         await cardPlayState.enemyUnitTargets[0].TakeDamage(new DamageData(1, this));
 
-        Owner.CreateCardInDeck("AndIWillPuff");
-        Owner.CreateCardInDeck("AndIWillPuff");
+        Owner.CreateCardInDeck(typeof(AndIWillPuff).ToString());
+        Owner.CreateCardInDeck(typeof(AndIWillPuff).ToString());
     }
 }

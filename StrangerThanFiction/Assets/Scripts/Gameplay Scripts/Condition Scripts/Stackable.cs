@@ -9,8 +9,10 @@ public class Stackable : Condition
 
     public Stackable(CardModel card, int amount, List<string> additionalStackTitles = null) : base(card, amount) 
     {
-        this.stackableTitles = new List<string>();
-        this.stackableTitles.Add(card.Title); // Add the card's own title to the stackable titles
+        this.stackableTitles = new List<string>
+        {
+            card.Title // Add the card's own title to the stackable titles
+        };
 
         if (additionalStackTitles != null)
             this.stackableTitles.AddRange(additionalStackTitles);
@@ -48,15 +50,15 @@ public class Stackable : Condition
         }
         else
         {
-            card.Owner.OnUnitSummoned.AddListener(StackableAura);
-            card.OnDestroy.AddListener(RemoveAura);
+            card.Owner.OnAfterUnitSummoned.AddListener(StackableAura);
+            card.OnRemove.AddListener(RemoveAura);
         }
     }
 
     private async UniTask RemoveAura(CardModel cardModel)
     {
-        card.Owner.OnUnitSummoned.RemoveListener(StackableAura);
-        card.OnDestroy.RemoveListener(RemoveAura);
+        card.Owner.OnAfterUnitSummoned.RemoveListener(StackableAura);
+        card.OnRemove.RemoveListener(RemoveAura);
     }
 
     private async UniTask StackableAura(CardModel unit)
@@ -68,6 +70,7 @@ public class Stackable : Condition
         if ((stackableTitles.Contains(unit.Title)) && unit != card && !unit.IsRemoved)
         {
             await card.GrantPower(unit.CurrentPower);
+            await card.GrantPlotArmor(unit.CurrentPlotArmor);
             await unit.Remove();
         }
 

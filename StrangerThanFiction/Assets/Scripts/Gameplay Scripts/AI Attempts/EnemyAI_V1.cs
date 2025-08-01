@@ -63,9 +63,21 @@ public class EnemyAI_V1 : MonoBehaviour
             }
         }
         if (playState.card.PlayRequirements.AllyCardTargets != 0)
-            ;
+        {
+            for (int i = 0; i < playState.card.PlayRequirements.AllyCardTargets; i++)
+            {
+                CardModel target;
+                do
+                {
+                    target = myPlayer.handManager.Hand[UnityEngine.Random.Range(0, myPlayer.handManager.Hand.Count)];
+                } while (playState.allyCardTargets.Contains(target) || target == playState.card);
+                playState.allyCardTargets.Add(target);
+            }
+        }
         if (playState.card.PlayRequirements.EnemyCardTargets != 0)
-            ;
+        {
+
+        }
 
         if (playState.card.Type == CardType.Unit)
         {

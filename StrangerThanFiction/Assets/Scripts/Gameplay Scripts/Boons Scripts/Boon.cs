@@ -17,12 +17,14 @@ public abstract class Boon
         this.Description = boonInfo.Description;
     }
 
-    public virtual UniTask OnAdd() => UniTask.CompletedTask;
-    public virtual UniTask OnEnterCombat() => UniTask.CompletedTask;
-    public virtual UniTask OnExitCombat() => UniTask.CompletedTask;
-    public virtual UniTask OnRemove() => UniTask.CompletedTask;
-
-
+    public virtual UniTask FirstAdded() => UniTask.CompletedTask;
+    public virtual UniTask EnterCombat(Player player) => UniTask.CompletedTask;
+    public virtual UniTask ExitCombat() => UniTask.CompletedTask;
+    public virtual UniTask EnterNodemap() => UniTask.CompletedTask;
+    public virtual UniTask ExitNodemap() => UniTask.CompletedTask;
+    public virtual UniTask EnterEncounter() => UniTask.CompletedTask;
+    public virtual UniTask ExitEncounter() => UniTask.CompletedTask;
+    public virtual UniTask Remove() => UniTask.CompletedTask;
 
     public override string ToString() => $"{Name}: {Description}";
 }

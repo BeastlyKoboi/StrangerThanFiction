@@ -18,6 +18,9 @@ public class GameData
     public DeckInventory player2Deck;
     public DeckInventory testDeck;
 
+    [Header("Boons")]
+    public List<string> boonList;
+
     public string nextBattleNode;
 
     [Header("Binding")]
@@ -44,6 +47,8 @@ public class GameData
         this.player1Deck = new DeckInventory();
         this.player2Deck = new DeckInventory();
         this.testDeck = new DeckInventory();
+
+        this.boonList = new List<string>();
 
         this.bindingPower = 20;
 

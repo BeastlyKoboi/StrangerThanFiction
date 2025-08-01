@@ -7,13 +7,13 @@ public sealed class Candlewick : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState)
     {
-        Owner.OnUnitSummoned.AddListener(CandlewickEffect);
+        Owner.OnBeforeUnitSummoned.AddListener(CandlewickEffect);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnUnitSummoned.RemoveListener(CandlewickEffect);
+        Owner.OnBeforeUnitSummoned.RemoveListener(CandlewickEffect);
         return UniTask.CompletedTask;
     }
 

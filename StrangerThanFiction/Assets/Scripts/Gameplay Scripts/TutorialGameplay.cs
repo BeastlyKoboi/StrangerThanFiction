@@ -83,7 +83,7 @@ public class TutorialGameplay : MonoBehaviour
         }
     }
 
-    private async UniTask OnGameStart()
+    private async UniTask OnGameStart(CombatEnterState combatEnterState)
     {
         await CyclePrompts(OnGameStartPrompts);
 

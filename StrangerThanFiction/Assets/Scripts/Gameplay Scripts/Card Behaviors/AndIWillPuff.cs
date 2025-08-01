@@ -17,7 +17,7 @@ public sealed class AndIWillPuff : CardModel
         await cardPlayState.enemyUnitTargets[0].TakeDamage(new DamageData(2, this));
         await cardPlayState.enemyUnitTargets[1].TakeDamage(new DamageData(2, this));
 
-        Owner.CreateCardInDeck("AndIWillBlowYouAway");
-        Owner.CreateCardInDeck("AndIWillBlowYouAway");
+        Owner.CreateCardInDeck(typeof(AndIWillBlowYouAway).ToString());
+        Owner.CreateCardInDeck(typeof(AndIWillBlowYouAway).ToString());
     }
 }

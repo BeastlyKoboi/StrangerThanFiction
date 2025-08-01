@@ -29,6 +29,10 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 8897281c1da0b55448dd2bdded05f5ba, type: 2}
   - Key: DonkeyFever
     Value: {fileID: 11400000, guid: 50b95fa0ba2c8d24594614297cac7f55, type: 2}
+  - Key: DramaticDuel
+    Value: {fileID: 11400000, guid: d8cea11780c9c4f448a8276e0b68d4f1, type: 2}
+  - Key: GoodRoleModel
+    Value: {fileID: 11400000, guid: 7ba7430ef56a4524eb19eb7241649fad, type: 2}
   - Key: GrowthSpurt
     Value: {fileID: 11400000, guid: 21278a59f44c0794993b68bd5c8786ac, type: 2}
   - Key: IWillHuff
@@ -37,6 +41,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: abdd20c89fdfcb346a464af2d90f68ac, type: 2}
   - Key: MurderOfCrows
     Value: {fileID: 11400000, guid: 61287403be9bc5d488d50ef3ef7afa67, type: 2}
+  - Key: Payoff
+    Value: {fileID: 11400000, guid: b1b0ca05969eac74cb36f3138f907ae1, type: 2}
   - Key: Pinocchio
     Value: {fileID: 11400000, guid: 9170dae9a94b6844cbfd3dcf319bf517, type: 2}
   - Key: PortraitPainter
@@ -45,6 +51,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 6ea3a4883b7a4af4390fc81f75fbccf9, type: 2}
   - Key: SacrificialLamb
     Value: {fileID: 11400000, guid: 2963754ea4cba614eab038d9002c71dc, type: 2}
+  - Key: Setup
+    Value: {fileID: 11400000, guid: 6d5986fd30564b445bb4855160e93de1, type: 2}
   - Key: TallTale
     Value: {fileID: 11400000, guid: 8b67946f40ed2af4eb9b59e24f82aed7, type: 2}
   - Key: TheBigBadWolf
@@ -53,12 +61,18 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: d9db779e447c7d9498c1031950a34256, type: 2}
   - Key: TheBoonsOfPlanning
     Value: {fileID: 11400000, guid: 47832d860b58f8b439b4e6b49712b4e1, type: 2}
+  - Key: TheChosenOne
+    Value: {fileID: 11400000, guid: 5bd0ed2bdc2c4af4fb55fccf69ebda0a, type: 2}
   - Key: TheCoachman
     Value: {fileID: 11400000, guid: ef6f341793c4b2c44a23fc99e6b4a7df, type: 2}
   - Key: TheHunter
     Value: {fileID: 11400000, guid: 5d9133fdda9981d4683dfd4f71e81b8d, type: 2}
   - Key: TheLateLumberjane
     Value: {fileID: 11400000, guid: 4ac704e53a2beb046bcf998a796ed3b5, type: 2}
+  - Key: TheMentor
+    Value: {fileID: 11400000, guid: ffcc3fd7432ee8e43ac8ea8e7bd63e84, type: 2}
+  - Key: TheStudioExecutive
+    Value: {fileID: 11400000, guid: 8cc5d7ae5a744c44f99e2cf233aa3539, type: 2}
   - Key: TheTalkingCricket
     Value: {fileID: 11400000, guid: 0edf0f32f8031644d9dddceaccfb585c, type: 2}
   - Key: WittyWhittler

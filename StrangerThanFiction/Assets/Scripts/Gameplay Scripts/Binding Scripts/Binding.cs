@@ -57,6 +57,9 @@ public class Binding : MonoBehaviour, IDataPersistence, IDamagable
             BindingDamage += damageData.damage;
         }
 
+        if (BindingDamage < 0)
+            BindingDamage = 0;
+
         await OnBindingChange.InvokeAsync(new BindingState(battleNodeData, BindingPower, prevBindingDamage, BindingDamage));
         await OnTakeDamage.InvokeAsync(damageData);
 

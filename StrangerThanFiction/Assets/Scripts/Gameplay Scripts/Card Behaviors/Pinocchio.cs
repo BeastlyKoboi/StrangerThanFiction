@@ -23,7 +23,7 @@ public sealed class Pinocchio : CardModel
 
     private UniTask CreateTallTaleInHand()
     {
-        Owner.CreateCardInHand("TallTale");
+        Owner.CreateCardInHand(typeof(TallTale).ToString());
         return UniTask.CompletedTask;
     }
 }

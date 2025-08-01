@@ -10,7 +10,8 @@ public class RunInfo : ScriptableObject
     [SerializeField] private int currency;
     [SerializeField] private int rerollTokens;
     [SerializeField] private DeckInventory deckInventory;
-
+    [SerializeField] private List<string> boonList;
+     
     [Header("Currency Events")]
     public GameEventAsync OnAfterCurrencyChange;
 
@@ -19,6 +20,9 @@ public class RunInfo : ScriptableObject
 
     [Header("Deck Inventory Events")]
     public GameEventAsync OnAfterDeckInventoryChange;
+
+    [Header("Boon Events")]
+    public GameEventAsync OnAfterBoonListChange;
 
     public async UniTask SetCurrency(int value)
     {
@@ -93,5 +97,27 @@ public class RunInfo : ScriptableObject
         await OnAfterDeckInventoryChange.InvokeAsync(new EventState());
     }
     public DeckInventory GetDeckInventory() => deckInventory;
+
+
+    public async UniTask SetBoonList(List<string> value)
+    {
+        boonList = value;
+        await OnAfterBoonListChange.InvokeAsync(new EventState());
+    }
+
+    public async UniTask AddBoon(string boonName)
+    {
+        boonList.Add(boonName);
+        await OnAfterBoonListChange.InvokeAsync(new EventState());
+    }
+
+    public async UniTask RemoveBoon(string boonName)
+    {
+        boonList.Remove(boonName);
+        await OnAfterBoonListChange.InvokeAsync(new EventState());
+    }
+
+    public List<string> GetBoonList() => boonList;
+
 
 }
