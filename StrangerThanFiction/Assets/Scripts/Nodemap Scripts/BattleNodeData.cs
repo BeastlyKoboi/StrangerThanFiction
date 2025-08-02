@@ -8,6 +8,8 @@ public class BattleNodeData : NodeData
     
     public DeckInventory DeckInventory;
 
+    public string[] Boons;
+
     public string BeforeCombatTransitionText;
     public string AfterCombatTransitionText;
 

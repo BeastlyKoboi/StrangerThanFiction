@@ -103,6 +103,9 @@ public class DataPersistenceManager : MonoBehaviour
         gameData.player1Deck = new DeckInventory();
         gameData.player1Deck.SetDeckEntries(defaultCardList);
 
+        gameData.boonList.Add("MeekInheritance");
+        gameData.boonList.Add("Cloudcuckoolander");
+        gameData.boonList.Add("ImpulsiveTinkering");
     }
 
     public void LoadGame()

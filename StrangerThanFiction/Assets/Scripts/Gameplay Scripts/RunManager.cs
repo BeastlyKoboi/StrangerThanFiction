@@ -16,7 +16,7 @@ public class RunManager : MonoBehaviour, IDataPersistence
 
     [Header("Boon Data")]
     [SerializeField] private GameObject boonPrefab;
-    public BoonCollection BoonCollection { get; private set; } = new BoonCollection();
+    public BoonCollection BoonCollection { get; set; } = new BoonCollection();
 
 
     private void Awake()

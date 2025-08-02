@@ -29,6 +29,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 8897281c1da0b55448dd2bdded05f5ba, type: 2}
   - Key: DonkeyFever
     Value: {fileID: 11400000, guid: 50b95fa0ba2c8d24594614297cac7f55, type: 2}
+  - Key: DoubleLife
+    Value: {fileID: 11400000, guid: 3901b0d5ce0afd64ea33434425e1fe47, type: 2}
   - Key: DramaticDuel
     Value: {fileID: 11400000, guid: d8cea11780c9c4f448a8276e0b68d4f1, type: 2}
   - Key: GoodRoleModel
@@ -37,6 +39,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 21278a59f44c0794993b68bd5c8786ac, type: 2}
   - Key: IWillHuff
     Value: {fileID: 11400000, guid: 3dc976c99eb8dfc4d9fa3d80721706f4, type: 2}
+  - Key: KickTheDog
+    Value: {fileID: 11400000, guid: fc738435b1dcaac4bbd350cae426e8ea, type: 2}
   - Key: MagicalWoodcarving
     Value: {fileID: 11400000, guid: abdd20c89fdfcb346a464af2d90f68ac, type: 2}
   - Key: MurderOfCrows
@@ -51,6 +55,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 6ea3a4883b7a4af4390fc81f75fbccf9, type: 2}
   - Key: SacrificialLamb
     Value: {fileID: 11400000, guid: 2963754ea4cba614eab038d9002c71dc, type: 2}
+  - Key: SaveTheCat
+    Value: {fileID: 11400000, guid: 3d7e533f4521d2744877d0ae8dfa0b1c, type: 2}
   - Key: Setup
     Value: {fileID: 11400000, guid: 6d5986fd30564b445bb4855160e93de1, type: 2}
   - Key: TallTale
@@ -71,6 +77,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 4ac704e53a2beb046bcf998a796ed3b5, type: 2}
   - Key: TheMentor
     Value: {fileID: 11400000, guid: ffcc3fd7432ee8e43ac8ea8e7bd63e84, type: 2}
+  - Key: TheMustacheTwirler
+    Value: {fileID: 11400000, guid: 149fac27f4328e34b98569a0a0567213, type: 2}
   - Key: TheStudioExecutive
     Value: {fileID: 11400000, guid: 8cc5d7ae5a744c44f99e2cf233aa3539, type: 2}
   - Key: TheTalkingCricket

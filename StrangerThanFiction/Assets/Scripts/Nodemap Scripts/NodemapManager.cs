@@ -96,30 +96,28 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         mapScrollRect.verticalNormalizedPosition = 0;
     }
 
-    private void CreateSpecialNodes(int index, SpecialNodeData specialNodeData = null)
+    private void CreateSpecialNodes(int index)
     {
         GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
         GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
         for (int j = 0; j < 2; j++)
         {
-            if (specialNodeData == null)
-                specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
+            SpecialNodeData specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
             MapNode baseNode = CreateNode(specialNodeData, bookrow);
             baseNode.ToggleSelectable(false);
             mapNodes[index].Add(baseNode);
         }
     }
 
-    private void CreateBattleNodes(int index, int binding, BattleNodeData battleNodeData = null)
+    private void CreateBattleNodes(int index, int binding)
     {
         GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
         GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
         for (int j = 0; j < 2; j++)
         {
-            if (battleNodeData == null)
-                battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
+            BattleNodeData battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
             MapNode baseNode = CreateNode(battleNodeData, bookrow);
             baseNode.ToggleSelectable(false);
 
@@ -199,13 +197,6 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData battleNodeData)
         {
             data.nextBattleNode = battleNodeData.name;
-
-            data.player2Deck.GetDeckEntries().Clear();
-
-            foreach (DeckEntry entry in battleNodeData.DeckInventory.GetDeckEntries())
-            {
-                data.player2Deck.GetDeckEntries().Add(new DeckEntry(entry.cardName, entry.numCopies));
-            }
         }
 
         // save the nodemap to the data

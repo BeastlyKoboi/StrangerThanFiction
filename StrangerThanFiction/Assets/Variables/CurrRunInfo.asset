@@ -12,28 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae44f888d794d0043b81b321bf3fff6c, type: 3}
   m_Name: CurrRunInfo
   m_EditorClassIdentifier: 
-  currency: 0
-  rerollTokens: 0
+  currency: 36
+  rerollTokens: 3
   deckInventory:
     deckEntries:
-    - cardName: Pinocchio
-      numCopies: 2
-      items: []
-    - cardName: TheCoachman
-      numCopies: 2
-      items: []
-    - cardName: Donkey
-      numCopies: 2
-      items: []
     - cardName: Candlewick
       numCopies: 2
       items: []
+      price: 0
+    - cardName: Donkey
+      numCopies: 3
+      items: []
+      price: 0
     - cardName: GrowthSpurt
       numCopies: 2
       items: []
-    - cardName: TheBoonsOfPlanning
+      price: 0
+    - cardName: Pinocchio
       numCopies: 2
       items: []
+      price: 0
+    - cardName: PortraitPainter
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: TheLateLumberjane
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: TheCoachman
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: DramaticDuel
+      numCopies: 10
+      items: []
+      price: 0
+  boonList: []
   OnAfterCurrencyChange: {fileID: 11400000, guid: 2fde68f3c6837b641921396258d0807c, type: 2}
   OnAfterRerollTokensChange: {fileID: 11400000, guid: ba967d6f872f95a4b953cd550a52a7a5, type: 2}
   OnAfterDeckInventoryChange: {fileID: 11400000, guid: 51ad2428761845b4bbe3c596360cf096, type: 2}
+  OnAfterBoonListChange: {fileID: 11400000, guid: b7549cd0d7ee0e04aa7f88b11ac420bc, type: 2}

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TheMustacheTwirler : CardModel
+public sealed class TheMustacheTwirler : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState = null)
     {

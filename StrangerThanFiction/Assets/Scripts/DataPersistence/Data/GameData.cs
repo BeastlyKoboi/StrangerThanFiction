@@ -15,7 +15,6 @@ public class GameData
 
     [Header("Decks")]
     public DeckInventory player1Deck;
-    public DeckInventory player2Deck;
     public DeckInventory testDeck;
 
     [Header("Boons")]
@@ -45,7 +44,6 @@ public class GameData
         this.storyParagraphs = new List<string>();
 
         this.player1Deck = new DeckInventory();
-        this.player2Deck = new DeckInventory();
         this.testDeck = new DeckInventory();
 
         this.boonList = new List<string>();

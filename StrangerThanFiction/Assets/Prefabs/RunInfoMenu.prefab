@@ -426,6 +426,7 @@ MonoBehaviour:
   powerPageContent: {fileID: 3828608843040070948}
   questsPageContent: {fileID: 0}
   runInfo: {fileID: 11400000, guid: a6f0853b56debfb47a0616b1288acdfe, type: 2}
+  boonPrefab: {fileID: 4851156255078126951, guid: 4fe50578725c9944d8db4c1ef190fedb, type: 3}
 --- !u!1 &1882358909394063048
 GameObject:
   m_ObjectHideFlags: 0

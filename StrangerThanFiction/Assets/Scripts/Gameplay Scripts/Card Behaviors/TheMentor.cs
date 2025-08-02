@@ -29,7 +29,7 @@ public sealed class TheMentor : CardModel
     private async UniTask SummonAndDefendTheChosenOne()
     {
         CardModel theChosenOne = null;
-        theChosenOne = Board.GetUnits(Owner).First(unit => unit is TheChosenOne);
+        theChosenOne = Board.GetUnits(Owner).FirstOrDefault(unit => unit is TheChosenOne);
 
         if (theChosenOne != null)
         {

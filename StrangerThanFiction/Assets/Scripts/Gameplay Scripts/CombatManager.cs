@@ -42,10 +42,11 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
     [HeaderAttribute("Text Assets")]
     [SerializeField] private bool usingInspector;
+    [SerializeField] private BattleNodeDictionary battleNodeDictionary;
+    [SerializeField] private BattleNodeData currentBattleNodeData;
     [SerializeField] private DeckInventory player1Deck;
-    [SerializeField] private List<string> player1BoonsList;
     [SerializeField] private DeckInventory player2Deck;
-    [SerializeField] private List<string> player2BoonsList;
+    [SerializeField] private List<string> player2BoonsList = new List<string>();
 
     private CancellationTokenSource cts;
 
@@ -58,14 +59,16 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         Debug.Log("Loading data in combat manager");
 
         player1Deck = data.player1Deck;
-        player1BoonsList = data.boonList;
-        player2Deck = data.player2Deck;
+
+        currentBattleNodeData = battleNodeDictionary.GetByKey(data.nextBattleNode) as BattleNodeData;
+
+        player2Deck = currentBattleNodeData.DeckInventory;
+        player2BoonsList.AddRange(currentBattleNodeData.Boons);
     }
 
     public void SaveData(GameData data)
     {
         data.player1Deck = player1Deck;
-        data.player2Deck = player2Deck;
 
         data.combatResults = new CombatResults()
         {

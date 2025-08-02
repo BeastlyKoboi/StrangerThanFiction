@@ -2264,46 +2264,47 @@ MonoBehaviour:
   player2: {fileID: 2079866878}
   uiManager: {fileID: 361155765}
   boardManager: {fileID: 815251594}
-  runManager: {fileID: 0}
+  runManager: {fileID: 2108137639}
   binding: {fileID: 1795388160}
   roundNumber: 0
   unusedInk: 0
-  usingInspector: 1
+  usingInspector: 0
+  battleNodeDictionary: {fileID: 11400000, guid: e39ee73f6614bb943ad2b754cddd5c52, type: 2}
+  currentBattleNodeData: {fileID: 0}
   player1Deck:
     deckEntries:
-    - cardName: Candlewick
+    - cardName: Setup
       numCopies: 2
       items: []
       price: 0
-    - cardName: Donkey
+    - cardName: TheChosenOne
       numCopies: 3
       items: []
       price: 0
-    - cardName: GrowthSpurt
+    - cardName: TheMentor
       numCopies: 2
       items: []
       price: 0
-    - cardName: Pinocchio
+    - cardName: TheStudioExecutive
       numCopies: 2
       items: []
       price: 0
-    - cardName: PortraitPainter
-      numCopies: 2
-      items: []
-      price: 0
-    - cardName: TheLateLumberjane
-      numCopies: 2
-      items: []
-      price: 0
-    - cardName: TheCoachman
+    - cardName: TheMustacheTwirler
       numCopies: 2
       items: []
       price: 0
     - cardName: DramaticDuel
-      numCopies: 10
+      numCopies: 2
       items: []
       price: 0
-  player1BoonsList: []
+    - cardName: KickTheDog
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: SaveTheCat
+      numCopies: 2
+      items: []
+      price: 0
   player2Deck:
     deckEntries:
     - cardName: AnimatedArtisan
@@ -15487,6 +15488,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4711006923160134540, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
+      propertyPath: boonPrefab
+      value: 
+      objectReference: {fileID: 4851156255078126951, guid: 4fe50578725c9944d8db4c1ef190fedb, type: 3}
     - target: {fileID: 4740020301132276812, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -16923,6 +16928,17 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 792362007620788451, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
   m_PrefabInstance: {fileID: 1954442933}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2108137639 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4711006923160134540, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
+  m_PrefabInstance: {fileID: 1954442933}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474ace4aa5ada13468ff52a2f2152974, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2131166891
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,41 @@ MonoBehaviour:
     the audience loves drama. So let\u2019s give them a bloodbath!"
   Icon: {fileID: 21300000, guid: d26bd652305916244aef47e66aeb4d0f, type: 3}
   DeckInventory:
-    deckEntries: []
+    deckEntries:
+    - cardName: Setup
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: TheChosenOne
+      numCopies: 3
+      items: []
+      price: 0
+    - cardName: TheMentor
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: TheStudioExecutive
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: TheMustacheTwirler
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: DramaticDuel
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: KickTheDog
+      numCopies: 2
+      items: []
+      price: 0
+    - cardName: SaveTheCat
+      numCopies: 2
+      items: []
+      price: 0
+  Boons:
+  - GloveSlap
   BeforeCombatTransitionText: 
   AfterCombatTransitionText: Fine then. That I go out with a whimper is my shame.
     But what is it that you expect out there? Freedom? No. Virulent banality is all

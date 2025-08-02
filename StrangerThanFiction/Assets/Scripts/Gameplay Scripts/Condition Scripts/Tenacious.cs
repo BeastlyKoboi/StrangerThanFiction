@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Tenacious : Condition
 {
-    public Tenacious(CardModel card, int amount) : base(card, amount) { }
+    public Tenacious(CardModel card, int amount = 0) : base(card, amount) { }
 
     public override UniTask OnAdd()
     {

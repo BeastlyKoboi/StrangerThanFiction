@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class TheStudioExecutive : CardModel
+public sealed class TheStudioExecutive : CardModel
 {
     protected override async UniTask SummonEffect()
     {
         CardModel cardToDiscard = null;
-        
-        if (Owner.handManager.Hand.Count > 1)
+        List<CardModel> cardsInHand = new List<CardModel>(); 
+        cardsInHand.AddRange(Owner.handManager.Hand.cards);
+        cardsInHand.Remove(this);
+
+        if (cardsInHand.Count > 0)
         {
-            do
-            {
-                cardToDiscard = Owner.handManager.Hand[UnityEngine.Random.Range(0, Owner.handManager.Hand.Count)];
-            } while (cardToDiscard != null && cardToDiscard != this);
+            cardToDiscard = cardsInHand[UnityEngine.Random.Range(0, cardsInHand.Count)];
 
             await Owner.DiscardCard(cardToDiscard);
         }
@@ -40,7 +40,7 @@ public class TheStudioExecutive : CardModel
             {
                 CardModel cardToDraw = cardModels[Random.Range(0, cardModels.Count)];
                 cardModels.Remove(cardToDraw);
-                await Owner.DrawCard(cardModels[i]);
+                await Owner.DrawCard(cardToDraw);
             }
         }
 

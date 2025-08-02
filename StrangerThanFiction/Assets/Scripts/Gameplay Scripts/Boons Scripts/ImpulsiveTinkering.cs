@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ImpulsiveTinkering : Boon
+public sealed class ImpulsiveTinkering : Boon
 {
     private Player player;
 

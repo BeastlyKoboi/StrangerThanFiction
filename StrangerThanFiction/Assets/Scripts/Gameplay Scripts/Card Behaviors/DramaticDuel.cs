@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class DramaticDuel : CardModel
+public sealed class DramaticDuel : CardModel
 {
 
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)

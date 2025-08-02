@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: BattleNodeDictionary
   m_EditorClassIdentifier: 
   entries:
+  - Key: TheScreenwriter
+    Value: {fileID: 11400000, guid: a11a88cdc31ecf043b33e96f561221b9, type: 2}
   - Key: Pinocchio
     Value: {fileID: 11400000, guid: 507dd1e8b7bed0e408950074bec26088, type: 2}
   - Key: TheBigBadWolf
