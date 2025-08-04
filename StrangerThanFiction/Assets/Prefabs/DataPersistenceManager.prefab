@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3864754438411073836
 MonoBehaviour:
@@ -53,56 +53,62 @@ MonoBehaviour:
   - cardName: Pinocchio
     numCopies: 2
     items: []
+    price: 0
   - cardName: TheCoachman
     numCopies: 2
     items: []
+    price: 0
   - cardName: Donkey
     numCopies: 2
     items: []
+    price: 0
   - cardName: Candlewick
     numCopies: 2
     items: []
+    price: 0
   - cardName: GrowthSpurt
     numCopies: 2
     items: []
-  - cardName: TheBoonsOfPlanning
-    numCopies: 2
-    items: []
+    price: 0
   pinocchioDeck:
   - cardName: Pinocchio
     numCopies: 2
     items: []
+    price: 0
   - cardName: TheCoachman
     numCopies: 2
     items: []
+    price: 0
   - cardName: Donkey
     numCopies: 2
     items: []
+    price: 0
   - cardName: Candlewick
     numCopies: 2
     items: []
+    price: 0
   - cardName: GrowthSpurt
     numCopies: 2
     items: []
-  - cardName: TheBoonsOfPlanning
-    numCopies: 2
-    items: []
+    price: 0
   humptyDumptyDeck:
   - cardName: Pinocchio
     numCopies: 2
     items: []
+    price: 0
   - cardName: TheCoachman
     numCopies: 2
     items: []
+    price: 0
   - cardName: Donkey
     numCopies: 2
     items: []
+    price: 0
   - cardName: Candlewick
     numCopies: 2
     items: []
+    price: 0
   - cardName: GrowthSpurt
     numCopies: 2
     items: []
-  - cardName: TheBoonsOfPlanning
-    numCopies: 2
-    items: []
+    price: 0

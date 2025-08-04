@@ -31,10 +31,6 @@ MonoBehaviour:
       numCopies: 3
       items: []
       price: 0
-    - cardName: SacrificialLamb
-      numCopies: 3
-      items: []
-      price: 0
     - cardName: Crow
       numCopies: 3
       items: []

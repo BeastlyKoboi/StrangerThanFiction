@@ -42,10 +42,6 @@ MonoBehaviour:
       numCopies: 2
       items: []
       price: 0
-    - cardName: TheBlueFairy
-      numCopies: 2
-      items: []
-      price: 0
     - cardName: TheLateLumberjane
       numCopies: 2
       items: []
