@@ -60,7 +60,7 @@ public class PauseMenu : MonoBehaviour
             sceneLoader = FindObjectOfType<SceneLoader>();
         }
         Time.timeScale = 1;
-        sceneLoader.LoadScene("Home Menu");
+        sceneLoader.LoadScene(GameScenes.HomeMenu);
     }
 
     public void LoadCharacterSelect()
@@ -70,7 +70,7 @@ public class PauseMenu : MonoBehaviour
             sceneLoader = FindObjectOfType<SceneLoader>();
         }
         Time.timeScale = 1;
-        sceneLoader.LoadScene("CharacterSelect");
+        sceneLoader.LoadScene(GameScenes.CharacterSelect);
     }
 
     /// <summary>

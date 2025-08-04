@@ -34,7 +34,9 @@ public class GameData
     [Header("Current Run Stats")]
     public Random.State randomState;
     public int currency;
-    public int rerollTokens; 
+    public int rerollTokens;
+
+    public bool runHasEnded; 
 
 
     public GameData()
@@ -56,7 +58,7 @@ public class GameData
 
         this.currency = 25;
         this.rerollTokens = 3;
-
+        this.runHasEnded = false;
     }
 
 

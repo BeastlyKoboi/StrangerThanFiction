@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BattleNodeData", menuName = "DataContainer/BattleNodeData")]
 public class BattleNodeData : NodeData
 {
-    
+    public BattleNodeType Type;
     public DeckInventory DeckInventory;
 
     public string[] Boons;
@@ -14,3 +14,4 @@ public class BattleNodeData : NodeData
     public string AfterCombatTransitionText;
 
 }
+public enum BattleNodeType { Boss, Normal };

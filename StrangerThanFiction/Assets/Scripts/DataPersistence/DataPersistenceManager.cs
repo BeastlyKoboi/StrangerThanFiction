@@ -161,6 +161,11 @@ public class DataPersistenceManager : MonoBehaviour
         dataHandler.Save(gameData, selectedProfileId);
     }
 
+    public void DeleteGame()
+    {
+        dataHandler.Delete(selectedProfileId);
+    }
+
     private void OnApplicationQuit()
     {
         SaveGame();

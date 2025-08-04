@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
 using System.IO;
+using UnityEngine;
+using UnityEngine.Profiling;
 
 public class FileDataHandler
 {
@@ -78,6 +79,19 @@ public class FileDataHandler
         catch (Exception e)
         {
             Debug.LogError("Error occured when trying to save data to file: " + fullPath + "\n" + e);
+        }
+    }
+
+    public void Delete(string profileId)
+    {
+        if (profileId == null) return;
+
+        // use Path.Combine to account for different OS's having different path seperators
+        string fullPath = Path.Combine(dataDirPath, profileId, dataFileName);
+
+        if (File.Exists(fullPath))
+        {
+            File.Delete(fullPath);
         }
     }
 

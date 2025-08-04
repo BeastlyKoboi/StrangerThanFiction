@@ -13,11 +13,13 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
     [SerializeField] private ScrollRect mapScrollRect;
     [SerializeField] private GameObject bookcaseContent;
     [SerializeField] private NodeMenu nodeMenu;
+    [SerializeField] private GameOverMenu gameOverMenu;
 
     [SerializeField] private GameObject bookNodePrefab;
     [SerializeField] private GameObject emptyShelfPrefab;
     public SpecialNodeData[] specialNodeDatas;
     public BattleNodeData[] battleNodeDatas;
+    public BattleNodeData[] bossBattleNodeDatas;
     [SerializeField] private BattleNodeDictionary battleNodeDictionary;
     [SerializeField] private SpecialNodeDictionary specialNodeDictionary;
 
@@ -38,10 +40,11 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         int baseBinding = 20;
         mapNodes = new List<List<MapNode>>();
         List<MapNode> startingSelectableNodes = new List<MapNode>();
+        bool isMapCompleted = false;
 
         if (gameData.nodeMap.flatNodeMap == null || gameData.nodeMap.flatNodeMap.Length == 0)
         {
-            int numModules = 5;
+            int numModules = 1;
 
             for (int i = 0; i < numModules; i++)
             {
@@ -53,9 +56,15 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
             {
                 CreateSpecialNodes(i);
                 baseBinding = (int)(baseBinding * 1.2);
-                CreateBattleNodes(i + 1, baseBinding);
+
+                if (i + 2 < mapNodes.Count) 
+                    CreateBattleNodes(i + 1, baseBinding, numNodes: Random.Range(2, 5));
+                else
+                    CreateBattleNodes(i + 1, baseBinding, 
+                        numNodes: 1, 
+                        specificNodeData: bossBattleNodeDatas[Random.Range(0, bossBattleNodeDatas.Length)]);
             }
-            
+
             startingSelectableNodes = mapNodes[0];
         }
         else
@@ -81,11 +90,15 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
                         startingSelectableNodes.Add(baseNode);
                     }
 
-                    if (nodeFlat.isSelected && nodeData is BattleNodeData && gameData.combatResults.victory)
+                    if (nodeFlat.isSelected && nodeData is BattleNodeData battleNodeData && gameData.combatResults.victory)
                     {
+                        if (battleNodeData.Type == BattleNodeType.Boss)
+                            isMapCompleted = true;
+
                         startingSelectableNodes.Remove(baseNode);
                         baseNode.ToggleSelectable(false);
                         runInfo.AddCurrency(gameData.combatResults.gainedDeus).Forget();
+
                     }
                 }
             }
@@ -94,6 +107,14 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         ConnectNodes();
         InitializeSelectableNodes(startingSelectableNodes);
         mapScrollRect.verticalNormalizedPosition = 0;
+
+        if (isMapCompleted) 
+        {
+            gameOverMenu.ToggleGameOverMenu(true);
+            gameData.runHasEnded = true;
+            DataPersistenceManager.instance.DeleteGame();
+        }
+
     }
 
     private void CreateSpecialNodes(int index)
@@ -110,14 +131,19 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         }
     }
 
-    private void CreateBattleNodes(int index, int binding)
+    private void CreateBattleNodes(int index, int binding, int numNodes = 2, BattleNodeData specificNodeData = null)
     {
         GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
         GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < numNodes; j++)
         {
-            BattleNodeData battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
+            BattleNodeData battleNodeData;
+            if (specificNodeData == null) 
+                battleNodeData = battleNodeDatas[Random.Range(0, battleNodeDatas.Length)];
+            else
+                battleNodeData = specificNodeData;
+
             MapNode baseNode = CreateNode(battleNodeData, bookrow);
             baseNode.ToggleSelectable(false);
 

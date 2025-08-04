@@ -13,7 +13,7 @@ public class CharacterProfile : MonoBehaviour
 
     public void SetData(GameData gameData)
     {
-        if (gameData == null)
+        if (gameData == null || gameData.runHasEnded)
         {
             hasData = false;
             startBtnText.text = "Start";
