@@ -23,6 +23,8 @@ public class CardView : MonoBehaviour
     private TextMeshProUGUI unitTextPower;
     private TextMeshProUGUI unitTextPlotArmor;
     private TextMeshProUGUI unitTitle;
+    private Transform unitConditionIconsBox;
+    private GameObject unitConditionIconPrefab;
 
     public void Instantiate(CardInfo cardInfo)
     {
@@ -46,6 +48,8 @@ public class CardView : MonoBehaviour
             unitTextPlotArmor = unitTransform.Find("PlotArmor").GetComponent<TextMeshProUGUI>();
             unitTitle = unitTransform.Find("Name").GetComponent<TextMeshProUGUI>();
             unitTransform.gameObject.SetActive(false);
+            unitConditionIconsBox = unitTransform.Find("Conditions");
+            unitConditionIconPrefab = unitTransform.Find("ConditionIcon").gameObject;
         }
 
         cardTextCost.text = cardInfo.BaseCost.ToString();
@@ -177,6 +181,23 @@ public class CardView : MonoBehaviour
             unitTextPlotArmor.color = Color.yellow;
         else
             unitTextPlotArmor.color = Color.white;
+    }
+
+    public void UpdateConditionsBox(Condition[] conditions)
+    {
+        if (!unitTransform) return;
+
+        // Clear all children from conditionsBox
+        foreach (Transform child in unitConditionIconsBox)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Condition condition in conditions)
+        {
+            Image icon = Instantiate(unitConditionIconPrefab, unitConditionIconsBox).GetComponent<Image>();
+            icon.sprite = condition.Icon;
+        }
     }
 
     public void ToggleGlow(bool enabled)

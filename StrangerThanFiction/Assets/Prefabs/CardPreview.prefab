@@ -512,6 +512,7 @@ MonoBehaviour:
   cardView: {fileID: 0}
   blurPanel: {fileID: 0}
   conditionsBox: {fileID: 0}
+  itemsBox: {fileID: 0}
   flavorBox: {fileID: 0}
   cardTextCost: {fileID: 0}
   cardTextPower: {fileID: 0}
@@ -656,15 +657,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8427202925506130080, guid: ac63671256a39124896e963132cf9e70, type: 3}
       propertyPath: m_fontColor.b
-      value: 0.14509805
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8427202925506130080, guid: ac63671256a39124896e963132cf9e70, type: 3}
       propertyPath: m_fontColor.g
-      value: 0.42352942
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8427202925506130080, guid: ac63671256a39124896e963132cf9e70, type: 3}
       propertyPath: m_fontColor.r
-      value: 0.7372549
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8427202925506130080, guid: ac63671256a39124896e963132cf9e70, type: 3}
       propertyPath: m_fontColor32.rgba

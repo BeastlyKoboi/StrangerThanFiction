@@ -5,43 +5,41 @@ using UnityEngine;
 
 public sealed class Crow : CardModel
 {
+    protected override async void Awake()
+    {
+        base.Awake();
+
+        await this.ApplyCondition(new Stackable(this, 0));
+    }
+
+    protected override UniTask DeployEffect(DeployState deployState = null)
+    {
+        Owner.OnRoundEnd.AddListener(TransformIntoMurderOfCrows);
+        return UniTask.CompletedTask;
+    }
+
+    protected override UniTask RemoveEffect(CardModel card)
+    {
+        Owner.OnRoundEnd.RemoveListener(TransformIntoMurderOfCrows);
+        return UniTask.CompletedTask;
+    }
+
     protected override async UniTask SummonEffect()
     {
         CardModel randomEnemy = Board.GetRandomUnit(Owner.enemyPlayer);
 
         if (randomEnemy)
-        { 
+        {
             await randomEnemy.TakeDamage(new DamageData(1, this));
         }
-
-        // make checks for murder of crows
-
-        CardModel[] allies = Board.GetUnits(Owner);
-        List<CardModel> alliedCrows = new List<CardModel>();
-
-        foreach (CardModel card in allies)
-        {
-            if (card.name == name && card != this)
-            {
-                alliedCrows.Add(card);
-            }
-        }
-
-        if (alliedCrows.Count >= 2)
-        {
-            await alliedCrows[0].Remove();
-            await alliedCrows[1].Remove();
-
-            OnRemove.AddListener(SummonMurder);
-            await Remove();
-        }
-        
     }
 
-    private async UniTask SummonMurder(CardModel card)
+    private async UniTask TransformIntoMurderOfCrows()
     {
-        CardModel murderOfCrows = CardFactory.Instance.CreateCard("MurderOfCrows", true, transform, Owner, Board, Title);
-        await murderOfCrows.Deploy();
-        await murderOfCrows.Summon();
+        if (CurrentPower >= 5)
+        {
+            await TransformInto(typeof(MurderOfCrows).ToString());
+        }
     }
+
 }

@@ -34,10 +34,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI manaPlayer2;
     [SerializeField] private TextMeshProUGUI powerPlayer2;
 
-    [HeaderAttribute("Binding")]
-    [SerializeField] private TextMeshProUGUI bindingLabel;
-    [SerializeField] private TextMeshProUGUI bindingWindowTitle;
-    [SerializeField] private TextMeshProUGUI chapterLabel;
+    
+
 
     [HeaderAttribute("Paused Menu")]
     [SerializeField] private GameObject PausedMenu;
@@ -69,10 +67,8 @@ public class UIManager : MonoBehaviour
     public void RoundStart(int roundNum, int maxRounds)
     {
         if (RoundPopup == null) return;
-        RoundPopup.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"Round {roundNum}";
+        RoundPopup.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = $"Chapter {roundNum}";
         RoundPopup.SetTrigger("Popup");
-
-        chapterLabel.text = $"Chapter {roundNum} of {maxRounds}";
     }
 
     //public async void GameStart()
@@ -153,16 +149,6 @@ public class UIManager : MonoBehaviour
 
         totalPower = board.GetTotalPower(player2);
         powerPlayer2.text = totalPower.ToString();
-    }
-
-    public void UpdateBinding(BindingState bindingState)
-    {
-        bindingLabel.text = $"{bindingState.currTotalBindingDamage}/{bindingState.bindingPower}";
-    }
-
-    public void UpdateBindingWindow(BindingState bindingState)
-    {
-        bindingWindowTitle.text = bindingState.BattleNodeData.Title;
     }
 
     public void TogglePausedMenu(bool isActive)

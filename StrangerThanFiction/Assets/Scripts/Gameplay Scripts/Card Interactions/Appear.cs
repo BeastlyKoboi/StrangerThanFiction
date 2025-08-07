@@ -54,7 +54,6 @@ public class Appear : MonoBehaviour
     private void EnableInteractionComponents(bool enable)
     {
         if (GetComponent<Hoverable>()) GetComponent<Hoverable>().enabled = enable;
-        if (GetComponent<Hoverable>()) GetComponent<Hoverable>().enabled = enable;
     }
 
 }

@@ -18,6 +18,7 @@ MonoBehaviour:
   FlavorText: 
   Type: 1
   Faction: 3
+  CollectionType: 1
   BaseCost: 3
   BasePower: 0
   BasePlotArmor: 0

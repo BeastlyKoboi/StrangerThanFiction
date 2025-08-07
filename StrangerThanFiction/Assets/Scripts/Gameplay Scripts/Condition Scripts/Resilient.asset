@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Resilient
   m_EditorClassIdentifier: 
   ConditionName: Resilient
+  ConditionType: 0
   Description: Takes # less damage from all sources
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: c5107675ad90671428b9252228fd835d, type: 3}

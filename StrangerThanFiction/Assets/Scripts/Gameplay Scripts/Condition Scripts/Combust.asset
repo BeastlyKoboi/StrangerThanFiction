@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Combust
   m_EditorClassIdentifier: 
   ConditionName: Combust
+  ConditionType: 1
   Description: Card is destroyed when played.
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: 7dc0d4f340146ff49b9551758c41af77, type: 3}

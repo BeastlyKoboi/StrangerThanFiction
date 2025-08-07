@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// This class is used to handle the display of tooltips in your Unity project.
@@ -16,10 +18,12 @@ public class TooltipHandlerHover : MonoBehaviour
 
     [SerializeField] private GameObject tooltipContainer;
     private TMP_Text _tooltipDescriptionTMP;
+    private Image _tooltipIcon;
 
     private void Awake()
     {
         _tooltipDescriptionTMP = tooltipContainer.GetComponentInChildren<TMP_Text>();
+        _tooltipIcon = tooltipContainer.transform.Find("Icon").GetComponent<Image>();
     }
 
     private void OnEnable()
@@ -46,7 +50,8 @@ public class TooltipHandlerHover : MonoBehaviour
                     tooltipContainer.gameObject.SetActive(true);
                 }
 
-                _tooltipDescriptionTMP.text = entry.Value.Description;
+                _tooltipDescriptionTMP.text = "<line-indent=30>" + entry.Value.Description;
+                _tooltipIcon.sprite = entry.Value.Image;
                 return;
             }
         }

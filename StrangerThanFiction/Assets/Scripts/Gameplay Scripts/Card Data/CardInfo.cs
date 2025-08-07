@@ -13,6 +13,7 @@ public class CardInfo : ScriptableObject
     public string FlavorText;
     public CardType Type;
     public Faction Faction;
+    public CollectionType CollectionType;
     public int BaseCost;
     public int BasePower;
     public int BasePlotArmor;

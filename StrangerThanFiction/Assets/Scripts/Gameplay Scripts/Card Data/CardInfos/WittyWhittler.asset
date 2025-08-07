@@ -20,6 +20,7 @@ MonoBehaviour:
     impression of your father!\" \nHis words are poison, as is his knife."
   Type: 0
   Faction: 0
+  CollectionType: 0
   BaseCost: 3
   BasePower: 2
   BasePlotArmor: 4

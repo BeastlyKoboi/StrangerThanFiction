@@ -17,6 +17,7 @@ using static UnityEngine.GraphicsBuffer;
 /// </summary>
 public enum CardType { Unit, Spell }
 public enum Faction { Pinocchio, LittleRed, HumptyDumpty, TheBigBadWolf, TheAuthors }
+public enum CollectionType { Collectible, Uncollectible }
 
 /// <summary>
 /// Defines the basic members and behaviors for all cards. Meant to be 
@@ -160,12 +161,13 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     // Unit Events - only called when in play, otherwise never.
     public UniTaskEvent<DeployState> OnDeploy = new UniTaskEvent<DeployState>();
     public UniTaskEvent OnSummon = new UniTaskEvent();
-    public UniTaskEvent OnRoundStart = new UniTaskEvent();
+    public UniTaskEvent<RoundStartState> OnRoundStart = new UniTaskEvent<RoundStartState>();
     public UniTaskEvent OnRoundEnd = new UniTaskEvent();
     public UniTaskEvent<UnitStrikeState> OnBeforeStrike = new UniTaskEvent<UnitStrikeState>();
     public UniTaskEvent<UnitStrikeState> OnAfterStrike = new UniTaskEvent<UnitStrikeState>();
     public UniTaskEvent<DamageData> OnTakeDamage = new UniTaskEvent<DamageData>();
     public UniTaskEvent<DamageData> OnSurviveDamage = new UniTaskEvent<DamageData>();
+    public UniTaskEvent<Condition> OnConditionApplied = new UniTaskEvent<Condition>();
     public UniTaskEvent<int> OnGrantCostModification = new UniTaskEvent<int>();
     public UniTaskEvent<int> OnGrantPower = new UniTaskEvent<int>();
     public UniTaskEvent<int> OnGrantPlotArmor = new UniTaskEvent<int>();
@@ -448,9 +450,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     /// <summary>
     /// Method to trigger OnRoundStart event.
     /// </summary>
-    public async UniTask RoundStart()
+    public async UniTask RoundStart(RoundStartState roundStartState)
     {
-        await OnRoundStart.InvokeAsync();
+        await OnRoundStart.InvokeAsync(roundStartState);
     }
 
     public async UniTask RoundEnd()
@@ -635,6 +637,12 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         {
             await conditions[condition.Name].OnSurplus(condition);
         }
+
+        cardView.UpdateConditionsBox(conditions.Values.ToArray());
+
+        await OnConditionApplied.InvokeAsync(conditions[condition.Name]);
+        if (Owner != null) 
+            await Owner.OnAfterUnitConditionApplied.InvokeAsync(conditions[condition.Name]);
     }
 
     /// <summary>

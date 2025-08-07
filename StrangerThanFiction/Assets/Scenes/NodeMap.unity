@@ -12883,42 +12883,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RunInfoMenu
       objectReference: {fileID: 0}
-    - target: {fileID: 3235729887099950343, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4711006923160134540, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: runInfo
-      value: 
-      objectReference: {fileID: 11400000, guid: a6f0853b56debfb47a0616b1288acdfe, type: 2}
-    - target: {fileID: 4711006923160134540, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: currency
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4711006923160134540, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: boonPrefab
-      value: 
-      objectReference: {fileID: 4851156255078126951, guid: 4fe50578725c9944d8db4c1ef190fedb, type: 3}
-    - target: {fileID: 4711006923160134540, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: currency.Variable
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4711006923160134540, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: currency.UseConstant
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4740020301132276812, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4740020301132276812, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4740020301132276812, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5025517204318968657, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -12989,7 +12953,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5025517204318968657, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1230
+      value: -1500
       objectReference: {fileID: 0}
     - target: {fileID: 5025517204318968657, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -13017,18 +12981,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7268475996056213682, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8673523675449564584, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8673523675449564584, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8673523675449564584, guid: cfc000b7b2aa0bf43bcae8b7672874c8, type: 3}
-      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -110,9 +110,9 @@ public class HandManager : MonoBehaviour
         }
     }
 
-    public async UniTask RoundStart()
+    public async UniTask RoundStart(RoundStartState roundStartState)
     {
-        await Hand.ForEach(async card => await card.RoundStart() );
+        await Hand.ForEach(async card => await card.RoundStart(roundStartState));
     }
 
     public async UniTask RoundEnd()

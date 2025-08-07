@@ -97,6 +97,15 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
                         startingSelectableNodes.Remove(baseNode);
                         baseNode.ToggleSelectable(false);
+
+                        if (gameData.combatResults.victory && gameData.nodeMap.flatNodeMap.Length >= i + 1)
+                        {
+                            foreach (FlatNode neighbor in gameData.nodeMap.flatNodeMap[i + 1].flatNodesArr)
+                            {
+                                neighbor.isSelectable = true;
+                            }
+                        }
+
                         runInfo.AddCurrency(gameData.combatResults.gainedDeus).Forget();
 
                     }
@@ -106,7 +115,27 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
         ConnectNodes();
         InitializeSelectableNodes(startingSelectableNodes);
-        mapScrollRect.verticalNormalizedPosition = 0;
+
+
+        for (int i = 0; i < mapNodes.Count; i++)
+        {
+            bool hasSelectableNode = false;
+
+            foreach (MapNode node in mapNodes[i])
+            {
+                if (startingSelectableNodes.Contains(node))
+                {
+                    hasSelectableNode = true;
+                    break;
+                }
+            }
+
+            if (hasSelectableNode)
+            {
+                mapScrollRect.verticalNormalizedPosition = Mathf.Clamp((float)(i + 1f) / (float)(mapNodes.Count - 1), 0f, 1f);
+                break;
+            }
+        }
 
         if (isMapCompleted) 
         {
@@ -197,11 +226,16 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         this.selectedNode = selectedNode;
         this.selectedNode.RemoveOnClick(SelectNewNode);
 
-        foreach (MapNode node in selectedNode.GetNeighbors())
+
+        if (this.selectedNode.GetComponent<BattleNode>() == null)
         {
-            node.AddOnClick(SelectNewNode);
-            node.ToggleSelectable(true);
+            foreach (MapNode node in selectedNode.GetNeighbors())
+            {
+                node.AddOnClick(SelectNewNode);
+                node.ToggleSelectable(true);
+            }
         }
+       
     }
     
     public void LoadData(GameData data)
@@ -220,10 +254,10 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(GameData data)
     {
-        if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData battleNodeData)
-        {
-            data.nextBattleNode = battleNodeData.name;
-        }
+        //if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData battleNodeData)
+        //{
+        //    data.nextBattleNode = battleNodeData.name;
+        //}
 
         // save the nodemap to the data
         

@@ -17,7 +17,7 @@ public sealed class MagicalWoodcarving : CardModel
         return UniTask.CompletedTask;
     }
 
-    protected async UniTask RoundEndEffect()
+    private async UniTask RoundEndEffect()
     {
         CardModel randomEnemy = Board.GetRandomUnit(Owner.enemyPlayer);
         if (randomEnemy)

@@ -24,7 +24,7 @@ public sealed class Rascals : CardModel
         return base.RemoveEffect(card);
     }
 
-    private UniTask CreateTrickOrTreatInHand()
+    private UniTask CreateTrickOrTreatInHand(RoundStartState roundStartState)
     {
         Owner.CreateCardInHand(typeof(TallTale).ToString());
         return UniTask.CompletedTask;

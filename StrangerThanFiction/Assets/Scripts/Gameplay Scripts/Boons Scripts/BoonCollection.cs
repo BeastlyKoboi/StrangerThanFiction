@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoonCollection
 {
-    List<Boon> boons = new List<Boon>();
+    public List<Boon> boons = new List<Boon>();
 
     public void AddBoon(Boon boon)
     {

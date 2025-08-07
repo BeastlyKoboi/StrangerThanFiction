@@ -21,7 +21,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 {
     // Basic gameplay events that objects can add to
     public UniTaskEvent<CombatEnterState> OnGameStart = new UniTaskEvent<CombatEnterState>();
-    public UniTaskEvent OnRoundStart = new UniTaskEvent();
+    public UniTaskEvent<RoundStartState> OnRoundStart = new UniTaskEvent<RoundStartState>();
     public UniTaskEvent OnRoundEnd = new UniTaskEvent();
     public UniTaskEvent OnGameOver = new UniTaskEvent();
 
@@ -194,7 +194,10 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
         await DrawHands(); // ITF maybe put this in event with numCards to draw as a variable
 
-        await OnRoundStart.InvokeAsync();
+        await OnRoundStart.InvokeAsync(new RoundStartState() { 
+            currentRoundNumber = roundNumber, 
+            maxRounds = maxRounds 
+        });
 
         uiManager.UpdateTotalPower();
 

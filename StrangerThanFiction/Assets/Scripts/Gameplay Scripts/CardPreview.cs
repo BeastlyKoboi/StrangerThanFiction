@@ -126,7 +126,8 @@ public class CardPreview : MonoBehaviour
             GameObject conditionBox = Instantiate(conditionBoxPrefab, conditionsBox);
             conditionBox.transform.Translate(0, i * -175,0);
             conditionBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
-                .text = conditions[i].ToString();
+                .text = "<line-indent=30>" + conditions[i].ToString();
+            conditionBox.transform.Find("Icon").GetComponent<Image>().sprite = conditions[i].Icon;
         }
 
         Item[] items = card.GetItems();
@@ -136,7 +137,8 @@ public class CardPreview : MonoBehaviour
             GameObject itemBox = Instantiate(conditionBoxPrefab, itemsBox);
             itemBox.transform.Translate(0, i * -175, 0);
             itemBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
-                .text = items[i].ToString();
+                .text = "<line-indent=30>" + items[i].ToString();
+            itemBox.transform.Find("Icon").GetComponent<Image>().sprite = items[i].Icon;
         }
 
         flavorText.text = card.FlavorText;

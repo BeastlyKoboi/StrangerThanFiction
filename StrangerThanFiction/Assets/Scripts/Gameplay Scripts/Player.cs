@@ -19,7 +19,7 @@ using static UnityEngine.UI.CanvasScaler;
 public class Player : MonoBehaviour
 {
     public UniTaskEvent OnGameStart = new UniTaskEvent();
-    public UniTaskEvent OnRoundStart = new UniTaskEvent();
+    public UniTaskEvent<RoundStartState> OnRoundStart = new UniTaskEvent<RoundStartState>();
     public UniTaskEvent OnRoundEnd = new UniTaskEvent();
     public UniTaskEvent OnGameOver = new UniTaskEvent();
 
@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     public UniTaskEvent<CardModel> OnBeforeUnitSummoned = new UniTaskEvent<CardModel>();
     public UniTaskEvent<CardModel> OnAfterUnitSummoned = new UniTaskEvent<CardModel>();
     public UniTaskEvent<DamageData> OnAfterUnitSurvivedDamage = new UniTaskEvent<DamageData>();
+    public UniTaskEvent<Condition> OnAfterUnitConditionApplied = new UniTaskEvent<Condition>();
     public UniTaskEvent<CardModel> OnUnitDestroyed = new UniTaskEvent<CardModel>();
     public UniTaskEvent<CardPlayState> OnBeforeCardPlayed = new UniTaskEvent<CardPlayState>();
     public UniTaskEvent<CardPlayState> OnAfterCardPlayed = new UniTaskEvent<CardPlayState>();
@@ -77,9 +78,6 @@ public class Player : MonoBehaviour
     public CardPile Discard { get; private set; }
     public GameObject discardGameObject;
     public GameObject discardViewParent;
-
-    [HeaderAttribute("Boons")]
-    public List<Boon> boons = new List<Boon>();
 
 
     [HeaderAttribute("Card Prefabs")]
@@ -160,9 +158,6 @@ public class Player : MonoBehaviour
             Type boonType = Type.GetType(boonName);
             Boon boon = (Boon)Activator.CreateInstance(boonType);
             BoonCollection.AddBoon(boon);
-
-            // Update Binding 
-
         }
     }
 
@@ -544,9 +539,9 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Method to invoke OnRoundStart event attached to player.
     /// </summary>
-    public async UniTask RoundStart()
+    public async UniTask RoundStart(RoundStartState roundStartState)
     {
-        await OnRoundStart.InvokeAsync();
+        await OnRoundStart.InvokeAsync(roundStartState);
     }
 
     public async UniTask RoundEnd()
@@ -571,6 +566,11 @@ public class Player : MonoBehaviour
     public async UniTask AfterUnitSurvivedDamage(DamageData damageData)
     {
         await OnAfterUnitSurvivedDamage.InvokeAsync(damageData);
+    }
+
+    public async UniTask AfterUnitConditionApplied(Condition condition)
+    {
+        await OnAfterUnitConditionApplied.InvokeAsync(condition);
     }
 
     public async UniTask UnitDestroyed(CardModel unit)

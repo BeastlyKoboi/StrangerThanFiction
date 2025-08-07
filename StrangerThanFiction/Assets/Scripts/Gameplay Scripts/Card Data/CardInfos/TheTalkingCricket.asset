@@ -20,6 +20,7 @@ MonoBehaviour:
     much to learn."'
   Type: 0
   Faction: 0
+  CollectionType: 0
   BaseCost: 1
   BasePower: 2
   BasePlotArmor: 0

@@ -24,6 +24,8 @@ public class BattleNode : MonoBehaviour, IDataPersistence
 
         mapNode.AddOnClick((MapNode mapNode) => { 
             gameData.combatResults = null;
+            gameData.nextBattleNode = _battleNodeData.name;
+            gameData.bindingPower = _binding;
             sceneLoader = FindObjectOfType<SceneLoader>();
             sceneLoader.LoadScene("Gameplay");
         });

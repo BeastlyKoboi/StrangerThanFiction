@@ -16,7 +16,7 @@ public sealed class TheMentor : CardModel
 
     protected override async UniTask SummonEffect()
     {
-        await SummonAndDefendTheChosenOne();
+        await SummonAndDefendTheChosenOne(new RoundStartState());
     }
 
     protected override UniTask RemoveEffect(CardModel card)
@@ -26,7 +26,7 @@ public sealed class TheMentor : CardModel
         return UniTask.CompletedTask;
     }
 
-    private async UniTask SummonAndDefendTheChosenOne()
+    private async UniTask SummonAndDefendTheChosenOne(RoundStartState roundStartState)
     {
         CardModel theChosenOne = null;
         theChosenOne = Board.GetUnits(Owner).FirstOrDefault(unit => unit is TheChosenOne);

@@ -15,7 +15,7 @@ public class Binding : MonoBehaviour, IDataPersistence, IDamagable
     public UniTaskEvent<DamageData> OnHeal = new UniTaskEvent<DamageData>();
 
     [SerializeField] private CombatManager combatManager;
-    [SerializeField] private UIManager uiManager;
+    [SerializeField] private BindingPopup bindingPopup;
     [SerializeField] private GameObject popupWindow;
     [SerializeField] private BattleNodeDictionary battleNodeDictionary;
 
@@ -34,8 +34,8 @@ public class Binding : MonoBehaviour, IDataPersistence, IDamagable
 
     private void Start()
     {
-        uiManager.UpdateBinding(new BindingState(battleNodeData, BindingPower, 0, 0));
-        uiManager.UpdateBindingWindow(new BindingState(battleNodeData, BindingPower, 0, 0));
+        bindingPopup.UpdateBinding(new BindingState(battleNodeData, BindingPower, 0, 0, combatManager.player2.BoonCollection));
+        bindingPopup.UpdateBindingWindow(new BindingState(battleNodeData, BindingPower, 0, 0, combatManager.player2.BoonCollection));
     }
 
     public async UniTask TakeDamage(DamageData damageData)
@@ -63,7 +63,7 @@ public class Binding : MonoBehaviour, IDataPersistence, IDamagable
         await OnBindingChange.InvokeAsync(new BindingState(battleNodeData, BindingPower, prevBindingDamage, BindingDamage));
         await OnTakeDamage.InvokeAsync(damageData);
 
-        uiManager.UpdateBinding(new BindingState(
+        bindingPopup.UpdateBinding(new BindingState(
             battleNodeData,
             bindingPower: BindingPower, 
             prevTotalBindingDamage: prevBindingDamage, 

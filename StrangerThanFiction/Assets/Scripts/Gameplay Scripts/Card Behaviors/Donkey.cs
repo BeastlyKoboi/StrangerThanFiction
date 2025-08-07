@@ -25,11 +25,11 @@ public sealed class Donkey : CardModel
         return UniTask.CompletedTask;
     }
 
-    protected async UniTask TransformIntoRascal()
+    private async UniTask TransformIntoRascal()
     {
         if (CurrentPower >= 5)
         {
-            await TransformInto("Rascals");
+            await TransformInto(typeof(Rascals).ToString());
         }
     }
 

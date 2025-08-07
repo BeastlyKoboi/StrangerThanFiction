@@ -17,7 +17,7 @@ public sealed class AnimatedArtisan : CardModel
         return UniTask.CompletedTask;
     }
 
-    private UniTask RoundStartEffect()
+    private UniTask RoundStartEffect(RoundStartState roundStartState)
     {
         Owner.CreateCardInDeck(typeof(MagicalWoodcarving).ToString());
         return UniTask.CompletedTask;

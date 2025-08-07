@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Tenacious
   m_EditorClassIdentifier: 
   ConditionName: Tenacious
+  ConditionType: 0
   Description: At round end, heal power to full.
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: 1e61610e51ee92b4e88e6987cac033c4, type: 3}

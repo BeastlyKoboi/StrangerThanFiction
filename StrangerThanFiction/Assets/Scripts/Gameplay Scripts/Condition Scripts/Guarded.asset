@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Guarded
   m_EditorClassIdentifier: 
   ConditionName: Guarded
+  ConditionType: 0
   Description: On Round End, set Plot Armor to #. Does stack.
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: 6a94d87cba1ae824ba9d08f04135dc7f, type: 3}

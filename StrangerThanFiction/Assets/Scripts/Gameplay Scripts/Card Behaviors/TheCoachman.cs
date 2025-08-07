@@ -13,7 +13,7 @@ public sealed class TheCoachman : CardModel
 
     protected override async UniTask SummonEffect()
     {
-        await SummonDonkey();
+        await SummonDonkey(new RoundStartState());
     }
 
     protected override UniTask RemoveEffect(CardModel card)
@@ -22,7 +22,7 @@ public sealed class TheCoachman : CardModel
         return UniTask.CompletedTask;
     }
 
-    private async UniTask SummonDonkey()
+    private async UniTask SummonDonkey(RoundStartState roundStartState)
     {
         CardModel donkey = CardFactory.Instance.CreateCard("Donkey", true, transform, Owner, Board, Title);
         await donkey.Deploy();

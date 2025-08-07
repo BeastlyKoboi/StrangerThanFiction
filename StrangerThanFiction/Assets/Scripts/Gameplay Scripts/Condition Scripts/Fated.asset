@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Fated
   m_EditorClassIdentifier: 
   ConditionName: Fated
+  ConditionType: 0
   Description: On Round End I gain # power. Does not stack.
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: ed34dde401d0ad04ea56c22596e133e7, type: 3}

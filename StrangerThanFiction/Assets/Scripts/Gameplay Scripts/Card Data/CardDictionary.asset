@@ -19,6 +19,10 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 866ef3af54016e14e81e5f4dd79c4fd9, type: 2}
   - Key: AnimatedArtisan
     Value: {fileID: 11400000, guid: a687fd4b86c5e9449b9df3eaf9a415cb, type: 2}
+  - Key: BigRed
+    Value: {fileID: 11400000, guid: a2cbe4e83ed3a214ca0510dc4297df3d, type: 2}
+  - Key: BigRedCap
+    Value: {fileID: 11400000, guid: c7914bbad8d5c3144bc8846085aa0d0c, type: 2}
   - Key: BuiltDifferent
     Value: {fileID: 11400000, guid: 18c34f01601158e498f0f4cafd586967, type: 2}
   - Key: Candlewick
@@ -41,6 +45,10 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 3dc976c99eb8dfc4d9fa3d80721706f4, type: 2}
   - Key: KickTheDog
     Value: {fileID: 11400000, guid: fc738435b1dcaac4bbd350cae426e8ea, type: 2}
+  - Key: LittleRed
+    Value: {fileID: 11400000, guid: 210740edcc850c143ad4ed46fe17caf0, type: 2}
+  - Key: LittleRedCap
+    Value: {fileID: 11400000, guid: 84274b334a78142458d586c123397953, type: 2}
   - Key: MagicalWoodcarving
     Value: {fileID: 11400000, guid: abdd20c89fdfcb346a464af2d90f68ac, type: 2}
   - Key: MurderOfCrows

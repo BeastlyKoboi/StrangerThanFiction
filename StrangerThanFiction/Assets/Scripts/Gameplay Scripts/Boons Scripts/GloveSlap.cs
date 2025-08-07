@@ -20,7 +20,7 @@ public class GloveSlap : Boon
         return UniTask.CompletedTask;
     }
 
-    private UniTask CreateDramaticDuelInHand()
+    private UniTask CreateDramaticDuelInHand(RoundStartState roundStartState)
     {
         player.CreateCardInHand(typeof(DramaticDuel).ToString());
         return UniTask.CompletedTask;

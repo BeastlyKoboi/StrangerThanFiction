@@ -90,7 +90,7 @@ public class TutorialGameplay : MonoBehaviour
         combatManager.OnGameStart.RemoveListener(OnGameStart);
     }
 
-    private async UniTask OnRound1Start()
+    private async UniTask OnRound1Start(RoundStartState roundStartState)
     {
         await CyclePrompts(OnRound1StartPrompts);
 

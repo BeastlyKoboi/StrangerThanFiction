@@ -83,6 +83,12 @@ public class CardFactory
     {
         GameObject cardObj = new GameObject(cardName, typeof(RectTransform));
         cardObj.transform.SetParent(parent, false);
+        RectTransform cardRect = cardObj.GetComponent<RectTransform>();
+        RectTransform prefabRect = cardPrefab.GetComponent<RectTransform>();
+        Vector2 size = cardRect.sizeDelta;
+        size.x = prefabRect.rect.width;
+        size.y = prefabRect.rect.height;
+        cardRect.sizeDelta = size;
 
         if (cardData == null)
             cardData = GameObject.Find("CardData").GetComponent<CardDataMono>();
@@ -163,7 +169,6 @@ public class CardFactory
             }
         }
 
-
         return cardScript;
     }
 
@@ -220,6 +225,7 @@ public class CardFactory
 
         cardObj.AddComponent<Clickable>();
         cardObj.GetComponent<Clickable>().OnRightClick += CardPreviewClickHandler;
+        cardObj.GetComponent<Clickable>().OnLongClick += CardPreviewClickHandler;
 
 
 

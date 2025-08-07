@@ -20,7 +20,7 @@ public sealed class Cloudcuckoolander : Boon
         return UniTask.CompletedTask;
     }
 
-    private UniTask CreateTallTaleInHand()
+    private UniTask CreateTallTaleInHand(RoundStartState roundStartState)
     {
         player.CreateCardInHand(typeof(TallTale).ToString());
         return UniTask.CompletedTask;

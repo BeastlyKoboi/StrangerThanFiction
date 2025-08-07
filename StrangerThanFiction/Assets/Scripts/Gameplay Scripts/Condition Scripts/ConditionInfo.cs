@@ -6,7 +6,10 @@ using UnityEngine;
 public class ConditionInfo : ScriptableObject
 {
     public string ConditionName;
+    public ConditionType ConditionType;
     [TextArea]
     public string Description;
     public Sprite Image;
 }
+
+public enum ConditionType { Positive, Negative }

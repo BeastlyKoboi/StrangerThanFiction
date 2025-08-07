@@ -21,7 +21,7 @@ public sealed class TheBigBadWolf : CardModel
     {
         if (card == this)
             return;
-        CardModel crow = CardFactory.Instance.CreateCard("Crow", true, transform, Owner, Board, Title);
+        CardModel crow = CardFactory.Instance.CreateCard(typeof(Crow).ToString(), true, transform, Owner, Board, Title);
         await crow.Deploy();
         await crow.Summon();
     }

@@ -95,10 +95,10 @@ public class BoardManager : MonoBehaviour
     /// Performs the round start events on all units on the board.
     /// This will start them, but will not wait for them to finish
     /// </summary>
-    public async UniTask RoundStart()
+    public async UniTask RoundStart(RoundStartState roundStartState)
     {
-        await playerRow.ForEach(async unit => await unit.RoundStart());
-        await enemyRow.ForEach(async unit => await unit.RoundStart());
+        await playerRow.ForEach(async unit => await unit.RoundStart(roundStartState));
+        await enemyRow.ForEach(async unit => await unit.RoundStart(roundStartState));
     }
 
     /// <summary>

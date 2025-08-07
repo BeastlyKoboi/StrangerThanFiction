@@ -21,7 +21,7 @@ public sealed class Pinocchio : CardModel
         return UniTask.CompletedTask;
     }
 
-    private UniTask CreateTallTaleInHand()
+    private UniTask CreateTallTaleInHand(RoundStartState roundStartState)
     {
         Owner.CreateCardInHand(typeof(TallTale).ToString());
         return UniTask.CompletedTask;

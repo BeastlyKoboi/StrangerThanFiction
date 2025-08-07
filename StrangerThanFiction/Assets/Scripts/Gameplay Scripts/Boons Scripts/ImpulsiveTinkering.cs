@@ -24,7 +24,7 @@ public sealed class ImpulsiveTinkering : Boon
         return UniTask.CompletedTask;
     }
 
-    private async UniTask SummonMagicalWoodcarving()
+    private async UniTask SummonMagicalWoodcarving(RoundStartState roundStartState)
     {
         CardModel woodcarving = CardFactory.Instance.CreateCard("MagicalWoodcarving", true, player.transform, player, player.board, "Impulsive Tinkering");
         await woodcarving.Deploy();

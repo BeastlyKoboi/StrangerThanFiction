@@ -9,10 +9,13 @@ public abstract class Item
     protected ItemInfo itemInfo;
     protected CardModel card;
 
+    public virtual Sprite Icon { get; set; }
+
     public Item(ItemInfo itemInfo, CardModel card)
     {
         this.itemInfo = itemInfo;
         this.card = card;
+        this.Icon = itemInfo.Image;
     }
 
     public virtual UniTask OnAdd() => UniTask.CompletedTask;

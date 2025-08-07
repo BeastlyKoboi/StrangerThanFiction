@@ -7,6 +7,8 @@ public class CardShop : MonoBehaviour
     [SerializeField] private CardDictionary cardDictionary;
     [SerializeField] private ItemDictionary itemDictionary;
 
+    [SerializeField] private List<CardInfo> collectibleCards;
+
     [SerializeField] private int baseCardPrice; 
 
     [SerializeField] private int baseCommonItemPrice;
@@ -23,12 +25,22 @@ public class CardShop : MonoBehaviour
         float random = Random.Range(0, 1);
 
         Debug.Log(random);
+
+        collectibleCards = new List<CardInfo>();
+        for (int i = 0; i < cardDictionary.GetEntries().Count; i++)
+        {
+            if (cardDictionary.GetEntries()[i].Value.CollectionType == CollectionType.Collectible)
+            {
+                collectibleCards.Add(cardDictionary.GetEntries()[i].Value);
+            }
+        }
+
     }
 
     public DeckEntry GetNextPurchaseableCard()
     {
         DeckEntry deckEntry = new DeckEntry();
-        deckEntry.cardName = cardDictionary.GetEntries()[Random.Range(0, cardDictionary.GetEntries().Count)].Key;
+        deckEntry.cardName = collectibleCards[Random.Range(0, collectibleCards.Count)].name;
         deckEntry.numCopies = 1;
         if (Random.Range(0f, 1f) < 0.5f)
         {

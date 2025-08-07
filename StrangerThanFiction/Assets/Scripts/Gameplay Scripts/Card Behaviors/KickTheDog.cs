@@ -25,7 +25,7 @@ public class KickTheDog : CardModel
 
     }
 
-    private async UniTask DrawCardsAtNextRoundStart()
+    private async UniTask DrawCardsAtNextRoundStart(RoundStartState roundStartState)
     {
         await Owner.DrawCard();
         await Owner.DrawCard();
