@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SetTheStage : Item
+public sealed class SetTheStage : Item
 {
     public SetTheStage(ItemInfo itemInfo, CardModel card) : base(itemInfo, card) { }
 
@@ -21,13 +21,15 @@ public class SetTheStage : Item
 
     public async UniTask OnPlay(CardPlayState cardPlayState)
     {
+        List<CardModel> unitsInDeck = new List<CardModel>();
         for (int i = card.Owner.Deck.Count - 1; i >= 0; i--)
         {
             if (card.Owner.Deck[i].Type == CardType.Unit)
             {
-                await card.Owner.Deck[i].GrantPower(1);
-                break;
+                unitsInDeck.Add(card.Owner.Deck[i]);
             }
         }
+
+        await unitsInDeck[Random.Range(0, unitsInDeck.Count)].GrantPower(1);
     }
 }

@@ -66,8 +66,12 @@ public class Player : MonoBehaviour
     private bool hasCardsHidden;
     public bool hasEndedTurn = false;
     private bool hasCanceledPlayCard = false;
+    public int NumUnitsHealedThisRound { get; set; } = 0;
     public int NumUnitsHealedThisCombat { get; set; } = 0;
     public int NumUnitsRevivedThisCombat { get; set; } = 0;
+    public int NumUnitsSurvivedDamageThisRound { get; set; } = 0;
+    public int NumUnitsSurvivedDamageThisCombat { get; set; } = 0;
+
 
     [HeaderAttribute("The Cards")]
     public HandManager handManager;
@@ -346,6 +350,12 @@ public class Player : MonoBehaviour
     /// Method to reset the player's mana.
     /// </summary>
     public void ResetMana() => CurrentMana = MaxMana;
+
+    public void ResetRoundStats()
+    {
+        NumUnitsHealedThisRound = 0;
+        NumUnitsSurvivedDamageThisRound = 0;
+    }
 
     /// <summary>
     /// Method to play a card.

@@ -58,9 +58,9 @@ public class CombatManager : MonoBehaviour, IDataPersistence
         // load the binding from the data
         Debug.Log("Loading data in combat manager");
 
-        player1Deck = data.player1Deck;
+        player1Deck = data.GetRunData().player1Deck;
 
-        currentBattleNodeData = battleNodeDictionary.GetByKey(data.nextBattleNode) as BattleNodeData;
+        currentBattleNodeData = battleNodeDictionary.GetByKey(data.GetRunData().nextBattleNode) as BattleNodeData;
 
         player2Deck = currentBattleNodeData.DeckInventory;
         player2BoonsList.AddRange(currentBattleNodeData.Boons);
@@ -68,9 +68,9 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(GameData data)
     {
-        data.player1Deck = player1Deck;
+        data.GetRunData().player1Deck = player1Deck;
 
-        data.combatResults = new CombatResults()
+        data.GetRunData().combatResults = new CombatResults()
         {
             victory = binding.BindingDamage >= binding.BindingPower,
             spentInk = 0,
@@ -225,6 +225,8 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
         uiManager.UpdateTotalPower();
 
+        ResetRoundStats();
+
         unusedInk += player1.CurrentMana;
 
         // Apply damage to binding
@@ -283,6 +285,13 @@ public class CombatManager : MonoBehaviour, IDataPersistence
             if (!card.HasCondition("Keep"))
                 await player.DiscardCard(card);
         }
+    }
+
+    private void ResetRoundStats()
+    {
+        // Reset round stats for both players
+        player1.ResetRoundStats();
+        player2.ResetRoundStats();
     }
 
     /// <summary>

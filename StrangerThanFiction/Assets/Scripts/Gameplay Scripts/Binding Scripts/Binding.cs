@@ -21,10 +21,10 @@ public class Binding : MonoBehaviour, IDataPersistence, IDamagable
 
     public void LoadData(GameData data)
     {
-        battleNodeData = battleNodeDictionary.GetByKey(data.nextBattleNode);
+        battleNodeData = battleNodeDictionary.GetByKey(data.GetRunData().nextBattleNode);
         Debug.Log($"Battle Node Data in binding: {battleNodeData}");
 
-        BindingPower = data.bindingPower;
+        BindingPower = data.GetRunData().bindingPower;
     }
 
     public void SaveData(GameData data)

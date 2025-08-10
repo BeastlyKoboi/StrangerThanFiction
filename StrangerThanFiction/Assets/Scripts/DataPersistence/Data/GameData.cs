@@ -13,31 +13,17 @@ public class GameData
     [Header("Story")]
     public List<string> storyParagraphs;
 
-    [Header("Decks")]
-    public DeckInventory player1Deck;
-    public DeckInventory testDeck;
+    public bool hasCompletedTutorial;
 
-    [Header("Boons")]
-    public List<string> boonList;
+    public Faction selectedFaction;
 
-    public string nextBattleNode;
+    public RunData littleRedRunData;
+    public RunData pinocchioRunData;
+    public RunData humptyDumptyRunData;
 
-    [Header("Binding")]
-    public int bindingPower;
-
-    [Header("Nodemap")]
-    public FlatNodeMap nodeMap;
-
-    [Header("Combat Results")]
-    public CombatResults combatResults;
-
-    [Header("Current Run Stats")]
-    public Random.State randomState;
-    public int currency;
-    public int rerollTokens;
-
-    public bool runHasEnded; 
-
+    [Header("Settings")]
+    public float timeScale = 1.0f;
+    public bool isMusicEnabled = true;
 
     public GameData()
     {
@@ -45,22 +31,44 @@ public class GameData
 
         this.storyParagraphs = new List<string>();
 
-        this.player1Deck = new DeckInventory();
-        this.testDeck = new DeckInventory();
-
-        this.boonList = new List<string>();
-
-        this.bindingPower = 20;
-
-        this.nodeMap = new FlatNodeMap();
-
-        this.combatResults = new CombatResults();
-
-        this.currency = 25;
-        this.rerollTokens = 3;
-        this.runHasEnded = false;
+        this.hasCompletedTutorial = false;
     }
 
+    public RunData GetRunData()
+    {
+        switch (selectedFaction)
+        {
+            case Faction.LittleRed:
+                return littleRedRunData;
+            case Faction.Pinocchio:
+                return pinocchioRunData;
+            case Faction.HumptyDumpty:
+                return humptyDumptyRunData;
+            default:
+                Debug.LogError("Selected faction is not set or is invalid.");
+                return null;
+        }
+    }
 
+    public void SetRunData(Faction faction, RunData runData)
+    {
+        switch (faction)
+        {
+            case Faction.LittleRed:
+                littleRedRunData = runData;
+                break;
+            case Faction.Pinocchio:
+                pinocchioRunData = runData;
+                break;
+            case Faction.HumptyDumpty:
+                humptyDumptyRunData = runData;
+                break;
+            default:
+                Debug.LogError("Selected faction is not set or is invalid.");
+                break;
+        }
+
+        
+    }
 
 }

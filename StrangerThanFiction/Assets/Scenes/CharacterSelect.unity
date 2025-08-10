@@ -544,7 +544,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Game
+  m_text: Continue
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}
   m_sharedMaterial: {fileID: 2694622330320015122, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}
@@ -769,7 +769,7 @@ GameObject:
   - component: {fileID: 267890201}
   - component: {fileID: 267890200}
   m_Layer: 5
-  m_Name: StartBtn
+  m_Name: NewGameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -842,14 +842,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 530947057}
         m_TargetAssemblyTypeName: CharacterSelect, Assembly-CSharp
-        m_MethodName: OnContinueClicked
+        m_MethodName: OnNewGameClicked
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1663163659}
           m_ObjectArgumentAssemblyTypeName: CharacterProfile, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: HumptyDumpty
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 479011029}
@@ -1309,6 +1309,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1991e4b996e832147a4230ec101e51df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  littleRedProfile: {fileID: 1376886481}
+  pinocchioProfile: {fileID: 933520308}
+  humptyDumptyProfile: {fileID: 1663163659}
 --- !u!1 &594795890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,7 +1460,7 @@ GameObject:
   - component: {fileID: 599043860}
   - component: {fileID: 599043859}
   m_Layer: 5
-  m_Name: StartBtn
+  m_Name: NewGameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1530,7 +1533,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 530947057}
         m_TargetAssemblyTypeName: CharacterSelect, Assembly-CSharp
-        m_MethodName: OnContinueClicked
+        m_MethodName: OnNewGameClicked
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1376886481}
@@ -1603,7 +1606,7 @@ GameObject:
   - component: {fileID: 603131860}
   - component: {fileID: 603131859}
   m_Layer: 5
-  m_Name: NewGameBtn
+  m_Name: ContinueGameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1655,7 +1658,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 530947057}
         m_TargetAssemblyTypeName: CharacterSelect, Assembly-CSharp
-        m_MethodName: OnNewGameClicked
+        m_MethodName: OnContinueClicked
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 933520308}
@@ -2274,10 +2277,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b7bcef5da26ec64581f5fa27b174c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileId: Pinocchio
+  faction: 0
+  characterDeck:
+  - cardName: Pinocchio
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: TheCoachman
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: Donkey
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: Candlewick
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: GrowthSpurt
+    numCopies: 2
+    items: []
+    price: 0
   hasData: 0
   startBtnText: {fileID: 181156024}
-  newGameButton: {fileID: 603131858}
+  continueGameButton: {fileID: 603131858}
 --- !u!1 &946846897
 GameObject:
   m_ObjectHideFlags: 0
@@ -2367,7 +2391,7 @@ GameObject:
   - component: {fileID: 952781667}
   - component: {fileID: 952781666}
   m_Layer: 5
-  m_Name: StartBtn
+  m_Name: NewGameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2440,7 +2464,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 530947057}
         m_TargetAssemblyTypeName: CharacterSelect, Assembly-CSharp
-        m_MethodName: OnContinueClicked
+        m_MethodName: OnNewGameClicked
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 933520308}
@@ -2724,7 +2748,7 @@ GameObject:
   - component: {fileID: 1093193560}
   - component: {fileID: 1093193559}
   m_Layer: 5
-  m_Name: NewGameBtn
+  m_Name: ContinueGameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2776,7 +2800,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 530947057}
         m_TargetAssemblyTypeName: CharacterSelect, Assembly-CSharp
-        m_MethodName: OnNewGameClicked
+        m_MethodName: OnContinueClicked
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1663163659}
@@ -3060,7 +3084,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Game
+  m_text: Continue
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}
   m_sharedMaterial: {fileID: 2694622330320015122, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}
@@ -3150,7 +3174,7 @@ GameObject:
   - component: {fileID: 1281581010}
   - component: {fileID: 1281581009}
   m_Layer: 5
-  m_Name: NewGameBtn
+  m_Name: ContinueGameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3202,7 +3226,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 530947057}
         m_TargetAssemblyTypeName: CharacterSelect, Assembly-CSharp
-        m_MethodName: OnNewGameClicked
+        m_MethodName: OnContinueClicked
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1376886481}
@@ -3414,10 +3438,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b7bcef5da26ec64581f5fa27b174c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileId: LittleRed
+  faction: 1
+  characterDeck:
+  - cardName: LittleRed
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: LittleRedCap
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: LaurelOfRoses
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: HealingBroth
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: ProperDosage
+    numCopies: 2
+    items: []
+    price: 0
   hasData: 0
   startBtnText: {fileID: 29991772}
-  newGameButton: {fileID: 1281581008}
+  continueGameButton: {fileID: 1281581008}
 --- !u!1001 &1478018092
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3534,10 +3579,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b7bcef5da26ec64581f5fa27b174c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileId: HumptyDumpty
+  faction: 2
+  characterDeck:
+  - cardName: HumptyDumpty
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: Pupcorn
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: Sugar
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: TheCerealKiller
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: CaptainGrits
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: TheCornKennel
+    numCopies: 2
+    items: []
+    price: 0
   hasData: 0
   startBtnText: {fileID: 654485466}
-  newGameButton: {fileID: 1093193558}
+  continueGameButton: {fileID: 1093193558}
 --- !u!1 &1783861831
 GameObject:
   m_ObjectHideFlags: 0
@@ -3884,7 +3954,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Game
+  m_text: Continue
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}
   m_sharedMaterial: {fileID: 2694622330320015122, guid: d86cd802b4e1bee4d9e83bd26a4551fc, type: 2}

@@ -13,9 +13,27 @@ MonoBehaviour:
   m_Name: ItemDictionary
   m_EditorClassIdentifier: 
   entries:
+  - Key: BetterTheSecondTime
+    Value: {fileID: 11400000, guid: 728bf7da8e17aa64fa5b184f55783c02, type: 2}
+  - Key: BolsteringAura
+    Value: {fileID: 11400000, guid: f5cde32975b4a964b97b4c256f245e5d, type: 2}
+  - Key: DamnedProdigy
+    Value: {fileID: 11400000, guid: 2e86bb0185fb82a43a421e34c2d75b35, type: 2}
   - Key: Epiphany
     Value: {fileID: 11400000, guid: 34c8a968bd4cf0644a6769f192989ae8, type: 2}
+  - Key: ExtraFineNib
+    Value: {fileID: 11400000, guid: d07e696289335c049b020aed7ee14e7e, type: 2}
   - Key: FineNib
     Value: {fileID: 11400000, guid: 46b1e854ad93ec24385205e565a32535, type: 2}
+  - Key: FirstDraft
+    Value: {fileID: 11400000, guid: f6c6e5cfaa0320c4e861ddcd9794aef8, type: 2}
+  - Key: OpeningBlow
+    Value: {fileID: 11400000, guid: 9f42fce7282a4b04da46c9830bcbaab7, type: 2}
+  - Key: ProtectiveInstinct
+    Value: {fileID: 11400000, guid: fb05e8aebb0a5d941bc2d95e353660a2, type: 2}
   - Key: SetTheStage
     Value: {fileID: 11400000, guid: a067d5b2d25198447ad995d99892b3f9, type: 2}
+  - Key: SetTheStageII
+    Value: {fileID: 11400000, guid: 0f185a73f2be9b346a0a017e65f0eac9, type: 2}
+  - Key: SetTheStageIII
+    Value: {fileID: 11400000, guid: ba1afa659643bc44986b2ec345fb4129, type: 2}

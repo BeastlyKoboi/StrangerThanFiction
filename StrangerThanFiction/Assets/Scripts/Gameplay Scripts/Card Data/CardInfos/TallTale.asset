@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Portrait: {fileID: 21300000, guid: 658f0f3155a97404a801712a5c5a5e4a, type: 3}
   Title: Tall Tale
-  Description: Put a card from hand onto the top of the deck with -1 cost. <link="Combust"><color=#bf9b30>Combust</color></link>
+  Description: Put a card from hand onto the top of the deck with -1 cost. <link="Combust"><color=#bf9b30>Combust</color></link>.
   FlavorText: A great fiction is a great boon to a growing mind.
   Type: 1
   Faction: 0
+  CollectionType: 0
   BaseCost: 0
   BasePower: 0
   BasePlotArmor: 0

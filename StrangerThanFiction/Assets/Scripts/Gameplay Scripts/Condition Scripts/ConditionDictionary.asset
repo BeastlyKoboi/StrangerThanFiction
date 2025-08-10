@@ -15,10 +15,18 @@ MonoBehaviour:
   entries:
   - Key: Combust
     Value: {fileID: 11400000, guid: 78576b0c95685084699c2aeb4ffd5f68, type: 2}
+  - Key: Cured
+    Value: {fileID: 11400000, guid: 692fcc8edaf97c442b291b27272ddc3c, type: 2}
+  - Key: Doomed
+    Value: {fileID: 11400000, guid: 166095a85ce07d04d9d298a5504228b1, type: 2}
   - Key: Fated
     Value: {fileID: 11400000, guid: 94ebb9469cc6ea54bb6d1914fa8c97ef, type: 2}
   - Key: Guarded
     Value: {fileID: 11400000, guid: 49b684fbe48edf04191362e5ec37ffc1, type: 2}
+  - Key: Helpless
+    Value: {fileID: 11400000, guid: 2f86084a2a14d4a4094f7ebeeb049def, type: 2}
+  - Key: Keep
+    Value: {fileID: 11400000, guid: 777969381917e294990ec8d47f61bfcb, type: 2}
   - Key: Poisoned
     Value: {fileID: 11400000, guid: 2de75df90cbe2874094df00a2a47e3b5, type: 2}
   - Key: Resilient
@@ -27,3 +35,5 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: ee848f530de92b6489f3740b3560e5e0, type: 2}
   - Key: Tenacious
     Value: {fileID: 11400000, guid: 8c197494e0fa4a54b8d2a826259b2adb, type: 2}
+  - Key: Thorns
+    Value: {fileID: 11400000, guid: 93745b6581620c34f8a70418de700ac5, type: 2}

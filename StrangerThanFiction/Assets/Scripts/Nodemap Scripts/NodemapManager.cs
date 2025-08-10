@@ -42,7 +42,9 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         List<MapNode> startingSelectableNodes = new List<MapNode>();
         bool isMapCompleted = false;
 
-        if (gameData.nodeMap.flatNodeMap == null || gameData.nodeMap.flatNodeMap.Length == 0)
+        FlatNodeRow[] flatNodeMap = gameData.GetRunData().nodeMap.flatNodeMap;
+
+        if (flatNodeMap == null || flatNodeMap.Length == 0)
         {
             int numModules = 5;
 
@@ -69,15 +71,15 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         }
         else
         {
-            for (int i = 0; i < gameData.nodeMap.flatNodeMap.Length; i++)
+            for (int i = 0; i < flatNodeMap.Length; i++)
             {
                 mapNodes.Add(new List<MapNode>());
                 GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
                 GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
-                for (int j = 0; j < gameData.nodeMap.flatNodeMap[i].flatNodesArr.Length; j++)
+                for (int j = 0; j < flatNodeMap[i].flatNodesArr.Length; j++)
                 {
-                    FlatNode nodeFlat = gameData.nodeMap.flatNodeMap[i].flatNodesArr[j];
+                    FlatNode nodeFlat = flatNodeMap[i].flatNodesArr[j];
                     NodeData nodeData = battleNodeDictionary.GetByKey(nodeFlat.nodeDataKey) as NodeData ??
                        specialNodeDictionary.GetByKey(nodeFlat.nodeDataKey) as NodeData;
 
@@ -90,23 +92,26 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
                         startingSelectableNodes.Add(baseNode);
                     }
 
-                    if (nodeFlat.isSelected && nodeData is BattleNodeData battleNodeData && gameData.combatResults.victory)
+                    if (nodeFlat.isSelected && nodeData is BattleNodeData battleNodeData && gameData.GetRunData().combatResults.victory)
                     {
+                        if (!gameData.hasCompletedTutorial)
+                            gameData.hasCompletedTutorial = true;
+
                         if (battleNodeData.Type == BattleNodeType.Boss)
                             isMapCompleted = true;
 
                         startingSelectableNodes.Remove(baseNode);
                         baseNode.ToggleSelectable(false);
 
-                        if (gameData.combatResults.victory && gameData.nodeMap.flatNodeMap.Length >= i + 1)
+                        if (gameData.GetRunData().combatResults.victory && flatNodeMap.GetLength(0) > i + 1)
                         {
-                            foreach (FlatNode neighbor in gameData.nodeMap.flatNodeMap[i + 1].flatNodesArr)
+                            foreach (FlatNode neighbor in flatNodeMap[i + 1].flatNodesArr)
                             {
                                 neighbor.isSelectable = true;
                             }
                         }
 
-                        runInfo.AddCurrency(gameData.combatResults.gainedDeus).Forget();
+                        runInfo.AddCurrency(gameData.GetRunData().combatResults.gainedDeus).Forget();
 
                     }
                 }
@@ -140,7 +145,7 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         if (isMapCompleted) 
         {
             gameOverMenu.ToggleGameOverMenu(true);
-            gameData.runHasEnded = true;
+            gameData.GetRunData().runHasEnded = true;
             DataPersistenceManager.instance.DeleteGame();
         }
 
@@ -240,47 +245,36 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
     
     public void LoadData(GameData data)
     {
-
-        //if (data.)
-
         gameData = data;
 
         CreateNodeMap();
 
         CardFactory.Instance.Initialize();
 
-        //throw new System.NotImplementedException();
+        //Time.timeScale = 4f;
     }
 
     public void SaveData(GameData data)
     {
-        //if (selectedNode != null && selectedNode.GetNodeData() is BattleNodeData battleNodeData)
-        //{
-        //    data.nextBattleNode = battleNodeData.name;
-        //}
-
-        // save the nodemap to the data
-        
-
-        data.nodeMap = new FlatNodeMap();
-        data.nodeMap.flatNodeMap = new FlatNodeRow[mapNodes.Count];
+        data.GetRunData().nodeMap = new FlatNodeMap();
+        data.GetRunData().nodeMap.flatNodeMap = new FlatNodeRow[mapNodes.Count];
 
         for (int i = 0; i < mapNodes.Count; i++)
         {
-            data.nodeMap.flatNodeMap[i] = new FlatNodeRow();
-            data.nodeMap.flatNodeMap[i].flatNodesArr = new FlatNode[mapNodes[i].Count];
+            data.GetRunData().nodeMap.flatNodeMap[i] = new FlatNodeRow();
+            data.GetRunData().nodeMap.flatNodeMap[i].flatNodesArr = new FlatNode[mapNodes[i].Count];
             for (int j = 0; j < mapNodes[i].Count; j++)
             {
-                data.nodeMap.flatNodeMap[i].flatNodesArr[j] = mapNodes[i][j].GetFlattenedNode();
+                data.GetRunData().nodeMap.flatNodeMap[i].flatNodesArr[j] = mapNodes[i][j].GetFlattenedNode();
 
                 if (selectedNode == mapNodes[i][j])
                 {
-                    data.nodeMap.flatNodeMap[i].flatNodesArr[j].isSelected = true;
+                    data.GetRunData().nodeMap.flatNodeMap[i].flatNodesArr[j].isSelected = true;
                 }
             }
         }
 
-        Debug.Log(data.nextBattleNode);
+        Debug.Log(data.GetRunData().nextBattleNode);
 
     }
 

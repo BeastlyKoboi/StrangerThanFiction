@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Portrait: {fileID: 21300000, guid: eef0bb72176a64b4ca826e9e68aac0e0, type: 3}
   Title: Murder of Crows
-  Description: 'Stackable. Crows stack with me. Whenever an ally dies, deal 1 damage
-    to all enemies. '
+  Description: '<link="Stackable"><color=#bf9b30>Stackable</color></link>. Crows
+    stack with me. Whenever an ally dies, deal 1 damage to all enemies. '
   FlavorText: 'You never see one of these for good reasons. '
   Type: 0
   Faction: 3

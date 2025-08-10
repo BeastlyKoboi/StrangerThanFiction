@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
-public class PauseMenu : MonoBehaviour
+public class PauseMenu : MonoBehaviour, IDataPersistence
 {
     [HeaderAttribute("Input Actions")]
     [SerializeField] private InputActionReference pause;
@@ -13,6 +13,11 @@ public class PauseMenu : MonoBehaviour
     private CanvasGroup canvasGroup;
 
     private SceneLoader sceneLoader;
+
+    private float timeScale;
+    [SerializeField] private GameObject timeScaleBtnSpeed1;
+    [SerializeField] private GameObject timeScaleBtnSpeed2;
+    [SerializeField] private GameObject timeScaleBtnSpeed3;
 
     private void Awake()
     {
@@ -35,9 +40,14 @@ public class PauseMenu : MonoBehaviour
         pause.action.performed -= TogglePause;
     }
 
-    private void TogglePause(CallbackContext ctx)
+    public void TogglePause(CallbackContext ctx)
     {
-        if (Time.timeScale == 1)
+        TogglePauseMenu();
+    }
+
+    public void TogglePauseMenu()
+    {
+        if (Time.timeScale == timeScale)
         {
             Time.timeScale = 0;
             canvasGroup.alpha = 1;
@@ -46,7 +56,7 @@ public class PauseMenu : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 1;
+            Time.timeScale = timeScale;
             canvasGroup.alpha = 0;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
@@ -59,7 +69,7 @@ public class PauseMenu : MonoBehaviour
         {
             sceneLoader = FindObjectOfType<SceneLoader>();
         }
-        Time.timeScale = 1;
+        Time.timeScale = timeScale;
         sceneLoader.LoadScene(GameScenes.HomeMenu);
     }
 
@@ -69,8 +79,24 @@ public class PauseMenu : MonoBehaviour
         {
             sceneLoader = FindObjectOfType<SceneLoader>();
         }
-        Time.timeScale = 1;
+        Time.timeScale = timeScale;
         sceneLoader.LoadScene(GameScenes.CharacterSelect);
+    }
+
+    public void ChangeTimeScale(float timeScale)
+    {
+        this.timeScale = timeScale;
+
+        timeScaleBtnSpeed1.transform.localScale = Vector3.one;
+        timeScaleBtnSpeed2.transform.localScale = Vector3.one;
+        timeScaleBtnSpeed3.transform.localScale = Vector3.one;
+
+        if (timeScale == 1f)
+            timeScaleBtnSpeed1.transform.localScale = Vector3.one * 1.2f;
+        else if (timeScale == 2f)
+            timeScaleBtnSpeed2.transform.localScale = Vector3.one * 1.2f;
+        else if (timeScale == 4f)
+            timeScaleBtnSpeed3.transform.localScale = Vector3.one * 1.2f;
     }
 
     /// <summary>
@@ -78,7 +104,20 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void QuitGame()
     {
-        Time.timeScale = 1;
+        Time.timeScale = timeScale;
         Application.Quit();
+    }
+
+    public void LoadData(GameData data)
+    {
+        timeScale = data.timeScale;
+        Time.timeScale = timeScale;
+
+        ChangeTimeScale(timeScale);
+    }
+
+    public void SaveData(GameData data)
+    {
+        data.timeScale = timeScale;
     }
 }

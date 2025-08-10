@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Portrait: {fileID: 21300000, guid: 8d746fa66328fbd42aebc62f5d11daf5, type: 3}
   Title: Crow
-  Description: Stackable. When summoned deal 1 damage to a random enemy. At round
-    end, if I have 5+ power, I transform into a Murder of Crows.
+  Description: <link="Stackable"><color=#bf9b30>Stackable</color></link>. When summoned
+    deal 1 damage to a random enemy. At round end, if I have 5+ power, I transform
+    into a Murder of Crows.
   FlavorText: 'A bad omen that proves even tragedies have their upsides for someone. '
   Type: 0
   Faction: 3
+  CollectionType: 0
   BaseCost: 1
   BasePower: 1
   BasePlotArmor: 1

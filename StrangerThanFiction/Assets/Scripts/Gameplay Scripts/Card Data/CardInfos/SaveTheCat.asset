@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Portrait: {fileID: 21300000, guid: eea62c5e6cd912645b5ba4b065648565, type: 3}
   Title: Save The Cat
-  Description: Heal an ally by 3 and grant it Tenacious. If that ally is at full
-    power, draw a card.
+  Description: Heal an ally by 3 and grant it <link="Tenacious"><color=#bf9b30>Tenacious</color></link>.
+    If that ally is at full power, draw a card.
   FlavorText: 
   Type: 1
   Faction: 4
+  CollectionType: 0
   BaseCost: 2
   BasePower: 0
   BasePlotArmor: 0

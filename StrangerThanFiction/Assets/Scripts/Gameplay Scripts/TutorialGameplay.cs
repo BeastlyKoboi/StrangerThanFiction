@@ -5,8 +5,9 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TutorialGameplay : MonoBehaviour
+public class TutorialGameplay : MonoBehaviour, IDataPersistence
 {
+    private bool hasCompletedTutorial = false;
     private CombatManager combatManager;
 
     [HeaderAttribute("Input Actions")]
@@ -30,6 +31,11 @@ public class TutorialGameplay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (hasCompletedTutorial)
+        {
+            Destroy(this);
+            return;
+        }
         combatManager = GetComponent<CombatManager>();
 
         combatManager.OnGameStart.AddListener(OnGameStart);
@@ -38,12 +44,6 @@ public class TutorialGameplay : MonoBehaviour
         combatManager.player1.OnBeforeCardPlayed.AddListener(OnFirstUnitPlayed);
         combatManager.player1.OnBeforeCardPlayed.AddListener(OnFirstSpellPlayed);
         combatManager.OnRoundEnd.AddListener(OnRound1End);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void ClosePrompt(InputAction.CallbackContext context)
@@ -129,5 +129,13 @@ public class TutorialGameplay : MonoBehaviour
         combatManager.player1.OnBeforeCardPlayed.RemoveListener(OnFirstSpellPlayed);
     }
 
+    public void LoadData(GameData data)
+    {
+        hasCompletedTutorial = data.hasCompletedTutorial;
+    }
 
+    public void SaveData(GameData data)
+    {
+        
+    }
 }

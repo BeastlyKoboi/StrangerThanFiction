@@ -6,14 +6,15 @@ using UnityEngine;
 public class CharacterProfile : MonoBehaviour
 {
     [Header("Profile")]
-    [SerializeField] private string profileId = "";
+    [SerializeField] private Faction faction;
+    [SerializeField] private List<DeckEntry> characterDeck;
     [SerializeField] public bool hasData;
     [SerializeField] private TextMeshProUGUI startBtnText;
-    [SerializeField] private GameObject newGameButton;
+    [SerializeField] private GameObject continueGameButton;
 
-    public void SetData(GameData gameData)
+    public void SetData(RunData runData)
     {
-        if (gameData == null || gameData.runHasEnded)
+        if (runData == null || !runData.runHasStarted || runData.runHasEnded)
         {
             hasData = false;
             startBtnText.text = "Start";
@@ -21,14 +22,19 @@ public class CharacterProfile : MonoBehaviour
         else
         {
             hasData = true;
-            startBtnText.text = "Continue";
-            newGameButton.SetActive(true);
+            startBtnText.text = "New Game";
+            continueGameButton.SetActive(true);
         }
     }
 
-    public string GetProfileId()
+    public Faction GetFaction()
     {
-        return profileId;
+        return faction;
+    }
+
+    public List<DeckEntry> GetCharacterDeck()
+    {
+        return characterDeck;
     }
 
 }

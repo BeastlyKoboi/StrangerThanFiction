@@ -7,21 +7,23 @@ public sealed class TheMustacheTwirler : CardModel
 {
     protected override UniTask DeployEffect(DeployState deployState = null)
     {
-        Owner.OnAfterUnitSurvivedDamage.AddListener(ApplyResilient);
+        Owner.OnRoundStart.AddListener(ApplyHelpless);
         return UniTask.CompletedTask;
     }
 
     protected override UniTask RemoveEffect(CardModel card)
     {
-        Owner.OnAfterUnitSurvivedDamage.RemoveListener(ApplyResilient);
+        Owner.OnRoundStart.RemoveListener(ApplyHelpless);
         return UniTask.CompletedTask;
     }
 
-    private async UniTask ApplyResilient(DamageData damageData)
+    private async UniTask ApplyHelpless(RoundStartState roundStartState)
     {
-        if (damageData.target is CardModel unit)
+        CardModel unit = Board.GetWeakestUnit(Owner.enemyPlayer);
+
+        if (unit)
         {
-            await unit.ApplyCondition(new Resilient(unit, 1));
+            await unit.ApplyCondition(new Helpless(unit, 1));
         }
     }
 }

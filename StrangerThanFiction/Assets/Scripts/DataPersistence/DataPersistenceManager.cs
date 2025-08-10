@@ -18,14 +18,8 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] private bool overrideSelectedProfileId = false;
     [SerializeField] private string testSelectedProfileId = "test";
 
-
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
-
-    [Header("Starter Decks")]
-    [SerializeField] private List<DeckEntry> littleRedDeck;
-    [SerializeField] private List<DeckEntry> pinocchioDeck;
-    [SerializeField] private List<DeckEntry> humptyDumptyDeck;
 
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
@@ -84,28 +78,6 @@ public class DataPersistenceManager : MonoBehaviour
     public void NewGame(string profile)
     {
         this.gameData = new GameData();
-
-        List<DeckEntry> defaultCardList = new List<DeckEntry>();
-
-        switch (profile)
-        {
-            case "LittleRed":
-                defaultCardList = littleRedDeck;
-                break;
-            case "Pinocchio":
-                defaultCardList = pinocchioDeck;   
-                break;
-            case "HumptyDumpty":
-                defaultCardList = humptyDumptyDeck;
-                break;
-        }
-
-        gameData.player1Deck = new DeckInventory();
-        gameData.player1Deck.SetDeckEntries(defaultCardList);
-
-        gameData.boonList.Add("MeekInheritance");
-        gameData.boonList.Add("Cloudcuckoolander");
-        gameData.boonList.Add("ImpulsiveTinkering");
     }
 
     public void LoadGame()

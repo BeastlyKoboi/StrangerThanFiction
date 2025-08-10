@@ -77,10 +77,10 @@ public class RunManager : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-        runInfo.SetCurrency(data.currency).Forget();
-        runInfo.SetRerollTokens(data.rerollTokens).Forget();
-        runInfo.SetDeckInventory(data.player1Deck).Forget();
-        runInfo.SetBoonList(data.boonList).Forget();
+        runInfo.SetCurrency(data.GetRunData().currency).Forget();
+        runInfo.SetRerollTokens(data.GetRunData().rerollTokens).Forget();
+        runInfo.SetDeckInventory(data.GetRunData().player1Deck).Forget();
+        runInfo.SetBoonList(data.GetRunData().boonList).Forget();
 
         RefreshDeck();
         RefreshBoons();
@@ -88,9 +88,9 @@ public class RunManager : MonoBehaviour, IDataPersistence
 
     public void SaveData(GameData data)
     {
-        data.currency = runInfo.GetCurrency();
-        data.rerollTokens = runInfo.GetRerollTokens();
-        data.player1Deck = runInfo.GetDeckInventory();
-        data.boonList = runInfo.GetBoonList();
+        data.GetRunData().currency = runInfo.GetCurrency();
+        data.GetRunData().rerollTokens = runInfo.GetRerollTokens();
+        data.GetRunData().player1Deck = runInfo.GetDeckInventory();
+        data.GetRunData().boonList = runInfo.GetBoonList();
     }
 }

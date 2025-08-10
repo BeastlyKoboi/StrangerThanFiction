@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConditionName: Poisoned
   ConditionType: 1
-  Description: On Round End, unit takes # damage and Poisoned decreases by 1. Does
-    stack.
+  Description: At round end, unit takes # damage and Poisoned decreases by 1. Does
+    stack. (Not affected by plot armor)
   Image: {fileID: 21300000, guid: 11d04a06f8b69bc4f899700628fb4c0f, type: 3}

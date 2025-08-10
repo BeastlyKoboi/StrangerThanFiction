@@ -9,6 +9,7 @@ public class ItemInfo : ScriptableObject
     [TextArea]
     public string Description;
     public Sprite Image;
+    public Rarity ItemRarity;
     public ItemRequirement Requirement;
 }
 
@@ -18,3 +19,11 @@ public enum ItemRequirement
     Unit,
     Spell,
 }
+public enum Rarity
+{
+    Common,
+    Uncommon,
+    Rare,
+    Epic
+}
+

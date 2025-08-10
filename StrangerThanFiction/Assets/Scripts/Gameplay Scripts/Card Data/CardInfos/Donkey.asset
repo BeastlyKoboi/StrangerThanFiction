@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Portrait: {fileID: 21300000, guid: 0b900aaff762c5f42b9807b171371e80, type: 3}
   Title: Donkey
-  Description: <link="Stackable"><color=#bf9b30>Stackable.</color></link> At round
+  Description: <link="Stackable"><color=#bf9b30>Stackable</color></link>. At round
     end, if I have 5+ power, I transform into a rascal."
   FlavorText: "Once a friend, once a child, cursed forevermore\u2026"
   Type: 0
   Faction: 0
+  CollectionType: 0
   BaseCost: 1
   BasePower: 1
   BasePlotArmor: 1

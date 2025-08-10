@@ -15,4 +15,5 @@ MonoBehaviour:
   ItemName: Epiphany
   Description: When played, draw a card.
   Image: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  ItemRarity: 1
   Requirement: 0

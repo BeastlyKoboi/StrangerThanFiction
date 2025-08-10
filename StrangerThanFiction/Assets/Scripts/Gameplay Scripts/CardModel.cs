@@ -97,7 +97,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
     public virtual int CalculateDamageDealt(int damage)
     {
-        return Mathf.Clamp((int)((damage + DamageDealtModifier) * DamageDealtMultiplier), 0, int.MaxValue);
+        return Mathf.Clamp((int)((damage + DamageDealtModifier + DamageResistence) * DamageDealtMultiplier), 0, int.MaxValue);
     }
 
 
@@ -514,7 +514,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
         damageData.target = this;
 
         // Applies damage mitigation effects, and separate conditions.
-        damageData.damage -= DamageResistence;
+        damageData.damage = CalculateDamageDealt(damageData.damage);
 
         // TODO: Make ifs for helpless or invincible
 
@@ -549,6 +549,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
             await OnSurviveDamage.InvokeAsync(damageData);
             await Owner.AfterUnitSurvivedDamage(damageData);
             Owner.uiManager.UpdateTotalPower();
+
+            Owner.NumUnitsSurvivedDamageThisRound++;
+            Owner.NumUnitsSurvivedDamageThisCombat++;
         }
     }
 
@@ -612,6 +615,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
 
         await OnHeal.InvokeAsync();
 
+        Owner.NumUnitsHealedThisRound++;
         Owner.NumUnitsHealedThisCombat++;
         Owner.uiManager.UpdateTotalPower();
     }

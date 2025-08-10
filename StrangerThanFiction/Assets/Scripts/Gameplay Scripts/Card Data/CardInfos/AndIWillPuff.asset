@@ -15,7 +15,7 @@ MonoBehaviour:
   Portrait: {fileID: 21300000, guid: d0708b9ea32b3d641be64cdb6b7964cb, type: 3}
   Title: "And I Will Puff\u2026"
   Description: Deal 2 damage to 2 enemy units. Create 2 copies of And I Will Blow
-    You Away in deck. <link="Combust"><color=#bf9b30>Combust</color></link>
+    You Away in deck. <link="Combust"><color=#bf9b30>Combust</color></link>.
   FlavorText: 
   Type: 1
   Faction: 3

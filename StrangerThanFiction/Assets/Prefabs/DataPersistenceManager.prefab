@@ -50,23 +50,23 @@ MonoBehaviour:
   testSelectedProfileId: test
   fileName: data.json
   littleRedDeck:
-  - cardName: Pinocchio
+  - cardName: LittleRed
     numCopies: 2
     items: []
     price: 0
-  - cardName: TheCoachman
+  - cardName: LittleRedCap
     numCopies: 2
     items: []
     price: 0
-  - cardName: Donkey
+  - cardName: LaurelOfRoses
     numCopies: 2
     items: []
     price: 0
-  - cardName: Candlewick
+  - cardName: HealingBroth
     numCopies: 2
     items: []
     price: 0
-  - cardName: GrowthSpurt
+  - cardName: ProperDosage
     numCopies: 2
     items: []
     price: 0
@@ -92,23 +92,27 @@ MonoBehaviour:
     items: []
     price: 0
   humptyDumptyDeck:
-  - cardName: Pinocchio
+  - cardName: HumptyDumpty
     numCopies: 2
     items: []
     price: 0
-  - cardName: TheCoachman
+  - cardName: Pupcorn
     numCopies: 2
     items: []
     price: 0
-  - cardName: Donkey
+  - cardName: Sugar
     numCopies: 2
     items: []
     price: 0
-  - cardName: Candlewick
+  - cardName: TheCerealKiller
     numCopies: 2
     items: []
     price: 0
-  - cardName: GrowthSpurt
+  - cardName: CaptainGrits
+    numCopies: 2
+    items: []
+    price: 0
+  - cardName: TheCornKennel
     numCopies: 2
     items: []
     price: 0
