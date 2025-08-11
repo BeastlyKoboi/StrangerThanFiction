@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class ShopSlot : MonoBehaviour
 {
     private Transform cardParent;
-    private TextMeshProUGUI itemDescText;
+    [SerializeField] private GameObject conditionsBox;
+    [SerializeField] private Image icon;
+    [SerializeField] private TextMeshProUGUI itemDescText;
     private TextMeshProUGUI priceText;
 
     private DeckEntry deckEntry;
@@ -15,7 +18,6 @@ public class ShopSlot : MonoBehaviour
     private void Awake()
     {
         cardParent = transform.Find("CardParent");
-        itemDescText = transform.Find("ItemDescription").GetComponent<TextMeshProUGUI>();
         priceText = transform.Find("Price").GetComponent<TextMeshProUGUI>();
     }
 
@@ -34,14 +36,15 @@ public class ShopSlot : MonoBehaviour
         return cardParent;
     }
 
-    public void SetItemDescText(string descText)
+    public void SetItemDescText(Item item)
     {
-        itemDescText.text = descText;
+        icon.sprite = item.Icon;
+        itemDescText.text = item.ToString();
     }
 
     public void ToggleItemDescText(bool isActive)
     {
-        itemDescText.gameObject.SetActive(isActive);
+        conditionsBox.SetActive(isActive);
     }
 
     public void SetPriceText(int price) 

@@ -227,9 +227,6 @@ public class CardFactory
         cardObj.GetComponent<Clickable>().OnRightClick += CardPreviewClickHandler;
         cardObj.GetComponent<Clickable>().OnLongClick += CardPreviewClickHandler;
 
-
-
-
         DeckInventory deckInventory = runInfo.GetDeckInventory();
 
         foreach (DeckEntry entry in deckInventory.GetDeckEntries())
@@ -247,9 +244,6 @@ public class CardFactory
                 break;
             }
         }
-
-
-
 
         return cardScript;
     }

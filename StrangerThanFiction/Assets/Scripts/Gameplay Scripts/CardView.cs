@@ -210,4 +210,12 @@ public class CardView : MonoBehaviour
         cardTransform.gameObject.SetActive(!isUnit);
         unitTransform.gameObject.SetActive(isUnit);
     }
+
+    public void SetCardbackVisibility(bool isVisible)
+    {
+        if (cardback != null)
+        {
+            cardback.gameObject.SetActive(isVisible);
+        }
+    }
 }

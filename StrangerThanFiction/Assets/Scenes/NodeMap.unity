@@ -634,6 +634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 98121194}
+  conditionsBox: {fileID: 479831432778039760, guid: ac63671256a39124896e963132cf9e70, type: 3}
   shopNameText: {fileID: 30130657}
   shopDescriptionText: {fileID: 467522683}
   rerollBtn: {fileID: 564816015}
@@ -9914,6 +9915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 1763898341}
+  conditionsBox: {fileID: 0}
   shopNameText: {fileID: 1168901023}
   shopDescriptionText: {fileID: 1288981550}
   rerollBtn: {fileID: 2081163412}

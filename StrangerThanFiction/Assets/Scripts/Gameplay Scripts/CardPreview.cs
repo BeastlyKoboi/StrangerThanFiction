@@ -16,8 +16,6 @@ public class CardPreview : MonoBehaviour
     public TextMeshProUGUI cardTextPower;
     public TextMeshProUGUI cardTextPlotArmor;
     public TextMeshProUGUI flavorText;
-    private Sprite spellCardFrame;
-    private Sprite unitCardFrame;
 
     [SerializeField] private GameObject conditionBoxPrefab;
 
@@ -126,7 +124,7 @@ public class CardPreview : MonoBehaviour
             GameObject conditionBox = Instantiate(conditionBoxPrefab, conditionsBox);
             conditionBox.transform.Translate(0, i * -175,0);
             conditionBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
-                .text = "<line-indent=30>" + conditions[i].ToString();
+                .text = conditions[i].ToString();
             conditionBox.transform.Find("Icon").GetComponent<Image>().sprite = conditions[i].Icon;
         }
 
@@ -137,7 +135,7 @@ public class CardPreview : MonoBehaviour
             GameObject itemBox = Instantiate(conditionBoxPrefab, itemsBox);
             itemBox.transform.Translate(0, i * -175, 0);
             itemBox.transform.Find("Description").GetComponent<TextMeshProUGUI>()
-                .text = "<line-indent=30>" + items[i].ToString();
+                .text = items[i].ToString();
             itemBox.transform.Find("Icon").GetComponent<Image>().sprite = items[i].Icon;
         }
 

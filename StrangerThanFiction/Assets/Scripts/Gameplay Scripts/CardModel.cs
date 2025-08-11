@@ -34,7 +34,17 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
     public virtual string FlavorText { get; private set; }
     public virtual CardType Type { get; private set; }
     public virtual Sprite Portrait { get; private set; }
-    public virtual bool IsHidden { get; set; } = false;
+
+    private bool _isHidden = false;
+    public virtual bool IsHidden
+    {
+        get { return _isHidden; }
+        set
+        {
+            _isHidden = value;
+            cardView.SetCardbackVisibility(value);
+        }
+    }
 
     // unused for now
     public virtual string Cardback { get; private set; }

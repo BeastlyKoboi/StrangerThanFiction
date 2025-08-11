@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class ShopUI : MonoBehaviour
 {
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Transform conditionsBox;
     [SerializeField] private TextMeshProUGUI shopNameText;
     [SerializeField] private TextMeshProUGUI shopDescriptionText;
     [SerializeField] private Button rerollBtn;
@@ -81,7 +82,7 @@ public class ShopUI : MonoBehaviour
                 Type itemScript = Type.GetType(purchaseableCards[i].items[0]);
                 Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, card);
                 card.AddItem(item);
-                shopSlot.SetItemDescText(item.ToString());
+                shopSlot.SetItemDescText(item);
                 shopSlot.ToggleItemDescText(true);
             }
 

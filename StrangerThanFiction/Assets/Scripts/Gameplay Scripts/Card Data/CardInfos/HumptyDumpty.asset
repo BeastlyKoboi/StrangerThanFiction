@@ -15,7 +15,7 @@ MonoBehaviour:
   Portrait: {fileID: 21300000, guid: eea62c5e6cd912645b5ba4b065648565, type: 3}
   Title: Humpty Dumpty
   Description: '<link="Tenacious"><color=#bf9b30>Tenacious</color></link>. When I
-    survive damage, grant me +1 power. When I have survived 10 damage, I transform
+    survive damage, grant me +1 power. When I have survived 5 damage, I transform
     into Phoenix Form. '
   FlavorText: 
   Type: 0

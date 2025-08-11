@@ -31,7 +31,7 @@ public sealed class HumptyDumpty : CardModel
 
         await GrantPower(1);
 
-        if (powerSurvived >= 10)
+        if (powerSurvived >= 5)
         {
             await TransformInto(typeof(HumptyDumptyPhoenixForm).ToString());
         }

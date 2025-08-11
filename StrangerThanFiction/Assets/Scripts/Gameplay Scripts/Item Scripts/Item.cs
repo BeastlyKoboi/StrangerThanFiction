@@ -20,5 +20,5 @@ public abstract class Item
 
     public virtual UniTask OnAdd() => UniTask.CompletedTask;
     public virtual UniTask OnRemove() => UniTask.CompletedTask;
-    public override string ToString() => $"{itemInfo.ItemName}: {itemInfo.Description}";
+    public override string ToString() => $"<line-indent=30>{itemInfo.ItemName}: {itemInfo.Description}";
 }

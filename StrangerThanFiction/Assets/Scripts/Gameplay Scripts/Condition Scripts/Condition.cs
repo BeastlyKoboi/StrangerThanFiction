@@ -29,5 +29,5 @@ public abstract class Condition : IDamageSource
     public virtual UniTask OnSurplus(Condition surplus) => UniTask.CompletedTask;
     public virtual UniTask OnRemove() => UniTask.CompletedTask;
 
-    public override string ToString() => $"{Name} {amount}: {Description}";
+    public override string ToString() => $"<line-indent=30>{Name} {amount}: {Description}";
 }
