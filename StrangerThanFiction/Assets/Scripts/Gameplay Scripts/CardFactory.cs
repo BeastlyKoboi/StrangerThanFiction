@@ -99,6 +99,10 @@ public class CardFactory
 
         if (queuedCard)
         {
+            LinkHandlerForTMPTextHover hoverHandler = queuedCard.GetComponentInChildren<LinkHandlerForTMPTextHover>();
+            if (hoverHandler != null)
+                hoverHandler.enabled = true;
+
             while (queuedCard.transform.childCount != 0)
             {
                 queuedCard.transform.GetChild(0).SetParent(cardObj.transform, false);
@@ -186,6 +190,10 @@ public class CardFactory
 
         if (queuedCard)
         {
+            LinkHandlerForTMPTextHover hoverHandler = queuedCard.GetComponentInChildren<LinkHandlerForTMPTextHover>();
+            if (hoverHandler != null)
+                hoverHandler.enabled = true;
+            
             while (queuedCard.transform.childCount != 0)
             {
                 queuedCard.transform.GetChild(0).SetParent(cardObj.transform, false);
@@ -268,7 +276,14 @@ public class CardFactory
         CardType cardType = card.Type;
 
         cardObj.transform.SetParent(cardStorage.transform, false);
-        //cardObj.SetActive(false);
+
+        // Disable hover and interaction scripts
+        LinkHandlerForTMPTextHover hoverHandler = cardObj.GetComponentInChildren<LinkHandlerForTMPTextHover>();
+        if (hoverHandler != null)
+            hoverHandler.enabled = false;
+
+        // Optionally, disable the whole card GameObject if you don't need it active
+        // cardObj.SetActive(false);
 
         if (cardType == CardType.Unit)
             lockedUnitCardPool.Enqueue(cardObj);

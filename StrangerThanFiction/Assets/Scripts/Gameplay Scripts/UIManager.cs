@@ -45,6 +45,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI enemyTotalPowerCount;
     [SerializeField] private TextMeshProUGUI overkillText;
     [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private TextMeshProUGUI gainedDeusText;
 
     [HeaderAttribute("Buttons")]
     [SerializeField] private Button rightMiddleBtn;
@@ -91,12 +92,13 @@ public class UIManager : MonoBehaviour
         if (gameOverState.hasPlayerWon)
         {
             resultText.text = "You Win";
-            overkillText.text = $"Overkill: {(playerTotalPower - enemyTotalPower).ToString()}";
+            overkillText.text = $"Binding Overkill: {(gameOverState.bindingDamage - gameOverState.bindingPower).ToString()}";
+            gainedDeusText.text = $"Gained Deus: {gameOverState.unusedInk}";
         }
         else
         {
             resultText.text = "You Lose";
-            overkillText.text = $"Overkill: {(enemyTotalPower - playerTotalPower).ToString()}";
+            overkillText.gameObject.SetActive(false);
         }
 
         GameOverPopup.gameObject.SetActive(true);

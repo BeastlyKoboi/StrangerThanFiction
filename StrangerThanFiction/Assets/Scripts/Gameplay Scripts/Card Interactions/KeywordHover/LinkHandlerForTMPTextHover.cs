@@ -17,7 +17,7 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
     private Camera _cameraToUse;
     private RectTransform _textBoxRectTransform;
 
-    private int _currentlyActiveLinkedElement;
+    private int _currentlyActiveLinkedElement = int.MaxValue;
     private bool _hasClosedTooltip = true;
 
     public delegate void HoverOnLinkEvent(string keyword, Vector3 mousePos);
@@ -61,13 +61,18 @@ public class LinkHandlerForTMPTextHover : MonoBehaviour
             return;
         }
 
-        int intersectingLink = TMP_TextUtilities.FindIntersectingLink(_tmpTextBox, mousePosition, null);
+        if (!isIntersectingRectTransform)
+        {
+            return;
+        }
 
-        if (_currentlyActiveLinkedElement != intersectingLink && !_hasClosedTooltip)
-            OnCloseTooltipEvent?.Invoke();
+        int intersectingLink = TMP_TextUtilities.FindIntersectingLink(_tmpTextBox, mousePosition, null);
 
         if (intersectingLink == -1)
             return;
+
+        if (_currentlyActiveLinkedElement != intersectingLink && !_hasClosedTooltip)
+            OnCloseTooltipEvent?.Invoke();
 
 
         Vector3 bottomLeft = Vector3.zero;

@@ -36,7 +36,7 @@ public class TheCuttingRoom : SpecialNode
             deck.RemoveAt(randomIndex);
         }
 
-        nodeUI.PopulateShop(removeableCards);
+        nodeUI.PopulateShop(removeableCards, showItems: false);
     }
 
     private async UniTask RemoveCard()

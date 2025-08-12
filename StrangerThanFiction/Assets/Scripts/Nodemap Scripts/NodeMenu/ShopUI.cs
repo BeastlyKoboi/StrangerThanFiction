@@ -64,7 +64,7 @@ public class ShopUI : MonoBehaviour
     }
 
 
-    public void PopulateShop(List<DeckEntry> purchaseableCards)
+    public void PopulateShop(List<DeckEntry> purchaseableCards, bool showItems = true)
     {
         foreach (Transform child in cardZone.transform)
         {
@@ -76,6 +76,8 @@ public class ShopUI : MonoBehaviour
             ShopSlot shopSlot = Instantiate(shopSlotPrefab, cardZone.transform).GetComponent<ShopSlot>();
             CardModel card = CardFactory.Instance.CreateNonPlayableCard(purchaseableCards[i].cardName, false, shopSlot.GetCardParent());
 
+            shopSlot.ToggleItemDescText(false);
+
             if (purchaseableCards[i].items.Count > 0)
             {
                 ItemInfo itemInfo = itemData.itemDictionary.GetByKey(purchaseableCards[i].items[0]);
@@ -83,7 +85,8 @@ public class ShopUI : MonoBehaviour
                 Item item = (Item)Activator.CreateInstance(itemScript, itemInfo, card);
                 card.AddItem(item);
                 shopSlot.SetItemDescText(item);
-                shopSlot.ToggleItemDescText(true);
+                if (showItems)
+                    shopSlot.ToggleItemDescText(true);
             }
 
             shopSlot.SetPriceText(purchaseableCards[i].price);
