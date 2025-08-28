@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public abstract class Boon 
+public abstract class Boon : ISelectable
 {
     public static BoonsDataMono boonsData = GameObject.Find("BoonsData").GetComponent<BoonsDataMono>();
     public virtual string Name { get; } = "";

@@ -372,8 +372,9 @@ public class Player : MonoBehaviour
             uiManager.SetRightMiddleButton("Cancel", CancelPlay);
 
             CardModel clickedCard = null;
-            void onCardClicked(CardModel cardModel)
+            void onCardClicked(ISelectable selectable)
             {
+                if (selectable == null || selectable is not CardModel cardModel) return;
                 clickedCard = cardModel;
             }
 

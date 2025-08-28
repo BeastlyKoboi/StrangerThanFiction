@@ -120,7 +120,7 @@ public class HandManager : MonoBehaviour
         await Hand.ForEach(async card => await card.RoundEnd());
     }
 
-    public async UniTask SetOnClickForCardsInHand(Action<CardModel> onClickAction, List<CardModel> excludedCards = null)
+    public async UniTask SetOnClickForCardsInHand(Action<ISelectable> onClickAction, List<CardModel> excludedCards = null)
     {
         if (excludedCards == null) excludedCards = new List<CardModel>();
 

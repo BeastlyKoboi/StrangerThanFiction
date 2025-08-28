@@ -1,24 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPointerDownHandler
 {
+    private ISelectable selectable;
     private Vector2 downPos;
-
+        
     public float requiredHoldTime = .75f; // Time in seconds for a long click
     private bool isPointerDown = false;
     private float pointerDownTimer = 0f;
 
-    public event Action<CardModel> OnClickWithoutDrag;
+    public event Action<ISelectable> OnClickWithoutDrag;
     public event Action OnDoubleClick;
 
-    public event Action<CardModel> OnLeftClick;
-    public event Action<CardModel> OnRightClick;
-    public event Action<CardModel> OnLongClick;
+    public event Action<ISelectable> OnLeftClick;
+    public event Action<ISelectable> OnRightClick;
+    public event Action<ISelectable> OnLongClick;
+
+    private void Awake()
+    {
+        if (selectable == null)
+            selectable = GetComponent<ISelectable>();
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -39,23 +47,26 @@ public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler,
 
         if (Vector3.Distance(downPos, eventData.position) < 7)
         {
-            OnClickWithoutDrag?.Invoke(GetComponent<CardModel>());
+            if (selectable == null) return;
+
+            OnClickWithoutDrag?.Invoke(selectable);
 
             if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                OnLeftClick?.Invoke(GetComponent<CardModel>());
-            }
+                OnLeftClick?.Invoke(selectable);
 
             if (eventData.button == PointerEventData.InputButton.Right)
-            {
-                OnRightClick?.Invoke(GetComponent<CardModel>());
-            }
+                OnRightClick?.Invoke(selectable);
         }
     }
 
-    public void SetOnClickWithoutDrag(Action<CardModel> action)
+    public void SetOnClickWithoutDrag(Action<ISelectable> action)
     {
         OnClickWithoutDrag = action;
+    }
+
+    public void SetOnLeftClick(Action<ISelectable> action)
+    {
+        OnLeftClick = action;
     }
 
     private IEnumerator CheckLongClick()
@@ -64,11 +75,17 @@ public class Clickable : MonoBehaviour, IPointerClickHandler, IPointerUpHandler,
         {
             pointerDownTimer += Time.deltaTime;
             yield return null; // Wait for next frame
-        }
+        } 
 
         if (isPointerDown && pointerDownTimer >= requiredHoldTime)
         {
-            OnLongClick?.Invoke(GetComponent<CardModel>()); // Trigger the long click event
+            if (selectable != null)
+                OnLongClick?.Invoke(selectable);
         }
+    }
+
+    public void SetSelectableTarget(ISelectable target)
+    {
+        selectable = target;
     }
 }

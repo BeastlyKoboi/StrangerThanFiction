@@ -4,9 +4,10 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class ShopSlot : MonoBehaviour
+public class ShopSlot : MonoBehaviour, SelectableSlot
 {
     private Transform cardParent;
+    public CardModel CardModel { get; set; }
     [SerializeField] private GameObject conditionsBox;
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI itemDescText;
@@ -51,6 +52,11 @@ public class ShopSlot : MonoBehaviour
     {
         this.price = price;
         priceText.text = "$" + price.ToString();
+    }
+
+    public void TogglePriceText(bool isActive)
+    {
+        priceText.gameObject.SetActive(isActive);
     }
 
     public int GetPrice()

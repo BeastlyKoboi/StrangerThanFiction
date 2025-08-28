@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class Item 
+public abstract class Item : ISelectable
 {
     protected ItemInfo itemInfo;
     protected CardModel card;
@@ -21,4 +21,5 @@ public abstract class Item
     public virtual UniTask OnAdd() => UniTask.CompletedTask;
     public virtual UniTask OnRemove() => UniTask.CompletedTask;
     public override string ToString() => $"<line-indent=30>{itemInfo.ItemName}: {itemInfo.Description}";
+    public virtual bool IsCardCompatible(CardModel card) => itemInfo.IsCardCompatible(card);
 }

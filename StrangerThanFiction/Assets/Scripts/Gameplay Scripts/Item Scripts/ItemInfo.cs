@@ -11,6 +11,16 @@ public class ItemInfo : ScriptableObject
     public Sprite Image;
     public Rarity ItemRarity;
     public ItemRequirement Requirement;
+
+    public bool IsCardCompatible(CardModel card)
+    {
+        if (card == null) return false;
+        if (Requirement == ItemRequirement.None) return true;
+        if (Requirement == ItemRequirement.Unit && card.Type == CardType.Unit) return true;
+        if (Requirement == ItemRequirement.Spell && card.Type == CardType.Spell) return true;
+
+        return false;
+    }
 }
 
 public enum ItemRequirement

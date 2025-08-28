@@ -256,7 +256,11 @@ public class CardFactory
         return cardScript;
     }
 
-    public void CardPreviewClickHandler(CardModel cardModel) { if (cardPreview) cardPreview.OnClick(cardModel); }
+    public void CardPreviewClickHandler(ISelectable selectable) 
+    {
+        if (selectable == null || selectable is not CardModel cardModel) return;
+        if (cardPreview) cardPreview.OnClick(cardModel); 
+    }
 
     // Additional methods for card comparison or other functionalities can be added here.
 

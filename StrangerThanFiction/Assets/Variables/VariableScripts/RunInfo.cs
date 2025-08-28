@@ -84,6 +84,15 @@ public class RunInfo : ScriptableObject
         }
         await OnAfterDeckInventoryChange.InvokeAsync(new EventState());
     }
+    public async UniTask AddItemToCardInDeckInventory(DeckEntry deckEntry, Item item)
+    {
+        if (deckInventory.GetDeckEntries().Find(entry => entry.cardName == deckEntry.cardName) is DeckEntry existingEntry)
+        {
+            deckEntry.items.Add(item.GetType().ToString());
+        }
+        await OnAfterDeckInventoryChange.InvokeAsync(new EventState());
+    }
+
     public async UniTask RemoveCardFromDeckInventory(string cardName)
     {
         if (deckInventory.GetDeckEntries().Find(entry => entry.cardName == cardName) is DeckEntry deckEntry)
@@ -96,6 +105,7 @@ public class RunInfo : ScriptableObject
         }
         await OnAfterDeckInventoryChange.InvokeAsync(new EventState());
     }
+
     public DeckInventory GetDeckInventory() => deckInventory;
 
 

@@ -92,7 +92,7 @@ public class ShopUI : MonoBehaviour
             shopSlot.SetPriceText(purchaseableCards[i].price);
             shopSlot.SetDeckEntry(purchaseableCards[i]);
 
-            card.GetComponent<Clickable>().OnLeftClick += (CardModel card) => { SelectSlot(shopSlot); };
+            card.GetComponent<Clickable>().OnLeftClick += (ISelectable selectable) => { SelectSlot(shopSlot); };
         }
 
         buyBtn.interactable = false;

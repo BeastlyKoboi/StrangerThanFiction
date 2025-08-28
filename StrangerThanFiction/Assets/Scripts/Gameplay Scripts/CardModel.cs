@@ -23,7 +23,7 @@ public enum CollectionType { Collectible, Uncollectible }
 /// Defines the basic members and behaviors for all cards. Meant to be 
 /// extended into card-specific scripts rather than used as is. 
 /// </summary>
-public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource
+public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISelectable
 {
     // ----------------------------------------------------------------------------
     // Physical Descriptors of the card, that will effect how it is viewed.

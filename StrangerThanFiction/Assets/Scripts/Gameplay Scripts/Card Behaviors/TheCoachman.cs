@@ -24,7 +24,7 @@ public sealed class TheCoachman : CardModel
 
     private async UniTask SummonDonkey(RoundStartState roundStartState)
     {
-        CardModel donkey = CardFactory.Instance.CreateCard("Donkey", true, transform, Owner, Board, Title);
+        CardModel donkey = CardFactory.Instance.CreateCard(typeof(Donkey).ToString(), true, transform, Owner, Board, Title);
         await donkey.Deploy();
         await donkey.Summon();
     }

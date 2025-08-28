@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sugar : CardModel
+public sealed class Sugar : CardModel
 {
     protected override async UniTask PlayEffect(CardPlayState cardPlayState)
     {

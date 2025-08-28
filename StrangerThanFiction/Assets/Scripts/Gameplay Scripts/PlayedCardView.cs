@@ -27,7 +27,7 @@ public class PlayedCardView : MonoBehaviour
 
         StartCoroutine(MoveToView(1f, null));
 
-        await UniTask.Delay(4000);
+        await UniTask.Delay(3500);
     }
 
     public IEnumerator MoveToView(float dur = 0.5f, Action onComplete = null)

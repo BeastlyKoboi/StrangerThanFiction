@@ -112,7 +112,7 @@ public class BoardManager : MonoBehaviour
     }
 
 
-    public async UniTask SetOnClickForPlayersUnits(Player player, Action<CardModel> action)
+    public async UniTask SetOnClickForPlayersUnits(Player player, Action<ISelectable> action)
     {
         UnitRow unitRow = player == combatManager.player1 ? playerRow : enemyRow;
 
@@ -122,7 +122,7 @@ public class BoardManager : MonoBehaviour
         });
     }
 
-    public async UniTask SetOnClickForUnitRowsUnits(UnitRow specificRow, Action<CardModel> action)
+    public async UniTask SetOnClickForUnitRowsUnits(UnitRow specificRow, Action<ISelectable> action)
     {
         await specificRow.ForEach(unit => {
             unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);

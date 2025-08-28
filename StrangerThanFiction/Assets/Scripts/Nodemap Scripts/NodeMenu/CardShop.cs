@@ -108,7 +108,21 @@ public class CardShop : MonoBehaviour
         return deckEntry;
     }
 
-    private ItemInfo GetRandomItem(CardInfo cardInfo)
+    public ItemInfo GetRandomItem(string cardTitle)
+    {
+        CardInfo cardInfo = null;
+        cardInfo = cardDictionary.GetByKey(cardTitle);
+
+        if (!cardInfo)
+        {
+            Debug.LogError($"Card {cardTitle} not found in card dictionary.");
+            return null;
+        }
+
+        return GetRandomItem(cardInfo);
+    }
+
+    public ItemInfo GetRandomItem(CardInfo cardInfo)
     {
         List<ItemInfo> commonItems = null;
         List<ItemInfo> uncommonItems = null;

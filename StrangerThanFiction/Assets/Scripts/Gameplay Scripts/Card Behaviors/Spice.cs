@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spice : CardModel
+public sealed class Spice : CardModel
 {
     protected override async void Awake()
     {

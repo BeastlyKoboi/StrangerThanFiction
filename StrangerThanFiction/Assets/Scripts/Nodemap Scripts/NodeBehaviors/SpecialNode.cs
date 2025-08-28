@@ -10,7 +10,7 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
     protected MapNode mapNode;
     protected RunInfo runInfo;
 
-    protected ShopUI nodeUI;
+    protected EncounterUI nodeUI;
 
     public bool hasOpenedShop = false;
 
@@ -38,7 +38,7 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
 
     protected virtual void Open() {
         nodeUI = nodeMenu.GetNodeUI(this);
-        nodeUI.OpenShop();
+        nodeUI.OpenUI();
 
         AddListenersToUI();
 
@@ -49,14 +49,40 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
         }
     }
 
-    protected abstract UniTask AddListenersToUI();
-    protected abstract UniTask RemoveListenersFromUI();
+    protected virtual UniTask AddListenersToUI()
+    {
+        nodeUI.OnConfirm.AddListener(Confirm);
+        nodeUI.OnReroll.AddListener(Reroll);
+        nodeUI.OnSelect.AddListener(CheckSelection);
+        nodeUI.OnClose.AddListener(RemoveListenersFromUI);
+        return UniTask.CompletedTask;
+    }
+    protected virtual UniTask RemoveListenersFromUI()
+    {
+        nodeUI.OnConfirm.RemoveListener(Confirm);
+        nodeUI.OnReroll.RemoveListener(Reroll);
+        nodeUI.OnSelect.RemoveListener(CheckSelection);
+        nodeUI.OnClose.RemoveListener(RemoveListenersFromUI);
+        return UniTask.CompletedTask;
+    }
 
     protected abstract void PopulateUI();
 
     public virtual void IncrementRerollTokensUsed() { rerollTokensUsed++; }
     public virtual void DecrementRerollTokensUsed() { rerollTokensUsed--; }
     public int GetRerollTokensUsed() => rerollTokensUsed;
+    protected virtual async UniTask Reroll()
+    {
+        if (runInfo.GetRerollTokens() <= 0) return;
+
+        await runInfo.SetRerollTokens(runInfo.GetRerollTokens() - 1);
+        IncrementRerollTokensUsed();
+
+        PopulateUI();
+    }
+    protected virtual UniTask CheckSelection(SelectionState selectionState) 
+        => UniTask.CompletedTask;
+    protected abstract UniTask Confirm(ConfirmSelectState confirmSelectState);
 
     public virtual void LoadData(GameData data)
     {
