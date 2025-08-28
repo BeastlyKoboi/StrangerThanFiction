@@ -17,6 +17,9 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     [SerializeField] private GameObject bookNodePrefab;
     [SerializeField] private GameObject emptyShelfPrefab;
+
+    [Header("Node Data")]
+    public SpecialNodeData sheherazadeNodeData;
     public SpecialNodeData[] specialNodeDatas;
     public BattleNodeData[] battleNodeDatas;
     public BattleNodeData[] bossBattleNodeDatas;
@@ -48,15 +51,18 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
         {
             int numModules = 5;
 
+            mapNodes.Add(new List<MapNode>());
+            CreateSpecialNodes(0, 1, sheherazadeNodeData);
+
             for (int i = 0; i < numModules; i++)
             {
                 mapNodes.Add(new List<MapNode>());
                 mapNodes.Add(new List<MapNode>());
             }
 
-            for (int i = 0; i < mapNodes.Count; i += 2)
+            for (int i = 1; i < mapNodes.Count; i += 2)
             {
-                CreateSpecialNodes(i);
+                CreateSpecialNodes(i, 2);
                 baseBinding = (int)(baseBinding * 1.2);
 
                 if (i + 2 < mapNodes.Count) 
@@ -151,14 +157,18 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     }
 
-    private void CreateSpecialNodes(int index)
+    private void CreateSpecialNodes(int index, int numNodes, SpecialNodeData specificNodeData = null)
     {
         GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
         GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
-        for (int j = 0; j < 2; j++)
+        for (int j = 0; j < numNodes; j++)
         {
-            SpecialNodeData specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
+            SpecialNodeData specialNodeData;
+            if (specificNodeData != null)
+                specialNodeData = specificNodeData;
+            else
+                specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
             MapNode baseNode = CreateNode(specialNodeData, bookrow);
             baseNode.ToggleSelectable(false);
             mapNodes[index].Add(baseNode);

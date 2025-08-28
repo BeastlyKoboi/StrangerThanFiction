@@ -7,14 +7,20 @@ public class SelectionState
     public SelectableSlot newSelection;
     public ShopSlot shopSlot;
     public ItemSlot itemSlot;
+    public BoonSlot boonSlot;
 
     public SelectionResult selectionResult;
 
-    public SelectionState(SelectableSlot newSelection, ShopSlot shopSlot = null, ItemSlot itemSlot = null, SelectionResult selectionResult = null) 
+    public SelectionState(SelectableSlot newSelection, 
+        ShopSlot shopSlot = null, 
+        ItemSlot itemSlot = null, 
+        BoonSlot boonSlot = null, 
+        SelectionResult selectionResult = null) 
     { 
         this.newSelection = newSelection;
-        this.itemSlot = itemSlot;
         this.shopSlot = shopSlot;
+        this.itemSlot = itemSlot;
+        this.boonSlot = boonSlot;
         this.selectionResult = selectionResult;
     }
 }

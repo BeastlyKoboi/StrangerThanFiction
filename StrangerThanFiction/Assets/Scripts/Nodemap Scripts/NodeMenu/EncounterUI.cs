@@ -49,8 +49,12 @@ public abstract class EncounterUI : MonoBehaviour
         private set { }
     }
 
-    //protected BoonSlot selectedBoonSlot;
-    //public BoonSlot SelectedBoonSlot => selectedBoonSlot;
+    protected BoonSlot selectedBoonSlot;
+    public BoonSlot SelectedBoonSlot
+    { 
+        get => selectedBoonSlot;
+        private set { }
+    }
 
     private void Awake()
     {
@@ -64,7 +68,7 @@ public abstract class EncounterUI : MonoBehaviour
         confirmBtn.onClick.AddListener(async () =>
         {
             confirmBtn.interactable = false;
-            await OnConfirm.InvokeAsync(new ConfirmSelectState(shopSlot: selectedCardSlot, itemSlot: selectedItemSlot));
+            await OnConfirm.InvokeAsync(new ConfirmSelectState(shopSlot: selectedCardSlot, itemSlot: selectedItemSlot, boonSlot: selectedBoonSlot));
             confirmBtn.interactable = true;
         });
 
@@ -88,6 +92,8 @@ public abstract class EncounterUI : MonoBehaviour
             foreach (Transform child in itemZone.transform) Destroy(child.gameObject);
         if (boonZone != null)
             foreach (Transform child in boonZone.transform) Destroy(child.gameObject);
+
+        Clickable clickable;
 
         foreach (EncounterOption option in populateUIState.options)
         {
@@ -128,20 +134,25 @@ public abstract class EncounterUI : MonoBehaviour
 
                     itemSlot.SetItemDescText(itemObj);
 
-                    Clickable clickable = itemSlot.GetComponent<Clickable>();
+                    clickable = itemSlot.GetComponent<Clickable>();
 
                     clickable.SetSelectableTarget(itemObj);
                     clickable.SetOnLeftClick((ISelectable selectable) => { SelectItemSlot(itemSlot); });
 
-                    // Add selection logic if needed
                     break;
 
                 case EncounterOptionType.Boon:
-                    //if (boonZone == null || boonSlotPrefab == null) break;
-                    //var boonInfo = option.Data as BoonInfo;
-                    //var boonSlot = Instantiate(boonSlotPrefab, boonZone.transform).GetComponent<BoonSlot>();
-                    //boonSlot.SetBoonDescText(boonInfo);
-                    // Add selection logic if needed
+                    if (boonZone == null || boonSlotPrefab == null) break;
+                    BoonInfo boonInfo = option.Data as BoonInfo;
+                    BoonSlot boonSlot = Instantiate(boonSlotPrefab, boonZone.transform).GetComponent<BoonSlot>();
+                    Type boonType = Type.GetType(boonInfo.name);
+                    Boon boon = (Boon)Activator.CreateInstance(boonType);
+                    boonSlot.SetBoonText(boon);
+
+                    clickable = boonSlot.GetComponent<Clickable>();
+
+                    clickable.SetSelectableTarget(boon);
+                    clickable.SetOnLeftClick((ISelectable selectable) => { SelectBoonSlot(boonSlot); });
                     break;
             }
         }
@@ -156,6 +167,7 @@ public abstract class EncounterUI : MonoBehaviour
             newSelection: shopSlot, 
             shopSlot: selectedCardSlot, 
             itemSlot: selectedItemSlot, 
+            boonSlot: selectedBoonSlot,
             selectionResult: selectionResult));
 
         if (selectionResult == null || !selectionResult.AllowSelection)
@@ -176,6 +188,7 @@ public abstract class EncounterUI : MonoBehaviour
             newSelection: itemSlot, 
             shopSlot: selectedCardSlot, 
             itemSlot: selectedItemSlot, 
+            boonSlot: selectedBoonSlot,
             selectionResult: selectionResult));
 
         if (selectionResult == null || !selectionResult.AllowSelection)
@@ -186,6 +199,24 @@ public abstract class EncounterUI : MonoBehaviour
 
         selectedItemSlot = itemSlot;
         selectedItemSlot.ToggleSelected(true);
+        confirmBtn.interactable = selectionResult.ConfirmInteractable;
+    }
+
+    public virtual async void SelectBoonSlot(BoonSlot boonSlot)
+    {
+        SelectionResult selectionResult = new SelectionResult(true, true);
+        await OnSelect.InvokeAsync(new SelectionState(
+            newSelection: boonSlot, 
+            shopSlot: selectedCardSlot, 
+            itemSlot: selectedItemSlot, 
+            boonSlot: selectedBoonSlot,
+            selectionResult: selectionResult));
+        if (selectionResult == null || !selectionResult.AllowSelection)
+            return;
+        if (selectedBoonSlot != null)
+            selectedBoonSlot.ToggleSelected(false);
+        selectedBoonSlot = boonSlot;
+        selectedBoonSlot.ToggleSelected(true);
         confirmBtn.interactable = selectionResult.ConfirmInteractable;
     }
 

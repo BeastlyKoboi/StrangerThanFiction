@@ -21,6 +21,8 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 046505a615034a5489ca0f8dafa8ebbc, type: 2}
   - Key: HeroicSacrifice
     Value: {fileID: 11400000, guid: b25b52c21356bbe49b393ce51a86e1b4, type: 2}
+  - Key: Scheherazade
+    Value: {fileID: 11400000, guid: c4793d926de255042b6a2b1858730235, type: 2}
   - Key: TestOfCharacter
     Value: {fileID: 11400000, guid: fe6bec79c2cf4fa48b77056d0bfc24e0, type: 2}
   - Key: TheCuttingRoom

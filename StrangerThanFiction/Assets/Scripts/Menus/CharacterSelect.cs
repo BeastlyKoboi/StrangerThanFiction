@@ -24,9 +24,6 @@ public class CharacterSelect : MonoBehaviour, IDataPersistence
         runData.player1Deck = new DeckInventory();
         runData.player1Deck.SetDeckEntries(characterProfile.GetCharacterDeck());
 
-        runData.boonList.Add("MeekInheritance");
-        runData.boonList.Add("Cloudcuckoolander");
-        runData.boonList.Add("ImpulsiveTinkering");
     }
 
     public void LoadData(GameData data)

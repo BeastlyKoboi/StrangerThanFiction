@@ -9,4 +9,5 @@ public class BoonInfo : ScriptableObject
     [TextArea]
     public string Description;
     public Sprite Image;
+    public Rarity BoonRarity;
 }

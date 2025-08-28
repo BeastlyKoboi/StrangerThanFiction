@@ -9,12 +9,14 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
     public NodemapManager nodemapManager;
     [SerializeField] private RunInfo runInfo;
     [SerializeField] private CardShop cardShop;
+    [SerializeField] private BoonShop boonShop;
 
     [Header("Shop Menu")]
     [SerializeField] private CanvasGroup shopMenuCanvasGroup;
     [SerializeField] private EncounterUI deusShopUI;
     [SerializeField] private EncounterUI theCuttingRoomUI;
     [SerializeField] private EncounterUI testOfCharacterUI;
+    [SerializeField] private EncounterUI scheherazadeUI;
 
 
     public void LoadData(GameData data)
@@ -32,13 +34,14 @@ public class NodeMenu : MonoBehaviour, IDataPersistence
         if (node is DeusShop) return deusShopUI;
         if (node is TheCuttingRoom) return theCuttingRoomUI;
         if (node is TestOfCharacter) return testOfCharacterUI;
+        if (node is Scheherazade) return scheherazadeUI;
         return null;
     }
 
     public RunInfo GetRunInfo() => runInfo;
 
     public CardShop GetCardShop() => cardShop;
-
+    public BoonShop GetBoonShop() => boonShop;
 
 
 }
