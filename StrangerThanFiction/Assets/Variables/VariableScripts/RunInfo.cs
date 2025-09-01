@@ -8,15 +8,11 @@ public class RunInfo : ScriptableObject
 {
     [Header("Variables")]
     [SerializeField] private int currency;
-    [SerializeField] private int rerollTokens;
     [SerializeField] private DeckInventory deckInventory;
     [SerializeField] private List<string> boonList;
      
     [Header("Currency Events")]
     public GameEventAsync OnAfterCurrencyChange;
-
-    [Header("Reroll Token Events")]
-    public GameEventAsync OnAfterRerollTokensChange;
 
     [Header("Deck Inventory Events")]
     public GameEventAsync OnAfterDeckInventoryChange;
@@ -40,17 +36,6 @@ public class RunInfo : ScriptableObject
         await OnAfterCurrencyChange.InvokeAsync(new EventStateInt(currency));
     }
     public int GetCurrency() => currency;
-
-
-    public async UniTask SetRerollTokens(int value)
-    {
-        rerollTokens = value;
-        await OnAfterRerollTokensChange.InvokeAsync(new EventStateInt(value));
-    }
-
-    public int GetRerollTokens() => rerollTokens;
-
-
 
     public async UniTask SetDeckInventory(DeckInventory value)
     {

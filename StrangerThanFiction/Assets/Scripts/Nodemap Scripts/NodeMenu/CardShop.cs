@@ -34,7 +34,7 @@ public class CardShop : MonoBehaviour
         Random.State state = Random.state;
         string stateSerialized = JsonUtility.ToJson(state);
         Debug.Log(stateSerialized);
-        float random = Random.Range(0, 1);
+        float random = Random.Range(0, 100);
 
         Debug.Log(random);
 

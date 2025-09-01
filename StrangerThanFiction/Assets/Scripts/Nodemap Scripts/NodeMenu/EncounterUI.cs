@@ -157,6 +157,9 @@ public abstract class EncounterUI : MonoBehaviour
             }
         }
 
+        string rerollText = populateUIState.rerollCost > 0 ? $"Reroll (${populateUIState.rerollCost})" : "Reroll (Free)";
+        rerollBtn.GetComponentInChildren<TextMeshProUGUI>().text = rerollText;
+
         confirmBtn.interactable = false;
     }
 

@@ -23,16 +23,22 @@ public class CharacterSelect : MonoBehaviour, IDataPersistence
         runData.runHasStarted = true;
         runData.player1Deck = new DeckInventory();
         runData.player1Deck.SetDeckEntries(characterProfile.GetCharacterDeck());
-
+        if (characterProfile.GetSeed() != null) 
+            runData.currentSeed = characterProfile.GetSeed();
+        else 
+            runData.currentSeed = System.DateTime.Now.ToString("yyyyMMddHHmmss");
     }
 
     public void LoadData(GameData data)
     {
         gameData = data;
 
-        littleRedProfile.SetData(gameData.littleRedRunData);
-        pinocchioProfile.SetData(gameData.pinocchioRunData);
-        humptyDumptyProfile.SetData(gameData.humptyDumptyRunData);
+        if (littleRedProfile)
+            littleRedProfile.SetData(gameData.littleRedRunData);
+        if (pinocchioProfile)
+            pinocchioProfile.SetData(gameData.pinocchioRunData);
+        if (humptyDumptyProfile)
+            humptyDumptyProfile.SetData(gameData.humptyDumptyRunData);
     }
 
     public void SaveData(GameData data)

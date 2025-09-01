@@ -19,6 +19,8 @@ public class TheCuttingRoom : SpecialNode
             deck.RemoveAt(randomIndex);
         }
 
+        state.rerollCost = GetNextRerollCost();
+
         nodeUI.PopulateUI(state);
     }
 

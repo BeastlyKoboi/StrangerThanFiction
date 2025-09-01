@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterProfile : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class CharacterProfile : MonoBehaviour
     [SerializeField] public bool hasData;
     [SerializeField] private TextMeshProUGUI startBtnText;
     [SerializeField] private GameObject continueGameButton;
+    [SerializeField] private TMP_InputField seedInputField;
+
 
     public void SetData(RunData runData)
     {
@@ -18,6 +21,7 @@ public class CharacterProfile : MonoBehaviour
         {
             hasData = false;
             startBtnText.text = "Start";
+            continueGameButton.SetActive(false);
         }
         else
         {
@@ -32,9 +36,26 @@ public class CharacterProfile : MonoBehaviour
         return faction;
     }
 
+    public void SetFaction(Faction faction)
+    {
+        this.faction = faction;
+    }
+
     public List<DeckEntry> GetCharacterDeck()
     {
         return characterDeck;
+    }
+
+    public void SetCharacterDeck(List<DeckEntry> characterDeck)
+    {
+        this.characterDeck = characterDeck;
+    }
+
+    public string GetSeed()
+    {
+        if (seedInputField != null && !string.IsNullOrEmpty(seedInputField.text))
+            return seedInputField.text;
+        return null;
     }
 
 }

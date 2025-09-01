@@ -27,7 +27,6 @@ public class RunData
     public string currentSeed;
     public Random.State randomState;
     public int currency;
-    public int rerollTokens;
 
     public bool runHasStarted;
     public bool runHasEnded;
@@ -46,7 +45,6 @@ public class RunData
         this.combatResults = new CombatResults();
 
         this.currency = 25;
-        this.rerollTokens = 3;
 
         this.runHasStarted = false;
         this.runHasEnded = false;

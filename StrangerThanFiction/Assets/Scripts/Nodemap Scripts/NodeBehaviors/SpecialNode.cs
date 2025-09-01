@@ -7,18 +7,22 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
 {
     protected GameData gameData;
     protected NodeMenu nodeMenu;
+    protected RunManager runManager;
     protected MapNode mapNode;
     protected RunInfo runInfo;
 
     protected EncounterUI nodeUI;
 
     public bool hasOpenedShop = false;
+    public bool hasOpenedShopThisSession = false;
 
-    protected int rerollTokensUsed;
+    protected int freeRerolls = 0;
+    protected int rerollsUsed;
 
     private void Awake()
     {
         nodeMenu = FindObjectOfType<NodeMenu>();
+        runManager = FindObjectOfType<RunManager>();
         mapNode = GetComponent<MapNode>();
         runInfo = nodeMenu.GetRunInfo();
     }
@@ -32,7 +36,9 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
     {
         if (flatNode != null)
         {
-            rerollTokensUsed = flatNode.flatNodeSpecial.rerollTokensUsed;
+            hasOpenedShop = flatNode.flatNodeSpecial.hasOpenedShop;
+            freeRerolls = flatNode.flatNodeSpecial.freeRerolls;
+            rerollsUsed = flatNode.flatNodeSpecial.rerollsUsed;
         }
     }
 
@@ -44,8 +50,16 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
 
         if (!hasOpenedShop)
         {
+            runManager.BoonCollection.EnterEncounter(this);
+
             PopulateUI();
             hasOpenedShop = true;
+            hasOpenedShopThisSession = true;
+        }
+        else if (!hasOpenedShopThisSession)
+        {
+            PopulateUI();
+            hasOpenedShopThisSession = true;
         }
     }
 
@@ -68,18 +82,43 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
 
     protected abstract void PopulateUI();
 
-    public virtual void IncrementRerollTokensUsed() { rerollTokensUsed++; }
-    public virtual void DecrementRerollTokensUsed() { rerollTokensUsed--; }
-    public int GetRerollTokensUsed() => rerollTokensUsed;
+    public virtual void IncrementFreeRerolls() { freeRerolls++; }
+    public virtual void DecrementFreeRerolls() { freeRerolls--; }
+
+    public virtual void IncrementRerollsUsed() { rerollsUsed++; }
+    public virtual void DecrementRerollsUsed() { rerollsUsed--; }
+    public int GetRerollsUsed() => rerollsUsed;
     protected virtual async UniTask Reroll()
     {
-        if (runInfo.GetRerollTokens() <= 0) return;
+        if (freeRerolls > 0)
+        {
+            DecrementFreeRerolls();
+            IncrementRerollsUsed();
+            PopulateUI();
+            return;
+        }
 
-        await runInfo.SetRerollTokens(runInfo.GetRerollTokens() - 1);
-        IncrementRerollTokensUsed();
+        if (runInfo.GetCurrency() < GetNextRerollCost()) return;
+
+        await runInfo.SetCurrency(runInfo.GetCurrency() - GetNextRerollCost());
+
+        IncrementRerollsUsed();
 
         PopulateUI();
     }
+
+    public int GetNextRerollCost()
+    {
+        if (freeRerolls > 0) return 0;
+
+        int nextRerollCost = 1;
+        for (int i = 0; i < rerollsUsed; i++)
+        {
+            nextRerollCost *= 2;
+        }
+        return nextRerollCost;
+    }
+
     protected virtual UniTask CheckSelection(SelectionState selectionState) 
         => UniTask.CompletedTask;
     protected abstract UniTask Confirm(ConfirmSelectState confirmSelectState);
@@ -95,7 +134,9 @@ public abstract class SpecialNode : MonoBehaviour, IDataPersistence
     {
         return new FlatNodeSpecial
         {
-            rerollTokensUsed = rerollTokensUsed
+            hasOpenedShop = hasOpenedShop,
+            freeRerolls = freeRerolls,
+            rerollsUsed = rerollsUsed
         };
     }
 }

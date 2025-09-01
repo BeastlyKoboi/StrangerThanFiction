@@ -13,7 +13,7 @@ public abstract class Boon : ISelectable
     {
         BoonInfo boonInfo = boonsData.boonDictionary.GetByKey(GetType().ToString());
 
-        this.Name = boonInfo.name;
+        this.Name = boonInfo.BoonName;
         this.Description = boonInfo.Description;
     }
 
@@ -22,8 +22,8 @@ public abstract class Boon : ISelectable
     public virtual UniTask ExitCombat() => UniTask.CompletedTask;
     public virtual UniTask EnterNodemap() => UniTask.CompletedTask;
     public virtual UniTask ExitNodemap() => UniTask.CompletedTask;
-    public virtual UniTask EnterEncounter() => UniTask.CompletedTask;
-    public virtual UniTask ExitEncounter() => UniTask.CompletedTask;
+    public virtual UniTask EnterEncounter(SpecialNode specialNode) => UniTask.CompletedTask;
+    public virtual UniTask ExitEncounter(SpecialNode specialNode) => UniTask.CompletedTask;
     public virtual UniTask Remove() => UniTask.CompletedTask;
 
     public override string ToString() => $"{Name}: {Description}";

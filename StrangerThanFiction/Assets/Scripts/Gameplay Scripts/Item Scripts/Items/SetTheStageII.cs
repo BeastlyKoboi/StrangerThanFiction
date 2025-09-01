@@ -31,6 +31,8 @@ public sealed class SetTheStageII : Item
             }
         }
 
+        if (unitsInDeck.Count == 0) return;
+
         for (int i = 0; i < 2; i++)
         {
             await unitsInDeck[Random.Range(0, unitsInDeck.Count)].GrantPower(2);

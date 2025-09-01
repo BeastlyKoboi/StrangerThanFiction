@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 108edfce30c4a6d45ba1bd1181999a53, type: 3}
-  m_Name: MeekInheritance
+  m_Name: InspiredPrewriting
   m_EditorClassIdentifier: 
-  BoonName: Meek Inheritance
-  Description: "Whenever you summon a unit with \u22641 cost, grant it +2 power. "
+  BoonName: Inspired Prewriting
+  Description: 'At round start, grant the highest cost card in deck -1 cost. '
   Image: {fileID: 0}
+  BoonRarity: 0

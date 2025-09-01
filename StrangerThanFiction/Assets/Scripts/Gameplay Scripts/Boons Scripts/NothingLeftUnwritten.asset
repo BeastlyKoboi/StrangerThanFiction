@@ -9,6 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4f7bc5a41de67b40b350efa8cd581d8, type: 3}
-  m_Name: OnAfterRerollTokensChange
+  m_Script: {fileID: 11500000, guid: 108edfce30c4a6d45ba1bd1181999a53, type: 3}
+  m_Name: NothingLeftUnwritten
   m_EditorClassIdentifier: 
+  BoonName: Nothing Left Unwritten
+  Description: At round end, if you have no ink, summon the top unit from deck if
+    possible.
+  Image: {fileID: 0}
+  BoonRarity: 0

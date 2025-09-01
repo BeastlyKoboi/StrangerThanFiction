@@ -35,6 +35,20 @@ public class BoonCollection
         }
     }
 
+    public void EnterEncounter(SpecialNode specialNode)
+    {
+        foreach (Boon boon in boons)
+        {
+            boon.EnterEncounter(specialNode);
+        }
+    }
 
+    public void ExitEncounter(SpecialNode specialNode)
+    {
+        foreach (Boon boon in boons)
+        {
+            boon.ExitEncounter(specialNode);
+        }
+    }
 
 }

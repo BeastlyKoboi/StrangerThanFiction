@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeekInheritance : Boon
+public class CinderellasDowry : Boon
 {
     public Player player;
 

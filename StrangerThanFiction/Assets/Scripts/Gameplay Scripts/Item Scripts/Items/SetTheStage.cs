@@ -30,6 +30,8 @@ public sealed class SetTheStage : Item
             }
         }
 
+        if (unitsInDeck.Count == 0) return;
+
         await unitsInDeck[Random.Range(0, unitsInDeck.Count)].GrantPower(1);
     }
 }

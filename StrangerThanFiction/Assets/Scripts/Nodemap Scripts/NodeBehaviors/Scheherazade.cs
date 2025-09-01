@@ -18,6 +18,8 @@ public class Scheherazade : SpecialNode
             state.options.Add(new EncounterOption(EncounterOptionType.Boon, boons[i]));
         }
 
+        state.rerollCost = GetNextRerollCost();
+
         nodeUI.PopulateUI(state);
     }
  

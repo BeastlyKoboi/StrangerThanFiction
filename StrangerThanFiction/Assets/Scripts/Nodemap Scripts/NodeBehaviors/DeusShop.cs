@@ -19,6 +19,7 @@ public class DeusShop : SpecialNode
 
         state.showPrices = true;
         state.showNewCardItems = true;
+        state.rerollCost = GetNextRerollCost();
 
         nodeUI.PopulateUI(state);
     }

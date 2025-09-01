@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -157,18 +158,21 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
 
     }
 
+
     private void CreateSpecialNodes(int index, int numNodes, SpecialNodeData specificNodeData = null)
     {
         GameObject bookshelf = Instantiate(emptyShelfPrefab, Vector3.zero, Quaternion.identity, bookcaseContent.transform);
         GameObject bookrow = bookshelf.transform.Find("BookRow").gameObject;
 
-        for (int j = 0; j < numNodes; j++)
+        List<SpecialNodeData> randomSpecialNode = specialNodeDatas.ToList().OrderBy(x => Random.value).Take(numNodes).ToList();
+
+        for (int j = 0; j < randomSpecialNode.Count; j++)
         {
             SpecialNodeData specialNodeData;
             if (specificNodeData != null)
                 specialNodeData = specificNodeData;
             else
-                specialNodeData = specialNodeDatas[Random.Range(0, specialNodeDatas.Length)];
+                specialNodeData = randomSpecialNode[j];
             MapNode baseNode = CreateNode(specialNodeData, bookrow);
             baseNode.ToggleSelectable(false);
             mapNodes[index].Add(baseNode);
@@ -256,6 +260,8 @@ public class NodemapManager : MonoBehaviour, IDataPersistence
     public void LoadData(GameData data)
     {
         gameData = data;
+
+        Random.InitState(gameData.GetRunData().currentSeed.GetHashCode());
 
         CreateNodeMap();
 

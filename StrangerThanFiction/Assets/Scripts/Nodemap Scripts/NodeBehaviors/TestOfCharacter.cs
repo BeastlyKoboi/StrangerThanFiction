@@ -81,6 +81,8 @@ public class TestOfCharacter : SpecialNode
             state.options.Add(new EncounterOption(EncounterOptionType.Item, selectedItems[i]));
         }
 
+        state.rerollCost = GetNextRerollCost();
+
         nodeUI.PopulateUI(state);
     }
 

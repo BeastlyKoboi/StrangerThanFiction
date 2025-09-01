@@ -13,11 +13,21 @@ MonoBehaviour:
   m_Name: BoonDictionary
   m_EditorClassIdentifier: 
   entries:
+  - Key: CinderellasDowry
+    Value: {fileID: 11400000, guid: 890e4655445fd114c8cfe4a743ce3673, type: 2}
   - Key: Cloudcuckoolander
     Value: {fileID: 11400000, guid: f9636ace62f9d774c9360cdaf1bc2d65, type: 2}
+  - Key: GeppettosCompulsion
+    Value: {fileID: 11400000, guid: ce40f328c33332c46b14d3a5f07e7f72, type: 2}
   - Key: GloveSlap
     Value: {fileID: 11400000, guid: a0e8bfcea731834488e010228636b5eb, type: 2}
-  - Key: ImpulsiveTinkering
-    Value: {fileID: 11400000, guid: ce40f328c33332c46b14d3a5f07e7f72, type: 2}
-  - Key: MeekInheritance
-    Value: {fileID: 11400000, guid: 890e4655445fd114c8cfe4a743ce3673, type: 2}
+  - Key: InspiredPrewriting
+    Value: {fileID: 11400000, guid: 0cadb817c9cb14546977e3a9f66c1e41, type: 2}
+  - Key: NothingLeftUnwritten
+    Value: {fileID: 11400000, guid: 6c068d21dce2fc44283242d1252bebd9, type: 2}
+  - Key: OpeningFlourish
+    Value: {fileID: 11400000, guid: 8c164624a28abdf4aa0be8d62e6b6fb0, type: 2}
+  - Key: RaiseTheWeak
+    Value: {fileID: 11400000, guid: 332bea7ba532a4244adc67f33562a1d8, type: 2}
+  - Key: TheBLMulligan
+    Value: {fileID: 11400000, guid: 240df2104600d244aafc555f230a882a, type: 2}

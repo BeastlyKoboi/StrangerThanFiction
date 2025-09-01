@@ -66,6 +66,8 @@ public class Player : MonoBehaviour
     private bool hasCardsHidden;
     public bool hasEndedTurn = false;
     private bool hasCanceledPlayCard = false;
+    public int NumCardsPlayedThisRound { get; set; } = 0;
+    public int NumCardsPlayedThisCombat { get; set; } = 0;
     public int NumUnitsHealedThisRound { get; set; } = 0;
     public int NumUnitsHealedThisCombat { get; set; } = 0;
     public int NumUnitsRevivedThisCombat { get; set; } = 0;
@@ -353,6 +355,7 @@ public class Player : MonoBehaviour
 
     public void ResetRoundStats()
     {
+        NumCardsPlayedThisRound = 0;
         NumUnitsHealedThisRound = 0;
         NumUnitsSurvivedDamageThisRound = 0;
     }
@@ -508,8 +511,10 @@ public class Player : MonoBehaviour
 
         await OnAfterCardPlayed.InvokeAsync(playState);
 
-
         handManager.SetCardPlayState(null);
+
+        NumCardsPlayedThisRound++;
+        NumCardsPlayedThisCombat++;
 
         if (playState.card.Type == CardType.Unit) return true;
 

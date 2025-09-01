@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class FlatNodeSpecial 
 {
-    public int rerollTokensUsed;
-
+    public bool hasOpenedShop;
+    public int rerollsUsed;
+    public int freeRerolls;
 }
