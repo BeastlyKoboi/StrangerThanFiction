@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitAnim : MonoBehaviour
@@ -27,25 +26,23 @@ public class UnitAnim : MonoBehaviour
         onComplete?.Invoke();
     }
 
-    public IEnumerator Strike(float dur = 0.5f, Action onComplete = null)
+    public IEnumerator Strike(float dur = 0.5f, Action onComplete = null, bool directionIsUp = true)
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
+        Vector3 originalPos = rectTransform.localPosition;
 
-        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
+        Vector3 lungeOffset = new Vector3(0, directionIsUp? 50f: -50f, 0); 
+
+        // Move forward
+        yield return CoroutineUtils.Lerp(dur / 2, (t) =>
         {
-            rectTransform.localRotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0,0,45), t);
+            rectTransform.localPosition = Vector3.Lerp(originalPos, originalPos + lungeOffset, t);
         });
-        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
+
+        // Move back
+        yield return CoroutineUtils.Lerp(dur / 2, (t) =>
         {
-            rectTransform.localRotation = Quaternion.Lerp(Quaternion.Euler(0, 0, 45), Quaternion.identity, t);
-        });
-        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
-        {
-            rectTransform.localRotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0, 0, -45), t);
-        });
-        yield return CoroutineUtils.Lerp(dur / 4, (t) =>
-        {
-            rectTransform.localRotation = Quaternion.Lerp(Quaternion.Euler(0, 0, -45), Quaternion.identity, t);
+            rectTransform.localPosition = Vector3.Lerp(originalPos + lungeOffset, originalPos, t);
         });
 
         onComplete?.Invoke();

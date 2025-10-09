@@ -9,6 +9,7 @@ public class ShopSlot : MonoBehaviour, SelectableSlot
     private Transform cardParent;
     public CardModel CardModel { get; set; }
     [SerializeField] private GameObject conditionsBox;
+    [SerializeField] private Image backgroundGlow;
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI itemDescText;
     private TextMeshProUGUI priceText;

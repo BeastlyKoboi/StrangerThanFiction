@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,7 +11,11 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private CardModel card;
     private RectTransform rectTransform;
     private Vector2 offset;
-    public bool isSelected; 
+    public bool isSelected;
+
+    public event Action<CardModel> OnBeginDragEvent;
+    public event Action<CardModel> OnDragEvent;
+    public event Action<CardModel> OnEndDragEvent;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +27,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        OnBeginDragEvent?.Invoke(card);
         offset = this.transform.position - new Vector3(eventData.position.x, eventData.position.y, 0);
         isSelected = true;
     }
@@ -29,10 +35,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnDrag(PointerEventData eventData)
     {
         this.transform.position = eventData.position + offset;
+        OnDragEvent?.Invoke(card);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        OnEndDragEvent?.Invoke(card);
         isSelected = false;
 
         // Needs to check if intersecting with player board areas,
@@ -41,7 +49,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (card.Type == CardType.Unit && !card.Board.CheckValidPlacement(eventData, card))
             return;
 
-        card.Owner.handManager.SetCardPlayState(card);
+        card.Owner.handManager.SetCardPlayState(card, replacedCard: card.Type == CardType.Unit? card.SelectedAreaSlot.Unit : null);
     }
 
 

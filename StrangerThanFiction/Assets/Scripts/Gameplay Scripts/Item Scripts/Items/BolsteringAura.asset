@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: Bolstering Aura
   Description: When summoned, grant all units in my row +1 power.
-  Image: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  Image: {fileID: 21300000, guid: 536d4a0baed7f734d9ed3c73af00745b, type: 3}
   ItemRarity: 1
   Requirement: 1

@@ -153,6 +153,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISel
 
     // Unit specific placement info
     public UnitRow SelectedArea { get; set; }
+    public UnitSlot SelectedAreaSlot { get; set; }
 
     // Ref to update view.
     public CardView cardView;
@@ -186,6 +187,7 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISel
 
     // Flags 
     public bool IsRemoved { get; private set; } = false;
+    public bool IsContested { get; private set; } = true;
 
     private void OnEnable()
     {
@@ -253,9 +255,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISel
     }
     protected virtual async UniTask StrikeAnim(UnitStrikeState unitStrikeState)
     {
-        float delay = 0.5f;
-        float dur = 0.25f;
-        StartCoroutine(gameObject.GetComponent<UnitAnim>().Strike(1.0f));
+        float delay = 0.25f;
+        float dur = 0.0f;
+        StartCoroutine(gameObject.GetComponent<UnitAnim>().Strike(.5f, directionIsUp: Owner == Owner.combatManager.player1));
         await UniTask.Delay((int)((delay + dur) * 1000));
     }
     protected virtual async UniTask DiscardAnim()
@@ -370,8 +372,6 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISel
     /// <returns></returns>
     public async UniTask<bool> Summon()
     {
-        await Board.SummonUnit(this, SelectedArea);
-
         await OnSummon.InvokeAsync();
 
         await Owner.BeforeUnitSummoned(this);
@@ -452,6 +452,9 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISel
             await newUnit.ApplyCondition(condition);
         }
 
+        // Transfer contested state
+        newUnit.SetContestedVisible(isContested: IsContested, isVisible: false);
+
         // Remove old unit safely
         await this.Remove();
     }
@@ -492,8 +495,10 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISel
         var damageDataA = new DamageData(damage: damageToA, source: unitB);
         var damageDataB = new DamageData(damage: damageToB, source: unitA);
 
-        await unitA.OnBeforeStrike.InvokeAsync(new UnitStrikeState(unitA, unitB));
-        await unitB.OnBeforeStrike.InvokeAsync(new UnitStrikeState(unitB, unitA));
+        await UniTask.WhenAll(
+            unitA.OnBeforeStrike.InvokeAsync(new UnitStrikeState(unitA, unitB)),
+            unitB.OnBeforeStrike.InvokeAsync(new UnitStrikeState(unitB, unitA))
+        );
 
         // Apply damage to both units in parallel
         await UniTask.WhenAll(
@@ -504,6 +509,18 @@ public abstract class CardModel : MonoBehaviour, IDamagable, IDamageSource, ISel
         // Trigger strike events for both units
         await unitA.OnAfterStrike.InvokeAsync(new UnitStrikeState(unitA, unitB));
         await unitB.OnAfterStrike.InvokeAsync(new UnitStrikeState(unitB, unitA));
+    }
+
+    public void ToggleContested(ISelectable selectable)
+    {
+        IsContested = !IsContested;
+        cardView.ToggleIsUnitContested(IsContested);
+    }
+
+    public void SetContestedVisible(bool isContested, bool isVisible)
+    {
+        IsContested = isContested;
+        cardView.ToggleIsUnitContested(IsContested, isVisible);
     }
 
 

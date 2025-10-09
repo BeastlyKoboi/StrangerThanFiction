@@ -116,6 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   conditionsBox: {fileID: 7118251893786020589}
+  backgroundGlow: {fileID: 0}
   icon: {fileID: 8063732276442431752}
   itemDescText: {fileID: 3443641947353307339}
 --- !u!1 &9015060332697136584

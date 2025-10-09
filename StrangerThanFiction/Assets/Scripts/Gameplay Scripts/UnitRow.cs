@@ -8,86 +8,92 @@ using UnityEngine;
 
 public class UnitRow : MonoBehaviour
 {
-    private List<CardModel> units;
-    private List<RectTransform> unitRects;
-    private List<CardView> unitViews;
-    delegate bool filterDelegate(CardModel unit);
+    [SerializeField] private UnitSlot[] unitSlots = new UnitSlot[7];
+
+    //private List<CardModel> units;
+    //private List<RectTransform> unitRects;
+    //private List<CardView> unitViews;
 
     private int maxUnits = 7;
 
     private void Awake()
     {
-        units = new List<CardModel>();
-        unitRects = new List<RectTransform>();
-        unitViews = new List<CardView>();
+
+        for (int i = 0; i < unitSlots.Length; i++)
+        {
+            if (unitSlots[i] == null) continue;
+            unitSlots[i].SlotIndex = i;
+        }
     }
 
     public void AddUnit(CardModel newUnit)
     {
-        newUnit.transform.SetParent(transform);
+        if (newUnit.SelectedAreaSlot == null)
+        {
+            newUnit.SelectedAreaSlot = unitSlots.FirstOrDefault((unitSlot) => unitSlot.IsEmpty() );
+        }
 
-        units.Add(newUnit);
-        unitRects.Add(newUnit.GetComponent<RectTransform>());
-        unitViews.Add(newUnit.cardView);
-
-        UpdateUnitPositions();
+        newUnit.SelectedAreaSlot.SetNewUnit(newUnit, newUnit.cardView);
     }
 
     public void RemoveUnit(CardModel unitToRemove)
     {
-        // test
-        int index = units.IndexOf(unitToRemove);
-        if (index != -1)
+        UnitSlot slot = unitSlots.FirstOrDefault((unitSlot) => unitSlot.Unit == unitToRemove);
+        if (slot != null)
         {
-            units.RemoveAt(index);
-            unitRects.RemoveAt(index);
-            unitViews.RemoveAt(index);
-            UpdateUnitPositions();
+            unitSlots[slot.SlotIndex].RemoveUnit();
         }
     }
 
     public void ReplaceUnit(CardModel oldUnit, CardModel newUnit)
     {
-        int index = units.IndexOf(oldUnit);
-        if (index != -1)
+        UnitSlot slot = unitSlots.FirstOrDefault((unitSlot) => unitSlot.Unit == oldUnit);
+        if (slot != null)
         {
-            units[index] = newUnit;
-            unitRects[index] = newUnit.GetComponent<RectTransform>();
-            unitViews[index] = newUnit.cardView;
-            UpdateUnitPositions();
+            unitSlots[slot.SlotIndex].SetNewUnit(newUnit, newUnit.cardView);
         }
     }
 
-    public void UpdateUnitPositions()
-    {
-        if (units.Count == 0) return;
-        float unitWidth = unitViews[0].unitTransform.transform.localScale.x * unitViews[0].unitTransform.GetComponent<RectTransform>().rect.width;
-        // Find out why next line does not work
-        //float unitWidth = units[0].unitView.transform.localScale.x * unitRects[0].rect.width;
-        float filledRowWidth = units.Count * unitWidth;
-        float startingXPos = -filledRowWidth / 2 + unitWidth / 2;
+    //public void UpdateUnitPositions()
+    //{
+    //    if (units.Count == 0) return;
+    //    float unitWidth = unitViews[0].unitTransform.transform.localScale.x * unitViews[0].unitTransform.GetComponent<RectTransform>().rect.width;
+    //    // Find out why next line does not work
+    //    //float unitWidth = units[0].unitView.transform.localScale.x * unitRects[0].rect.width;
+    //    float filledRowWidth = units.Count * unitWidth;
+    //    float startingXPos = -filledRowWidth / 2 + unitWidth / 2;
 
-        for (int i = 0; i < units.Count; i++)
-        {
-            unitRects[i].anchoredPosition = new Vector2(startingXPos + i * unitWidth, 0);
-            unitRects[i].rotation = Quaternion.identity;
-        }
+    //    for (int i = 0; i < units.Count; i++)
+    //    {
+    //        unitRects[i].anchoredPosition = new Vector2(startingXPos + i * unitWidth, 0);
+    //        unitRects[i].rotation = Quaternion.identity;
+    //    }
 
-    }
+    //}
     
     public async UniTask ForEach(Func<CardModel, UniTask> func)
     {
         // Units are removing themselves during the loop, so we need to copy the list
-        CardModel[] unitsSnapshot = units.ToArray();
-        for (int i = 0; i < unitsSnapshot.Length; i++)
+        List<CardModel> units = new List<CardModel>();
+        CardModel[] unitsArr = null;
+
+        for (int i = 0; i < unitSlots.Length; i++)
         {
-            await func(unitsSnapshot[i]);
+            if (!unitSlots[i].IsEmpty())
+                units.Add(unitSlots[i].Unit);
+        }
+
+        unitsArr = units.ToArray();
+
+        for (int i = 0; i < unitsArr.Length; i++)
+        {
+            await func(unitsArr[i]);
         }
     }
 
     public bool GetIsFull()
     {
-        return units.Count >= maxUnits;
+        return GetUnits().Length == unitSlots.Length;
     }
 
     // ----------------------------------------------------------------------------
@@ -100,6 +106,7 @@ public class UnitRow : MonoBehaviour
     /// <returns></returns>
     public CardModel GetStrongestUnit()
     {
+        List<CardModel> units = GetUnits().ToList();
         if (units.Count == 0) return null;
 
         CardModel[] unitsArr = units.ToArray();
@@ -122,6 +129,7 @@ public class UnitRow : MonoBehaviour
     /// <returns></returns>
     public CardModel GetWeakestUnit()
     {
+        List<CardModel> units = GetUnits().ToList();
         if (units.Count == 0) return null;
 
         CardModel[] unitsArr = units.ToArray();
@@ -152,7 +160,7 @@ public class UnitRow : MonoBehaviour
     {
         int total = 0;
 
-        units.ForEach(unit => { total += unit.CurrentPower; });
+        GetUnits().ToList().ForEach(unit => { total += unit.CurrentPower; });
 
         // Other option
         // return units.Sum(unit => unit.CurrentPower);
@@ -166,6 +174,27 @@ public class UnitRow : MonoBehaviour
     /// <returns></returns>
     public CardModel[] GetUnits()
     {
+        List<CardModel> units = new List<CardModel>();
+
+        for (int i = 0; i < unitSlots.Length; i++)
+        {
+            if (!unitSlots[i].IsEmpty())
+                units.Add(unitSlots[i].Unit);
+        }
+
         return units.ToArray();
+    }
+
+    public UnitSlot[] GetUnitSlots() => unitSlots;
+    public GameObject[] GetUnitSlotObjs()
+    {
+        List<GameObject> unitSlotObjs = new List<GameObject>();
+
+        for (int i = 0; i < unitSlots.Length; i++)
+        {
+            unitSlotObjs.Add(unitSlots[i].gameObject);
+        }
+
+        return unitSlotObjs.ToArray();
     }
 }

@@ -1,13 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HandManager : MonoBehaviour
 {
     private UIManager uiManager;
+    private BoardManager boardManager;
     public CardPile Hand { get; set; }
 
     public int NumPlayableCards = 0;
@@ -27,6 +30,8 @@ public class HandManager : MonoBehaviour
     void Start()
     {
         uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        boardManager = GameObject.Find("Board").GetComponent<BoardManager>();
+
         Hand = new CardPile();
     }
 
@@ -38,6 +43,14 @@ public class HandManager : MonoBehaviour
         if (!card.GetComponent<Hoverable>()) card.gameObject.AddComponent<Hoverable>();
         if (!card.GetComponent<Draggable>()) card.gameObject.AddComponent<Draggable>();
 
+        Draggable draggable = card.GetComponent<Draggable>(); 
+
+        draggable.OnBeginDragEvent += SetPlayerRowTargetable;
+        draggable.OnEndDragEvent += SetPlayerRowUntargetable;
+
+        draggable.OnBeginDragEvent += BeginDragOpacityChange;
+        draggable.OnEndDragEvent += EndDragOpacityChange;
+
         card.transform.SetParent(transform);
         Hand.Insert(0, card);
         UpdateTargetTransforms();
@@ -48,6 +61,15 @@ public class HandManager : MonoBehaviour
         Destroy(card.GetComponent<Appear>());
         Destroy(card.GetComponent<Hoverable>());
         Destroy(card.GetComponent<Draggable>());
+
+        Draggable draggable = card.GetComponent<Draggable>();
+
+        draggable.OnBeginDragEvent -= SetPlayerRowTargetable;
+        draggable.OnEndDragEvent -= SetPlayerRowUntargetable;
+
+        draggable.OnBeginDragEvent -= BeginDragOpacityChange;
+        draggable.OnEndDragEvent -= EndDragOpacityChange;
+
         Hand.Remove(card);
         UpdateTargetTransforms();
     }
@@ -102,6 +124,44 @@ public class HandManager : MonoBehaviour
             (cardIndex < middleIndex? 1: -1); // flip the sign for the second half
     }
 
+    private void SetPlayerRowTargetable(CardModel card)
+    {
+        if (card.Type != CardType.Unit) return;
+
+        boardManager.playerRow.GetUnitSlots().ToList().ForEach((unitSlot) =>
+        {
+            unitSlot.ToggleTargetable(true);
+        });
+    }
+
+    private void SetPlayerRowUntargetable(CardModel card)
+    {
+        if (card.Type != CardType.Unit) return;
+
+        boardManager.playerRow.GetUnitSlots().ToList().ForEach((unitSlot) =>
+        {
+            unitSlot.ToggleTargetable(false);
+        });
+    }
+
+    private void BeginDragOpacityChange(CardModel card)
+    {
+        card.cardView.cardTransform.GetComponent<CanvasGroup>().alpha = 0.5f;
+
+    }
+
+    private void SetDraggedCardOpacity(CardModel card)
+    {
+        //boardManager.playerRow.
+
+
+    }
+
+    private void EndDragOpacityChange(CardModel card)
+    {
+        card.cardView.cardTransform.GetComponent<CanvasGroup>().alpha = 1;
+    }
+
     public void LockCards()
     {
         for (int i = 0; i < Hand.Count; i++)
@@ -120,7 +180,7 @@ public class HandManager : MonoBehaviour
         await Hand.ForEach(async card => await card.RoundEnd());
     }
 
-    public async UniTask SetOnClickForCardsInHand(Action<ISelectable> onClickAction, List<CardModel> excludedCards = null)
+    public async UniTask SetOnLeftClickForCardsInHand(Action<ISelectable> onLeftClickAction, List<CardModel> excludedCards = null)
     {
         if (excludedCards == null) excludedCards = new List<CardModel>();
 
@@ -128,7 +188,7 @@ public class HandManager : MonoBehaviour
         {
             if (excludedCards.Contains(card)) 
                 return UniTask.CompletedTask;
-            card.GetComponent<Clickable>().SetOnClickWithoutDrag(onClickAction);
+            card.GetComponent<Clickable>().SetOnLeftClick(onLeftClickAction);
             return UniTask.CompletedTask;
         });
     }

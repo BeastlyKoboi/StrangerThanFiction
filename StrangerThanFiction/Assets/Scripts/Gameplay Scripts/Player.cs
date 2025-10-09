@@ -3,11 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.XR;
-using static UnityEngine.UI.CanvasScaler;
 
 /// <summary>
 /// My thinking is that all player input will be filtered in from here, human or AI. 
@@ -249,7 +246,7 @@ public class Player : MonoBehaviour
         bool playedSuccessfully = false;
 
         if (combatManager.player1 == this)
-            uiManager.SetRightMiddleButton("End Turn", PassTurn);
+            uiManager.SetRightMiddleButton(visible: true ,"End Turn", PassTurn);
 
         RefreshPlayableCards();
 
@@ -275,7 +272,7 @@ public class Player : MonoBehaviour
         } while (!playedSuccessfully && !hasEndedTurn);
 
         if (combatManager.player1 == this)
-            uiManager.SetRightMiddleButton("", () => { });
+            uiManager.SetRightMiddleButton(visible: false, "", () => { });
 
         handManager.LockCards();
     }
@@ -372,7 +369,7 @@ public class Player : MonoBehaviour
 
         if (combatManager.player1 == this)
         {
-            uiManager.SetRightMiddleButton("Cancel", CancelPlay);
+            uiManager.SetRightMiddleButton(visible: true, "Cancel", CancelPlay);
 
             CardModel clickedCard = null;
             void onCardClicked(ISelectable selectable)
@@ -386,7 +383,7 @@ public class Player : MonoBehaviour
                 uiManager.SetPrompt(true, $"Select {playReq} " +
                     $"{(combatManager.player1 == player? "allied" : "enemy")} " +
                     $"unit{(playReq > 1? "s": "")}");
-                await board.SetOnClickForPlayersUnits(player, onCardClicked);
+                await board.SetOnLeftClickForUnits(onCardClicked, player);
 
                 do
                 {
@@ -402,7 +399,7 @@ public class Player : MonoBehaviour
                 } while (!hasCanceledPlayCard && targetList.Count != playReq);
 
                 uiManager.SetPrompt(false);
-                await board.SetOnClickForPlayersUnits(player, CardFactory.Instance.CardPreviewClickHandler);
+                await board.SetOnLeftClickForUnits(null, player);
             }
 
             async UniTask getTargetsFromCardsInHand(HandManager targetHand, List<CardModel> targetList, int playReq)
@@ -410,7 +407,7 @@ public class Player : MonoBehaviour
                 uiManager.SetPrompt(true, $"Select {playReq} " +
                     $"card{(playReq > 1? "s": "")} in " + 
                     $"{(handManager == targetHand? "allied" : "enemy")}" + " hand");
-                await targetHand.SetOnClickForCardsInHand(onCardClicked, new List<CardModel>() { playState.card });
+                await targetHand.SetOnLeftClickForCardsInHand(onCardClicked, new List<CardModel>() { playState.card });
                 handManager.Hand.ForEach((cardInHand) =>
                 {
                     if (cardInHand == playState.card)
@@ -432,7 +429,7 @@ public class Player : MonoBehaviour
                 } while (!hasCanceledPlayCard && targetList.Count != playReq);
 
                 uiManager.SetPrompt(false);
-                await targetHand.SetOnClickForCardsInHand(CardFactory.Instance.CardPreviewClickHandler, new List<CardModel>() { playState.card });
+                await targetHand.SetOnLeftClickForCardsInHand(null, new List<CardModel>() { playState.card });
                 handManager.Hand.ForEach((cardInHand) =>
                 {
                     if (cardInHand == playState.card)
@@ -442,22 +439,40 @@ public class Player : MonoBehaviour
                 });
             }
 
-            if (playState.card.Type == CardType.Unit && playState.card.SelectedArea.GetIsFull())
-            {
-                uiManager.SetPrompt(true, $"Select a unit in that row to replace.");
-                await board.SetOnClickForUnitRowsUnits(playState.card.SelectedArea, onCardClicked);
+            //if (playState.card.Type == CardType.Unit && playState.card.SelectedArea.GetIsFull())
+            //{
+            //    uiManager.SetPrompt(true, $"Select a unit in that row to replace.");
+            //    await board.SetOnLeftClickForUnits(onCardClicked, unitRow: playState.card.SelectedArea);
 
-                do
-                {
-                    await UniTask.Yield();
-                } while (!hasCanceledPlayCard && clickedCard == null);
+            //    do
+            //    {
+            //        await UniTask.Yield();
+            //    } while (!hasCanceledPlayCard && clickedCard == null);
 
-                playState.replacedCard = clickedCard;
-                clickedCard = null;
+            //    playState.replacedCard = clickedCard;
+            //    clickedCard = null;
 
-                uiManager.SetPrompt(false);
-                await board.SetOnClickForUnitRowsUnits(playState.card.SelectedArea, CardFactory.Instance.CardPreviewClickHandler);
-            }
+            //    uiManager.SetPrompt(false);
+            //    await board.SetOnLeftClickForUnits(null, unitRow: playState.card.SelectedArea);
+            //}
+
+            //if (playState.card.Type == CardType.Unit && playState.replacedCard && playState.card.Owner == combatManager.player1)
+            //{
+            //    uiManager.SetPrompt(true, $"Are you sure you want to replace that unit?");
+            //    //uiManager.SetRightMiddleButton("Confirm");
+            //    await board.SetOnLeftClickForUnits(onCardClicked, unitRow: playState.card.SelectedArea);
+
+            //    do
+            //    {
+            //        await UniTask.Yield();
+            //    } while (!hasCanceledPlayCard && clickedCard == null);
+
+            //    playState.replacedCard = clickedCard;
+            //    clickedCard = null;
+
+            //    uiManager.SetPrompt(false);
+            //    await board.SetOnLeftClickForUnits(null, unitRow: playState.card.SelectedArea);
+            //}
 
             if (playReqs.AllyUnitTargets != 0)
             {
@@ -530,7 +545,7 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Cancel play called");
         hasCanceledPlayCard = true;
-        uiManager.SetRightMiddleButton("End Turn", PassTurn); 
+        uiManager.SetRightMiddleButton(visible: true, "End Turn", PassTurn); 
     }
         
 

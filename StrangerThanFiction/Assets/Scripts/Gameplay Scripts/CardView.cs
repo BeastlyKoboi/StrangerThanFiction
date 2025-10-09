@@ -9,7 +9,7 @@ public class CardView : MonoBehaviour
 {
     public CardInfo CardInfo;
 
-    private Transform cardTransform;
+    public Transform cardTransform;
     private TextMeshProUGUI cardTextCost;
     private TextMeshProUGUI cardTextPower;
     private TextMeshProUGUI cardTextPlotArmor;
@@ -25,6 +25,9 @@ public class CardView : MonoBehaviour
     private TextMeshProUGUI unitTitle;
     private Transform unitConditionIconsBox;
     private GameObject unitConditionIconPrefab;
+    private Image unitContestedIcon;
+    private Image unitUncontestedIcon; 
+
 
     public void Instantiate(CardInfo cardInfo)
     {
@@ -50,6 +53,9 @@ public class CardView : MonoBehaviour
             unitTransform.gameObject.SetActive(false);
             unitConditionIconsBox = unitTransform.Find("Conditions");
             unitConditionIconPrefab = unitTransform.Find("ConditionIcon").gameObject;
+
+            unitContestedIcon = unitTransform.Find("contested").GetComponent<Image>();
+            unitUncontestedIcon = unitTransform.Find("uncontested").GetComponent<Image>();
         }
 
         cardTextCost.text = cardInfo.BaseCost.ToString();
@@ -216,6 +222,27 @@ public class CardView : MonoBehaviour
         if (cardback != null)
         {
             cardback.gameObject.SetActive(isVisible);
+        }
+    }
+
+    public void ToggleIsUnitContested(bool isContested, bool isVisible = true)
+    {
+        if (!unitContestedIcon || !unitUncontestedIcon) return;
+        if (isContested)
+        {
+            unitContestedIcon.gameObject.SetActive(true);
+            unitUncontestedIcon.gameObject.SetActive(false);
+        }
+        else
+        {
+            unitContestedIcon.gameObject.SetActive(false);
+            unitUncontestedIcon.gameObject.SetActive(true);
+        }
+
+        if (!isVisible) 
+        {
+            unitContestedIcon.gameObject.SetActive(false);
+            unitUncontestedIcon.gameObject.SetActive(false);
         }
     }
 }

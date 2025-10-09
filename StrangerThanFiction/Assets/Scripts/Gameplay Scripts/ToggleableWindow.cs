@@ -7,8 +7,24 @@ public class ToggleableWindow : MonoBehaviour
 {
     public Transform unfocusPanel;
     public CanvasGroup canvasGroup;
+    public RectTransform rectTransform;
     public bool isFading;
     public float fadeDuration = 0.20f;
+    
+    public bool isTeleportedOnFade;
+    public Vector2 newFadedPosition;
+    public Vector2 oldFadedPosition;
+
+    private void Awake()
+    {
+        if (isTeleportedOnFade)
+        {
+            if (rectTransform == null) 
+                rectTransform = GetComponent<RectTransform>();
+            oldFadedPosition = rectTransform.anchoredPosition;
+            rectTransform.anchoredPosition = newFadedPosition;
+        }
+    }
 
     public void Unfocus()
     {
@@ -19,6 +35,12 @@ public class ToggleableWindow : MonoBehaviour
             isFading = false;
             canvasGroup.blocksRaycasts = false; 
             canvasGroup.interactable = false;
+
+            if (isTeleportedOnFade)
+            {
+                oldFadedPosition = rectTransform.anchoredPosition;
+                rectTransform.anchoredPosition = newFadedPosition;
+            }
         }));
     }
 
@@ -27,6 +49,12 @@ public class ToggleableWindow : MonoBehaviour
         if (isFading) return;
         isFading = true;
         unfocusPanel.gameObject.SetActive(true);
+
+        if (isTeleportedOnFade)
+        {
+            rectTransform.anchoredPosition = oldFadedPosition;
+        }
+
         StartCoroutine(Fade(dur: fadeDuration, start: 0.0f, end: 1.0f, onComplete: () => { 
             isFading = false;
             canvasGroup.blocksRaycasts = true;

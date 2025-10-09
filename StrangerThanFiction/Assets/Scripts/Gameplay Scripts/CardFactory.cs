@@ -143,7 +143,8 @@ public class CardFactory
             cardView.OverwriteUnitPrefab(cardScript);
 
         cardObj.AddComponent<Clickable>();
-        cardObj.GetComponent<Clickable>().OnClickWithoutDrag += CardPreviewClickHandler;
+        cardObj.GetComponent<Clickable>().OnRightClick += CardPreviewClickHandler;
+        cardObj.GetComponent<Clickable>().OnLongClick += CardPreviewClickHandler;
 
 
         DeckInventory deckInventory;

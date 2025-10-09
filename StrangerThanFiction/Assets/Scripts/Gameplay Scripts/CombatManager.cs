@@ -1,14 +1,15 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using Cysharp.Threading.Tasks;
-using System.Threading;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Manages the flow of game in a single match. 
@@ -221,6 +222,10 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
         await DiscardHands();
 
+        await PromptSwapAlliedUnit();
+
+        await PromptContestedUnits();
+
         await OnRoundEnd.InvokeAsync();
 
         uiManager.UpdateTotalPower();
@@ -229,21 +234,7 @@ public class CombatManager : MonoBehaviour, IDataPersistence
 
         unusedInk += player1.CurrentMana;
 
-        // Apply damage to binding
-        CardModel[] units = boardManager.GetUnits(player1);
-        for (int i = 0; i < units.Length; i++)
-        {
-            await units[i].Strike(binding);
-        }
-
-        if (binding.BindingDamage < binding.BindingPower)
-        {
-            units = boardManager.GetUnits(player2);
-            for (int i = 0; i < units.Length; i++)
-            {
-                await units[i].Strike(binding);
-            }
-        }
+        await ResolveCombat();
 
         await CardFactory.Instance.QueueLockedCards();
     }
@@ -286,6 +277,236 @@ public class CombatManager : MonoBehaviour, IDataPersistence
                 await player.DiscardCard(card);
         }
     }
+
+    private async UniTask PromptSwapAlliedUnit()
+    {
+        if (boardManager.GetUnits(player1).Length == 0) return;
+
+        bool skipSwap = false;
+        UnitSlot firstSlot = null;
+        UnitSlot secondSlot = null;
+        CardModel[] allies = boardManager.GetUnits(player1);
+        UnitSlot[] unitSlots = boardManager.playerRow.GetUnitSlots();
+
+        async UniTask<UnitSlot> SelectFirstSlot()
+        {
+            UnitSlot selectedSlot = null;
+
+            uiManager.SetPrompt(isActive: true, text: "Exert your autonomy. Choose an ally to move, or skip to hold your formation.");
+            uiManager.SetRightMiddleButton(visible: true, text: "Skip", () => skipSwap = true);
+
+            await boardManager.SetOnLeftClickForUnits((selectable) => 
+            {
+                if (selectable is not CardModel unit) return;
+
+                for (int i = 0; i < unitSlots.Length; i++)
+                {
+                    if (unitSlots[i].Unit == unit) 
+                    { 
+                        selectedSlot = unitSlots[i];
+                        continue;
+                    }
+                }
+                return;
+            }, player1);
+
+            do
+            {
+                await UniTask.Yield();
+            } while (selectedSlot == null && !skipSwap);
+
+            await boardManager.SetOnLeftClickForUnits(null, player1);
+
+            if (skipSwap)
+                return null;
+
+            return selectedSlot;
+        }
+
+        async UniTask<UnitSlot> SelectSecondSlot()
+        {
+            UnitSlot selectedSlot = null;
+            bool cancelSelection = false;
+
+            uiManager.SetPrompt(isActive: true, text: "Choose a new slot or ally to swap positions with.");
+            uiManager.SetRightMiddleButton(visible: true, text: "Cancel", () => cancelSelection = true);
+            for (int i = 0; i < unitSlots.Length; i++)
+            {
+                if (!unitSlots[i].IsEmpty()) continue;
+
+                unitSlots[i].SetOnLeftClick((selectable) =>
+                {
+                    if (selectable is not UnitSlot unitSlot || unitSlot == firstSlot) return;
+
+                    selectedSlot = unitSlot;
+                });
+            }
+
+            await boardManager.SetOnLeftClickForUnits((selectable) =>
+            {
+                if (selectable is not CardModel unit) return;
+
+                for (int i = 0; i < unitSlots.Length; i++)
+                {
+                    if (unitSlots[i].Unit == unit)
+                    {
+                        selectedSlot = unitSlots[i];
+                        continue;
+                    }
+                }
+                return;
+
+            }, player1);
+
+            do
+            {
+                await UniTask.Yield();
+
+            } while (selectedSlot == null && !cancelSelection);
+
+            await boardManager.SetOnLeftClickForUnits(null, player1);
+
+            if (cancelSelection)
+                return null;
+
+            return selectedSlot;
+        }
+
+
+        bool hasCanceledButNotSkipped = false;
+        do
+        {
+            hasCanceledButNotSkipped = false;
+
+            firstSlot = await SelectFirstSlot();
+
+            if (firstSlot != null)
+            {
+                secondSlot = await SelectSecondSlot();
+
+                if (secondSlot == null)
+                    hasCanceledButNotSkipped = true;
+            }
+
+        } while (hasCanceledButNotSkipped);
+
+        uiManager.SetPrompt(isActive: false, text: "");
+        uiManager.SetRightMiddleButton(visible: false, text: "", null);
+
+        for (int i = 0; i < unitSlots.Length; i++)
+        {
+            unitSlots[i].SetOnLeftClick(null);
+        }
+
+        if (!firstSlot)
+            return;
+
+        // Now do the actual replacing.
+        CardModel tempStorage = secondSlot.Unit;
+
+        secondSlot.SetNewUnit(firstSlot.Unit, firstSlot.Unit.cardView);
+
+        if (tempStorage)
+            firstSlot.SetNewUnit(tempStorage, tempStorage.cardView);
+        else
+            firstSlot.RemoveUnit();
+
+    }
+
+    private async UniTask PromptContestedUnits()
+    {
+        CardModel[] allies = boardManager.GetUnits(player1);
+        bool hasConfirmed = false;
+
+        uiManager.SetPrompt(isActive: true, text: "Select which allies will strike the Binding.\nEnemies that contest them will block their attack.");
+        uiManager.SetRightMiddleButton(visible: true, text: "Confirm", () => hasConfirmed = true);
+
+        for (int i = 0; i < allies.Length; i++)
+        {
+            allies[i].SetContestedVisible(isContested: false, isVisible: true);
+        }
+
+        await boardManager.SetOnLeftClickForUnits((selectable) => 
+        {
+            if (selectable is not CardModel unit) return;
+            unit.ToggleContested(selectable);
+        }, player1);
+
+        do
+        {
+            await UniTask.Yield();
+        } while (!hasConfirmed);
+
+        uiManager.SetPrompt(isActive: false, text: "");
+        uiManager.SetRightMiddleButton(visible: false, text: "", null);
+
+        await boardManager.SetOnLeftClickForUnits(null, player1);
+    }
+
+    private async UniTask ResolveCombat()
+    {
+        // Apply damage to binding
+        UnitSlot[] alliedSlots = boardManager.playerRow.GetUnitSlots();
+        UnitSlot[] enemySlots = boardManager.enemyRow.GetUnitSlots();
+
+        for (int i = 0; i < alliedSlots.Length; i++)
+        {
+            CardModel ally = alliedSlots[i].Unit;
+            CardModel enemy = enemySlots[i].Unit;
+
+            bool allyContested = ally && ally.IsContested;
+            bool enemyContested = enemy && enemy.IsContested;
+
+            // Case 1: Both sides contested -> they strike each other only.
+            if (allyContested && enemyContested)
+            {
+                await CardModel.SimultaneousStrike(ally, enemy);
+                continue; // Each only strikes once
+            }
+
+            // Case 2: Only ally is contested -> strikes Binding
+            if (allyContested && !enemyContested)
+                await ally.Strike(binding);
+
+            // Case 3: Only enemy is contested -> strikes Binding (heals it)
+            if (enemyContested && !allyContested)
+                await enemy.Strike(binding);
+
+            //if (alliedSlots[i].Unit != null && alliedSlots[i].Unit.IsContested && 
+            //    enemySlots[i].Unit != null && enemySlots[i].Unit.IsContested)
+            //{
+            //    await CardModel.SimultaneousStrike(alliedSlots[i].Unit, enemySlots[i].Unit);
+            //}
+
+            //if (alliedSlots[i].Unit && alliedSlots[i].Unit.IsContested)
+            //    await alliedSlots[i].Unit.Strike(binding);
+
+            //if (enemySlots[i].Unit && enemySlots[i].Unit.IsContested)
+            //    await enemySlots[i].Unit.Strike(binding);
+        }
+
+        for (int i = 0; i < alliedSlots.Length; i++)
+        {
+            if (alliedSlots[i].Unit)
+                alliedSlots[i].Unit.SetContestedVisible(isContested: false, isVisible: false);
+        }
+
+        //for (int i = 0; i < alliedSlots.Length; i++)
+        //{
+        //    if (alliedSlots[i].Unit)
+        //        await alliedSlots[i].Unit.Strike(binding);
+        //}
+
+        //if (binding.BindingDamage < binding.BindingPower)
+        //{
+        //    for (int i = 0; i < enemySlots.Length; i++)
+        //    {
+        //        if (enemySlots[i].Unit)
+        //            await enemySlots[i].Unit.Strike(binding);
+        //    }
+        //}
+    }
+
 
     private void ResetRoundStats()
     {

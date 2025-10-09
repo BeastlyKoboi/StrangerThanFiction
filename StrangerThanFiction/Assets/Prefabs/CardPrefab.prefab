@@ -144,6 +144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8769590378629164357}
+  - component: {fileID: 5249620014880173249}
   m_Layer: 5
   m_Name: CardPrefab
   m_TagString: Untagged
@@ -181,6 +182,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 275, y: 375}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &5249620014880173249
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809478321450799374}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2510173576333629408
 GameObject:
   m_ObjectHideFlags: 0

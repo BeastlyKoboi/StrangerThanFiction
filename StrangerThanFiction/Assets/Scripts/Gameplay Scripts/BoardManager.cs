@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using static UnityEngine.Rendering.DebugUI.Table;
 using static UnityEngine.UI.CanvasScaler;
+using System.Linq;
 
 /// <summary>
 /// The BoardManager will be responsible for managing the game board, 
@@ -36,16 +37,6 @@ public class BoardManager : MonoBehaviour
     {
         newUnit.SelectedArea = oldUnit.SelectedArea;
         newUnit.SelectedArea.ReplaceUnit(oldUnit, newUnit);
-    }
-
-    /// <summary>
-    /// Adds a unit to the board.
-    /// </summary>
-    /// <param name="unit"></param>
-    /// <param name="row"></param>
-    public UniTask SummonUnit(CardModel unit, UnitRow row)
-    {
-        return UniTask.CompletedTask;
     }
 
     private async UniTask DestroyUnit(CardModel unit)
@@ -81,11 +72,18 @@ public class BoardManager : MonoBehaviour
 
         for (int i = 0; i < raycastResults.Count; i++)
         {
-            if (playerRow.gameObject == raycastResults[i].gameObject)
+            if (playerRow.GetUnitSlotObjs().Contains(raycastResults[i].gameObject))
             {
                 card.SelectedArea = playerRow;
+                card.SelectedAreaSlot = raycastResults[i].gameObject.GetComponent<UnitSlot>();
                 return true;
             }
+
+            //if (playerRow.gameObject == raycastResults[i].gameObject)
+            //{
+            //    card.SelectedArea = playerRow;
+            //}
+
         }
 
         return false;
@@ -111,21 +109,15 @@ public class BoardManager : MonoBehaviour
         await enemyRow.ForEach(async unit => await unit.RoundEnd());
     }
 
-
-    public async UniTask SetOnClickForPlayersUnits(Player player, Action<ISelectable> action)
+    public async UniTask SetOnLeftClickForUnits(Action<ISelectable> action, Player player = null, UnitRow unitRow = null)
     {
-        UnitRow unitRow = player == combatManager.player1 ? playerRow : enemyRow;
+        if (unitRow == null && player == null) return; 
 
-        await unitRow.ForEach(unit => { 
-            unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
-            return UniTask.CompletedTask;
-        });
-    }
+        if (unitRow == null)
+            unitRow = player == combatManager.player1 ? playerRow : enemyRow;
 
-    public async UniTask SetOnClickForUnitRowsUnits(UnitRow specificRow, Action<ISelectable> action)
-    {
-        await specificRow.ForEach(unit => {
-            unit.GetComponent<Clickable>().SetOnClickWithoutDrag(action);
+        await unitRow.ForEach(unit => {
+            unit.GetComponent<Clickable>().SetOnLeftClick(action);
             return UniTask.CompletedTask;
         });
     }

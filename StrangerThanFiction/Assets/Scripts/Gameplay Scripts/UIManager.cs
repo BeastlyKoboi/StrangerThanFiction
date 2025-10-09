@@ -50,6 +50,8 @@ public class UIManager : MonoBehaviour
     [HeaderAttribute("Buttons")]
     [SerializeField] private Button rightMiddleBtn;
     [SerializeField] private TextMeshProUGUI rightMiddleBtnText;
+    [SerializeField] private Animator rightMiddleBtnAnimator;
+    [SerializeField] private bool rightMiddleBtnIsVisible = false;
 
     [HeaderAttribute("Prompt")]
     [SerializeField] private GameObject prompt;
@@ -158,8 +160,19 @@ public class UIManager : MonoBehaviour
         PausedMenu.SetActive(isActive);
     }
 
-    public void SetRightMiddleButton(string text, Action onClick)
+    public void SetRightMiddleButton(bool visible, string text, Action onClick)
     {
+        if (visible && rightMiddleBtnIsVisible != visible)
+        {
+            rightMiddleBtnAnimator.SetBool("Visible", true);
+            rightMiddleBtnIsVisible = visible;
+        }
+        else if (!visible && rightMiddleBtnIsVisible != visible)
+        {
+            rightMiddleBtnAnimator.SetBool("Visible", false);
+            rightMiddleBtnIsVisible = visible;
+        }
+
         rightMiddleBtnText.text = text;
         rightMiddleBtn.onClick.RemoveAllListeners();
         rightMiddleBtn.onClick.AddListener(() => onClick());
