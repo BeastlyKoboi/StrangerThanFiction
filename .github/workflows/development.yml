@@ -1,0 +1,49 @@
+name: Build Unity WebGL
+
+on:
+  push:
+    branches: [ development ] 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        lfs: true  # if you use large files (Unity assets)
+
+    - name: Cache Library folder
+      uses: actions/cache@v4
+      with:
+        path: Library
+        key: Library-${{ runner.os }}-${{ hashFiles('**/Packages/manifest.json') }}
+        restore-keys: |
+          Library-${{ runner.os }}-
+
+    - name: Setup Unity
+      uses: game-ci/unity-setup@v4
+      with:
+        unityVersion: 2022.3.0f1  # adjust for your version
+        activateLicense: true
+        unityEmail: ${{ secrets.UNITY_EMAIL }}
+        unityPassword: ${{ secrets.UNITY_PASSWORD }}
+        unitySerial: ${{ secrets.UNITY_SERIAL }}
+
+    - name: Build WebGL
+      uses: game-ci/unity-builder@v4
+      with:
+        targetPlatform: WebGL
+        buildName: WebGLBuild
+        buildPath: build/webgl
+
+    - name: Deploy to docs/
+      run: |
+        rm -rf docs/*
+        cp -r build/webgl/* docs/
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add docs
+        git commit -m "Auto-update WebGL build"
+        git push
